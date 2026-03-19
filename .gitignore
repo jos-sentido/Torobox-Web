@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large media files not used by the site
+*.mp4
+*.MP4
+*.mov
+*.MOV
+public/images/sucursales/zona-real/Fotos profesionales Zona Real/
