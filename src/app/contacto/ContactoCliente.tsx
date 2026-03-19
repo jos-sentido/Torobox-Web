@@ -1,21 +1,22 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import Button from '@/components/Button';
 import SimuladorTarifas, { type SeleccionSimulador } from '@/components/SimuladorTarifas';
+import { SUCURSALES } from '@/data/sucursales';
 
 const fmt = (n: number) =>
   n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 });
 
-export default function ContactoCliente({ initialSucursal = '' }: { initialSucursal?: string }) {
+export default function ContactoCliente({ initialSucursal = '', initialTamano = '' }: { initialSucursal?: string; initialTamano?: string }) {
   const formRef = useRef<HTMLDivElement>(null);
 
   // Simulator pre-fill state
   const [preseleccion, setPreseleccion] = useState<SeleccionSimulador | null>(null);
 
   // Controlled form fields (those that can be pre-filled)
-  const [sucursal, setSucursal] = useState('');
-  const [tamano, setTamano] = useState('');
+  const [sucursal, setSucursal] = useState(initialSucursal);
+  const [tamano, setTamano] = useState(initialTamano);
   const [plazo, setPlazo] = useState('');
 
   const handleSolicitar = (data: SeleccionSimulador) => {
@@ -30,9 +31,26 @@ export default function ContactoCliente({ initialSucursal = '' }: { initialSucur
 
   const clearPreseleccion = () => setPreseleccion(null);
 
+  // All unique bodega sizes across all branches
+  const allTamanos = useMemo(() => {
+    const seen = new Map<string, string>();
+    for (const s of SUCURSALES) {
+      for (const b of s.bodegas) {
+        if (!seen.has(b.id)) seen.set(b.id, b.label);
+      }
+    }
+    return Array.from(seen.entries()).map(([id, label]) => ({ id, label }));
+  }, []);
+
+  // Filter sucursales based on selected tamaño
+  const sucursalesFiltradas = useMemo(() => {
+    if (!tamano) return SUCURSALES;
+    return SUCURSALES.filter(s => s.bodegas.some(b => b.id === tamano));
+  }, [tamano]);
+
   return (
     <>
-      <SimuladorTarifas onSolicitar={handleSolicitar} initialSucursalId={initialSucursal} />
+      <SimuladorTarifas onSolicitar={handleSolicitar} initialSucursalId={initialSucursal} initialBodegaId={initialTamano} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -129,19 +147,18 @@ export default function ContactoCliente({ initialSucursal = '' }: { initialSucur
                   <label htmlFor="sucursal" className="block text-sm font-medium text-gray-700 mb-2">Sucursal de interés</label>
                   <select
                     id="sucursal"
-                    value={sucursal}
+                    value={sucursalesFiltradas.some(s => s.id === sucursal) ? sucursal : ''}
                     onChange={e => setSucursal(e.target.value)}
                     className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none bg-white"
                   >
                     <option value="">Selecciona una opción</option>
-                    <option value="vallarta">Av Vallarta</option>
-                    <option value="zona-real">Zona Real</option>
-                    <option value="punto-sur">Punto Sur</option>
-                    <option value="bucerias">Bucerías</option>
+                    {sucursalesFiltradas.map(s => (
+                      <option key={s.id} value={s.id}>{s.nombre}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="tamano" className="block text-sm font-medium text-gray-700 mb-2">Tamaño aproximado</label>
+                  <label htmlFor="tamano" className="block text-sm font-medium text-gray-700 mb-2">Tamaño de bodega</label>
                   <select
                     id="tamano"
                     value={tamano}
@@ -149,16 +166,9 @@ export default function ContactoCliente({ initialSucursal = '' }: { initialSucur
                     className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none bg-white"
                   >
                     <option value="">Aún no lo sé, necesito asesoría</option>
-                    <option value="1.75">1.75 m²</option>
-                    <option value="3.5">3.5 m²</option>
-                    <option value="7">7 m²</option>
-                    <option value="8">8 m²</option>
-                    <option value="9">9 m²</option>
-                    <option value="10">10 m²</option>
-                    <option value="11">11 m²</option>
-                    <option value="15">15 m²</option>
-                    <option value="30">30 m²</option>
-                    <option value="oficina">Bodega con Oficina</option>
+                    {allTamanos.map(t => (
+                      <option key={t.id} value={t.id}>{t.label}</option>
+                    ))}
                   </select>
                 </div>
               </div>

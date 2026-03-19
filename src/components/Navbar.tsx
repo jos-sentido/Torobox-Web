@@ -28,10 +28,11 @@ export default function Navbar() {
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" onClick={handleLinkClick}>
               <Image
-                src="/logos/TOROBOX PNG.PNG"
-                alt="Logo ToroBox"
-                width={150}
-                height={50}
+                src="/logos/logo-torobox.png"
+                alt="ToroBox — Renta de Mini Bodegas en México"
+                width={600}
+                height={92}
+                quality={100}
                 className="object-contain h-12 w-auto"
                 priority
               />

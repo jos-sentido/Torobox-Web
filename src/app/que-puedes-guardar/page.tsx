@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Button from "@/components/Button";
-import Image from "next/image";
+import { PiCheckDuotone } from "react-icons/pi";
+
+export const metadata: Metadata = {
+  title: "Qué Puedes Guardar en tu Mini Bodega — ToroBox",
+  description:
+    "Muebles, inventario, archivo muerto, equipo deportivo y más. Conoce todo lo que puedes almacenar en una mini bodega ToroBox.",
+};
 
 export default function QuePuedesGuardarPage() {
   const categorias = [
@@ -36,7 +43,7 @@ export default function QuePuedesGuardarPage() {
               <ul className="space-y-4">
                 {cat.items.map((item, i) => (
                   <li key={i} className="flex items-start">
-                    <svg className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                    <PiCheckDuotone className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{item}</span>
                   </li>
                 ))}

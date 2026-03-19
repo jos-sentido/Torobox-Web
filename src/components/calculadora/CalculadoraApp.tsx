@@ -1,12 +1,24 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Unit, Branch, PlacedItem, ItemType } from './types';
 import { BRANCHES, ITEM_TYPES, PIXELS_PER_METER } from './constants';
 import Sidebar from './Sidebar';
 import CanvasArea from './CanvasArea';
 import StatsPanel from './StatsPanel';
 import { applyGravity } from './utils';
+import { autoArrange } from './binPacking';
+
+export interface AIAnalysis {
+  summary: string;
+  canOptimize: boolean;
+  itemsToRemove: string[];
+}
+
+export interface OverflowInfo {
+  items: PlacedItem[];
+  names: string[];
+}
 
 export default function CalculadoraApp() {
   const [selectedBranch, setSelectedBranch] = useState<Branch>(BRANCHES[0]);
@@ -14,23 +26,36 @@ export default function CalculadoraApp() {
   const [items, setItems] = useState<PlacedItem[]>([]);
   const [customItems, setCustomItems] = useState<ItemType[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [aiFeedback, setAiFeedback] = useState<string | null>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<AIAnalysis | null>(null);
+  const [overflowInfo, setOverflowInfo] = useState<OverflowInfo | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
   const [mobileTab, setMobileTab] = useState<'bodega' | 'objetos' | 'resumen'>('bodega');
 
-  // Combined list: predefined + custom
   const allItemTypes = useMemo(() => [...ITEM_TYPES, ...customItems], [customItems]);
+
+  // ── Toast system (replaces alert()) ─────────────────────────────
+  const showToast = useCallback((msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  }, []);
+
+  // ── Reset helpers ───────────────────────────────────────────────
+  const clearFeedback = useCallback(() => {
+    setAiAnalysis(null);
+    setOverflowInfo(null);
+  }, []);
 
   const handleSelectBranch = (branch: Branch) => {
     setSelectedBranch(branch);
     setSelectedUnit(branch.units[0]);
     setItems([]);
-    setAiFeedback(null);
+    clearFeedback();
   };
 
   const handleSelectUnit = (unit: Unit) => {
     setSelectedUnit(unit);
     setItems([]);
-    setAiFeedback(null);
+    clearFeedback();
   };
 
   const handleAddCustomItem = (item: ItemType) => {
@@ -39,7 +64,6 @@ export default function CalculadoraApp() {
 
   const handleDeleteCustomItem = (id: string) => {
     setCustomItems(prev => prev.filter(item => item.id !== id));
-    // Also remove any placed instances of this custom item
     setItems(prev => applyGravity(prev.filter(item => item.typeId !== id), undefined, allItemTypes));
   };
 
@@ -55,71 +79,64 @@ export default function CalculadoraApp() {
     };
   };
 
-  const handleDropItem = (typeId: string, x: number, y: number) => {
-    const itemType = allItemTypes.find(t => t.id === typeId);
-    if (!itemType) return;
-
+  /** Validate if item fits in unit — returns true if OK, shows toast if not */
+  const validateFit = (itemType: ItemType): { ok: boolean; rotation: number } => {
     const itemMin = Math.min(itemType.width, itemType.length);
     const itemMax = Math.max(itemType.width, itemType.length);
     const unitMin = Math.min(selectedUnit.width, selectedUnit.length);
     const unitMax = Math.max(selectedUnit.width, selectedUnit.length);
 
     if (itemMin > unitMin || itemMax > unitMax || itemType.height > selectedUnit.height) {
-      alert(`El objeto "${itemType.name}" es demasiado grande para esta bodega.`);
-      return;
+      showToast(`"${itemType.name}" es demasiado grande para esta bodega.`);
+      return { ok: false, rotation: 0 };
     }
 
-    let initialRotation = 0;
+    let rotation = 0;
     if (itemType.width > selectedUnit.width || itemType.length > selectedUnit.length) {
-      initialRotation = 90;
+      rotation = 90;
     }
+    return { ok: true, rotation };
+  };
 
-    const { x: cx, y: cy } = clampPosition(x, y, itemType.width, itemType.length, initialRotation);
+  const handleDropItem = (typeId: string, x: number, y: number) => {
+    const itemType = allItemTypes.find(t => t.id === typeId);
+    if (!itemType) return;
+    const { ok, rotation } = validateFit(itemType);
+    if (!ok) return;
+
+    const { x: cx, y: cy } = clampPosition(x, y, itemType.width, itemType.length, rotation);
     const newItem: PlacedItem = {
-      id: Math.random().toString(36).substring(2, 9),
+      id: crypto.randomUUID(),
       typeId,
       x: cx,
       y: cy,
-      rotation: initialRotation,
+      rotation,
       z: 9999,
     };
     setItems(prev => applyGravity([...prev, newItem], newItem.id, allItemTypes));
-    setAiFeedback(null);
+    clearFeedback();
   };
 
   const handleAddItem = (typeId: string) => {
     const itemType = allItemTypes.find(t => t.id === typeId);
     if (!itemType) return;
-
-    const itemMin = Math.min(itemType.width, itemType.length);
-    const itemMax = Math.max(itemType.width, itemType.length);
-    const unitMin = Math.min(selectedUnit.width, selectedUnit.length);
-    const unitMax = Math.max(selectedUnit.width, selectedUnit.length);
-
-    if (itemMin > unitMin || itemMax > unitMax || itemType.height > selectedUnit.height) {
-      alert(`El objeto "${itemType.name}" es demasiado grande para esta bodega.`);
-      return;
-    }
-
-    let initialRotation = 0;
-    if (itemType.width > selectedUnit.width || itemType.length > selectedUnit.length) {
-      initialRotation = 90;
-    }
+    const { ok, rotation } = validateFit(itemType);
+    if (!ok) return;
 
     const cx = (selectedUnit.width * PIXELS_PER_METER) / 2;
     const cy = (selectedUnit.length * PIXELS_PER_METER) / 2;
-    const { x, y } = clampPosition(cx, cy, itemType.width, itemType.length, initialRotation);
+    const { x, y } = clampPosition(cx, cy, itemType.width, itemType.length, rotation);
 
     const newItem: PlacedItem = {
-      id: Math.random().toString(36).substring(2, 9),
+      id: crypto.randomUUID(),
       typeId,
       x,
       y,
-      rotation: initialRotation,
+      rotation,
       z: 9999,
     };
     setItems(prev => applyGravity([...prev, newItem], newItem.id, allItemTypes));
-    setAiFeedback(null);
+    clearFeedback();
   };
 
   const handleItemMove = (id: string, x: number, y: number) => {
@@ -131,7 +148,7 @@ export default function CalculadoraApp() {
       const { x: cx, y: cy } = clampPosition(x, y, itemType.width, itemType.length, item.rotation);
       return applyGravity(prev.map(i => (i.id === id ? { ...i, x: cx, y: cy } : i)), id, allItemTypes);
     });
-    setAiFeedback(null);
+    clearFeedback();
   };
 
   const handleItemRotate = (id: string) => {
@@ -145,7 +162,7 @@ export default function CalculadoraApp() {
       const w = isRotated ? itemType.length : itemType.width;
       const h = isRotated ? itemType.width : itemType.length;
       if (w > selectedUnit.width || h > selectedUnit.length) {
-        alert(`El objeto "${itemType.name}" no cabe si se rota.`);
+        showToast(`"${itemType.name}" no cabe si se rota.`);
         return prev;
       }
       const { x: cx, y: cy } = clampPosition(item.x, item.y, itemType.width, itemType.length, newRotation);
@@ -155,22 +172,24 @@ export default function CalculadoraApp() {
         allItemTypes
       );
     });
-    setAiFeedback(null);
+    clearFeedback();
   };
 
   const handleItemDelete = (id: string) => {
     setItems(prev => applyGravity(prev.filter(item => item.id !== id), undefined, allItemTypes));
-    setAiFeedback(null);
+    clearFeedback();
   };
 
   const handleClearItems = () => {
+    if (items.length === 0) return;
     setItems([]);
-    setAiFeedback(null);
+    clearFeedback();
+    showToast('Bodega vaciada.');
   };
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
-    setAiFeedback(null);
+    setAiAnalysis(null);
     try {
       const itemDescriptions = items.map(item => {
         const type = allItemTypes.find(t => t.id === item.typeId);
@@ -195,16 +214,85 @@ export default function CalculadoraApp() {
       });
 
       const data = await res.json();
-      setAiFeedback(data.feedback ?? 'No se pudo generar un análisis.');
+      setAiAnalysis({
+        summary: data.summary ?? 'No se pudo generar un análisis.',
+        canOptimize: data.canOptimize ?? false,
+        itemsToRemove: data.itemsToRemove ?? [],
+      });
     } catch {
-      setAiFeedback('Ocurrió un error al analizar. Intenta de nuevo.');
+      setAiAnalysis({
+        summary: 'Ocurrió un error al analizar. Intenta de nuevo.',
+        canOptimize: false,
+        itemsToRemove: [],
+      });
     } finally {
       setIsAnalyzing(false);
     }
   };
 
+  const handleAutoArrange = () => {
+    const { arranged, overflow } = autoArrange(items, allItemTypes, selectedUnit);
+
+    setItems(arranged);
+
+    if (overflow.length > 0) {
+      const overflowNames = overflow.map(item => {
+        const type = allItemTypes.find(t => t.id === item.typeId);
+        return type?.name ?? item.typeId;
+      });
+      setOverflowInfo({ items: overflow, names: overflowNames });
+      setAiAnalysis({
+        summary: `Se acomodaron ${arranged.length} objetos. ${overflow.length} no cupieron.`,
+        canOptimize: false,
+        itemsToRemove: [],
+      });
+    } else {
+      setOverflowInfo(null);
+      setAiAnalysis({
+        summary: `Se acomodaron ${arranged.length} objetos de forma segura y óptima.`,
+        canOptimize: false,
+        itemsToRemove: [],
+      });
+    }
+  };
+
+  const handleRemoveOverflow = () => {
+    setOverflowInfo(null);
+    setAiAnalysis({
+      summary: 'Objetos eliminados. Tu bodega está optimizada.',
+      canOptimize: false,
+      itemsToRemove: [],
+    });
+  };
+
+  const handleKeepOverflow = () => {
+    if (!overflowInfo) return;
+    const centerX = (selectedUnit.width * PIXELS_PER_METER) / 2;
+    const centerY = (selectedUnit.length * PIXELS_PER_METER) / 2;
+    const restored = overflowInfo.items.map(item => ({
+      ...item,
+      x: centerX,
+      y: centerY,
+      z: 9999,
+    }));
+    setItems(prev => applyGravity([...prev, ...restored], undefined, allItemTypes));
+    setOverflowInfo(null);
+    setAiAnalysis({
+      summary: 'Objetos restaurados. Algunos no caben — considera quitar algo o usar una bodega más grande.',
+      canOptimize: false,
+      itemsToRemove: [],
+    });
+  };
+
   return (
     <div className="flex flex-col h-[calc(100dvh-5rem)] bg-slate-50 text-slate-900 overflow-hidden">
+      {/* Toast notification */}
+      {toast && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl shadow-lg animate-fade-in">
+          {toast}
+        </div>
+      )}
+
       {/* Mobile tabs */}
       <div className="flex lg:hidden bg-white border-b border-slate-200 shrink-0 z-20 shadow-sm">
         {(['bodega', 'objetos', 'resumen'] as const).map(tab => (
@@ -223,7 +311,6 @@ export default function CalculadoraApp() {
       </div>
 
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
-        {/* Canvas */}
         <main className="order-1 lg:order-2 flex-none lg:flex-1 p-2 lg:p-4 h-[45vh] lg:h-auto bg-slate-50 border-b border-slate-200 lg:border-none overflow-hidden">
           <CanvasArea
             unit={selectedUnit}
@@ -255,8 +342,12 @@ export default function CalculadoraApp() {
           onClear={handleClearItems}
           onItemDelete={handleItemDelete}
           onAnalyze={handleAnalyze}
+          onAutoArrange={handleAutoArrange}
+          onRemoveOverflow={handleRemoveOverflow}
+          onKeepOverflow={handleKeepOverflow}
           isAnalyzing={isAnalyzing}
-          aiFeedback={aiFeedback}
+          aiAnalysis={aiAnalysis}
+          overflowInfo={overflowInfo}
           mobileTab={mobileTab}
         />
       </div>

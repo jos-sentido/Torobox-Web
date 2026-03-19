@@ -1,7 +1,13 @@
+import type { Metadata } from 'next';
 import SucursalPage from '@/components/SucursalPage';
 
-const e = (f: string) =>
-  `/images/sucursales/av-vallarta/${f.replace(/ /g, '%20').replace(/\(/g, '%28').replace(/\)/g, '%29')}`;
+export const metadata: Metadata = {
+  title: 'Mini Bodegas Av. Vallarta, Zapopan — ToroBox',
+  description:
+    'Renta de mini bodegas desde 1.75 m² en Av. Vallarta 7529, Zapopan. Acceso 24/7, vigilancia CCTV y cerca de vías rápidas. Cotiza hoy.',
+};
+
+const base = '/images/sucursales/av-vallarta';
 
 export default function SucursalAvVallartaPage() {
   return (
@@ -16,16 +22,16 @@ export default function SucursalAvVallartaPage() {
         email: 'ventasvallarta@torobox.com.mx',
         direccion: 'Av. Vallarta 7529, Col. Ciudad Granja, C.P. 45010, Zapopan, Jalisco',
         mapQuery: 'Torobox+Av.+Ignacio+L.+Vallarta+7529,+Granja,+45010+Zapopan,+Jal.,+M%C3%A9xico',
-        heroSrc: '/images/sucursales/av-vallarta/hero.jpg',
+        heroSrc: `${base}/hero.webp`,
         gallery: [
-          e('hero.jpg'),
-          e('hero2.jpg'),
-          e('WhatsApp Image 2025-06-09 at 5.46.33 PM.jpeg'),
-          e('WhatsApp Image 2025-06-09 at 5.48.01 PM.jpeg'),
-          e('WhatsApp Image 2025-06-10 at 10.16.31 AM.jpeg'),
-          e('WhatsApp Image 2025-06-10 at 10.16.32 AM.jpeg'),
-          e('WhatsApp Image 2025-07-15 at 3.11.07 PM.jpeg'),
-          e('WhatsApp Image 2025-07-22 at 9.50.16 AM.jpeg'),
+          `${base}/hero.webp`,
+          `${base}/hero2.webp`,
+          `${base}/2025-06-09-5.46.33-pm.webp`,
+          `${base}/2025-06-09-5.48.01-pm.webp`,
+          `${base}/2025-06-10-10.16.31-am.webp`,
+          `${base}/2025-06-10-10.16.32-am.webp`,
+          `${base}/2025-07-15-3.11.07-pm.webp`,
+          `${base}/2025-07-22-9.50.16-am.webp`,
         ],
         servicios: [
           'Acceso 24/7',

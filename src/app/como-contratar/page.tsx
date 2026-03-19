@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Button from "@/components/Button";
+
+export const metadata: Metadata = {
+  title: "Cómo Contratar tu Mini Bodega — ToroBox",
+  description:
+    "Contrata tu mini bodega en 5 pasos: contacto, asesoría de tamaño, documentación, firma de contrato y acceso inmediato. Proceso rápido y sin complicaciones.",
+};
 
 export default function ComoContratarPage() {
   const steps = [
@@ -49,7 +56,7 @@ export default function ComoContratarPage() {
 
         <div className="mt-16 text-center">
           <h2 className="text-3xl font-bold mb-8 text-brand-black">¿Listo para comenzar tu contratación?</h2>
-          <Button href="/contacto" className="bg-brand-red hover:bg-brand-red-hover text-white px-10 py-5 text-lg shadow-xl shadow-red-500/20">
+          <Button href="/contacto" variant="primary" className="px-10 py-5 text-lg shadow-xl shadow-red-500/20">
             Ir a formulario de contacto
           </Button>
         </div>

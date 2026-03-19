@@ -10,11 +10,12 @@ export default function Footer() {
           <div className="space-y-6">
             <Link href="/" className="inline-block bg-white p-2 rounded">
               <Image
-                src="/logos/TOROBOX PNG.PNG"
-                alt="Logo ToroBox"
-                width={120}
-                height={40}
-                className="object-contain"
+                src="/logos/logo-torobox.png"
+                alt="ToroBox — Renta de Mini Bodegas en México"
+                width={480}
+                height={74}
+                quality={100}
+                className="object-contain h-10 w-auto"
               />
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed">

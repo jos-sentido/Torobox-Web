@@ -36,18 +36,21 @@ export function doIntersect(item1: PlacedItem, item2: PlacedItem, allItemTypes: 
 }
 
 export function canStack(bottomTypeId: string, topTypeId: string): boolean {
-  // Custom items (prefix 'custom-') can support/be placed on anything
-  if (bottomTypeId.startsWith('custom-') || topTypeId.startsWith('custom-')) return true;
+  // Custom items: only boxes can go on top, and custom items can go on stable surfaces
+  if (bottomTypeId.startsWith('custom-')) return topTypeId === 'box';
+  if (topTypeId.startsWith('custom-')) return false; // custom items stay on floor
 
+  // Conservative real-world rules: ONLY boxes stack on flat, stable surfaces
+  // Bikes, chairs, sofas, tables, fridges, cabinets → always floor
   const rules: Record<string, string[]> = {
-    box: ['box'],
-    sofa: ['box', 'bike'],
-    chair: [],
-    table: ['box', 'chair'],
-    cabinet: ['box'],
-    bike: [],
-    fridge: ['box'],
-    bed: ['box', 'bike', 'chair'],
+    box: ['box'],        // Boxes stack on boxes (up to max level limit)
+    bed: ['box'],        // Flat surface — only boxes
+    table: ['box'],      // Flat surface — only boxes
+    sofa: ['box'],       // Only small boxes on top
+    cabinet: ['box'],    // Flat top — only boxes
+    fridge: ['box'],     // Flat top — only boxes
+    chair: [],           // Nothing on chairs
+    bike: [],            // Nothing on bikes
   };
   return rules[bottomTypeId]?.includes(topTypeId) || false;
 }

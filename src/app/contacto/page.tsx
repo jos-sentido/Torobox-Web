@@ -3,10 +3,11 @@ import ContactoCliente from './ContactoCliente';
 export default async function ContactoPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sucursal?: string }>;
+  searchParams: Promise<{ sucursal?: string; tamano?: string }>;
 }) {
   const params = await searchParams;
   const initialSucursal = params.sucursal ?? '';
+  const initialTamano = params.tamano ?? '';
 
   return (
     <div className="bg-white min-h-screen">
@@ -20,7 +21,7 @@ export default async function ContactoPage({
         </div>
       </div>
 
-      <ContactoCliente initialSucursal={initialSucursal} />
+      <ContactoCliente initialSucursal={initialSucursal} initialTamano={initialTamano} />
     </div>
   );
 }

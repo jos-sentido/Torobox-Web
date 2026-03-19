@@ -1,39 +1,52 @@
+import type { Metadata } from "next";
 import Button from "@/components/Button";
+
+export const metadata: Metadata = {
+  title: "Tamaños de Mini Bodegas — ToroBox",
+  description:
+    "Bodegas desde 1.75 m² hasta 30 m². Encuentra el tamaño ideal para tu hogar, negocio o archivo. Cotiza en Guadalajara, Zapopan, Tlajomulco y Bucerías.",
+};
 
 export default function TamanosPage() {
   const tamanos = [
     {
       size: "1.75 m²",
+      value: "1.75",
       title: "Mini Bodega Estándar",
       caben: "Cajas pequeñas, archivo muerto, maletas, bicicletas, decoraciones de temporada.",
       recomendado: "Ideal para liberar espacio de clósets en casa o pequeños excedentes de oficina.",
     },
     {
       size: "3.5 m²",
+      value: "3.5",
       title: "Bodega Chica",
       caben: "Muebles de una recámara pequeña, electrodomésticos, cajas medianas.",
       recomendado: "Equivalente a la capacidad de una van de carga. Perfecto para remodelaciones.",
     },
     {
       size: "7.0 m²",
+      value: "7",
       title: "Bodega Mediana",
       caben: "Muebles de un departamento de 1-2 recámaras, sofás, colchones, comedor.",
       recomendado: "Excelente para mudanzas de departamentos pequeños o inventario medio de negocio.",
     },
     {
       size: "10.0 m²",
+      value: "10",
       title: "Bodega Amplia",
       caben: "Contenido de una casa de 2-3 recámaras, archivo masivo, equipo de trabajo.",
       recomendado: "Optimo para pequeños negocios de e-commerce y empresas de construcción.",
     },
     {
       size: "15.0 m²",
+      value: "15",
       title: "Bodega Grande",
       caben: "Muebles de una casa de 3-4 recámaras, inventario de tienda, maquinaria.",
       recomendado: "Ideal para comerciantes, exceso de mercancía y contratistas.",
     },
     {
       size: "30.0 m²",
+      value: "30",
       title: "Bodega Industrial / Comercial",
       caben: "Inventario corporativo, vehículos pequeños, mudanzas masivas, material pesado.",
       recomendado: "Nuestra solución más grande, diseñada para logística de empresas o gran volumen.",
@@ -76,7 +89,7 @@ export default function TamanosPage() {
                 </div>
                 
                 <div className="mt-auto">
-                  <Button href="/contacto" fullWidth variant="primary">Solicitar Información</Button>
+                  <Button href={`/contacto?tamano=${t.value}`} fullWidth variant="primary">Solicitar Información</Button>
                 </div>
               </div>
             </div>

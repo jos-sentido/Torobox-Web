@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Button from "@/components/Button";
 import Image from "next/image";
-import Link from "next/link";
+import { PiMapPinDuotone, PiPhoneDuotone, PiEnvelopeDuotone } from "react-icons/pi";
+
+export const metadata: Metadata = {
+  title: "Sucursales de Mini Bodegas — ToroBox",
+  description:
+    "Encuentra tu mini bodega más cercana en Guadalajara, Zapopan, Tlajomulco y Bucerías. Instalaciones con seguridad 24/7, acceso controlado y estacionamiento.",
+};
 
 const sucursales = [
   {
@@ -10,7 +17,8 @@ const sucursales = [
     email: "ventasvallarta@torobox.com.mx",
     direccion: "Av. Vallarta 7529, Col. Ciudad Granja, C.P. 45010, Zapopan, Jalisco",
     mapQuery: "Torobox+Av.+Ignacio+L.+Vallarta+7529,+Granja,+45010+Zapopan,+Jal.,+M%C3%A9xico",
-    img: "/images/sucursales/av-vallarta/hero.jpg",
+    img: "/images/sucursales/av-vallarta/hero.webp",
+    alt: "Fachada de la sucursal ToroBox Av. Vallarta en Zapopan con acceso vehicular",
     caracteristicas: ["Acceso 24/7", "Bodegas desde 1.75m²", "Cerca de vías rápidas"],
   },
   {
@@ -20,7 +28,8 @@ const sucursales = [
     email: "karen.diaz@torobox.com.mx",
     direccion: "Prol. Jesús 3777, Col. Los Girasoles, C.P. 45136, Zapopan, Jalisco",
     mapQuery: "Torobox+Prol.+Jes%C3%BAs+3777,+Los+Girasoles,+45136+Zapopan,+Jal.,+M%C3%A9xico",
-    img: "/images/sucursales/zona-real/hero.jpg",
+    img: "/images/sucursales/zona-real/hero.webp",
+    alt: "Instalaciones de la sucursal ToroBox Zona Real en Zapopan con estacionamiento amplio",
     caracteristicas: ["Seguridad Premium", "Bodegas corporativas", "Amplio estacionamiento"],
   },
   {
@@ -30,7 +39,8 @@ const sucursales = [
     email: "ventaspuntosur@torobox.com.mx",
     direccion: "Av. Adolfo López Mateos Sur 5540, Col. Los Gavilanes, C.P. 45645, Tlajomulco, Jalisco",
     mapQuery: "Torobox+Av.+Adolfo+L%C3%B3pez+Mateos+Sur+5540,+Los+Gavilanes,+45645+Tlajomulco+de+Z%C3%BA%C3%B1iga,+Jal.,+M%C3%A9xico",
-    img: "/images/sucursales/punto-sur/hero.jpg",
+    img: "/images/sucursales/punto-sur/hero.webp",
+    alt: "Entrada de la sucursal ToroBox Punto Sur en Tlajomulco con acceso controlado",
     caracteristicas: ["Pensión vehicular", "Acceso controlado", "Ideal para hogar"],
   },
   {
@@ -40,7 +50,8 @@ const sucursales = [
     email: null,
     direccion: "Carr. Tepic-Vallarta, Bucerías, Nayarit",
     mapQuery: "Buce%C3%ADas,+Nayarit,+M%C3%A9xico",
-    img: "/images/sucursales/bucerias/hero.jpg",
+    img: "/images/sucursales/bucerias/hero.webp",
+    alt: "Sucursal ToroBox Bucerías en Nayarit, almacenamiento vacacional cerca de la playa",
     caracteristicas: ["Almacén vacacional", "Clima controlado", "Espacios para botes y motos"],
   },
 ];
@@ -71,8 +82,9 @@ export default function SucursalesPage() {
                 <div className="relative h-56 sm:h-64 w-full bg-gray-200">
                   <Image
                     src={suc.img}
-                    alt={`Sucursal ToroBox ${suc.nombre}`}
+                    alt={suc.alt}
                     fill
+                    sizes="(max-width: 1024px) 100vw, 66vw"
                     className="object-cover"
                   />
                 </div>
@@ -85,9 +97,7 @@ export default function SucursalesPage() {
                     {/* Address */}
                     <div className="flex items-start gap-3 mb-3">
                       <div className="shrink-0 w-8 h-8 bg-red-50 border border-red-100 rounded-lg flex items-center justify-center text-brand-red mt-0.5">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                        </svg>
+                        <PiMapPinDuotone className="w-4 h-4" />
                       </div>
                       <div>
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Dirección</p>
@@ -99,9 +109,7 @@ export default function SucursalesPage() {
                     {suc.telefono && (
                       <div className="flex items-start gap-3 mb-3">
                         <div className="shrink-0 w-8 h-8 bg-red-50 border border-red-100 rounded-lg flex items-center justify-center text-brand-red mt-0.5">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                          </svg>
+                          <PiPhoneDuotone className="w-4 h-4" />
                         </div>
                         <div>
                           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Teléfono</p>
@@ -116,9 +124,7 @@ export default function SucursalesPage() {
                     {suc.email && (
                       <div className="flex items-start gap-3 mb-5">
                         <div className="shrink-0 w-8 h-8 bg-red-50 border border-red-100 rounded-lg flex items-center justify-center text-brand-red mt-0.5">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                          </svg>
+                          <PiEnvelopeDuotone className="w-4 h-4" />
                         </div>
                         <div>
                           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Correo</p>
@@ -140,12 +146,9 @@ export default function SucursalesPage() {
                     </ul>
                   </div>
 
-                  <Link
-                    href={`/sucursales/${suc.id}`}
-                    className="inline-flex items-center justify-center font-medium rounded-md transition-colors duration-200 border-2 border-brand-red text-brand-red hover:bg-brand-red hover:text-white px-6 py-2.5 text-center"
-                  >
+                  <Button href={`/sucursales/${suc.id}`} variant="secondary">
                     Ver Detalles de Sucursal
-                  </Link>
+                  </Button>
                 </div>
               </div>
 

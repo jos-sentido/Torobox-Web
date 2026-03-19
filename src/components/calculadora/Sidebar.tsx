@@ -1,10 +1,38 @@
 'use client';
 
 import { useState } from 'react';
+import type { ComponentType } from 'react';
 import { Branch, Unit, ItemType } from './types';
 import { BRANCHES, ITEM_TYPES } from './constants';
-import { Plus, Trash2, ChevronDown, ChevronUp, PenLine } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import {
+  PiPlusDuotone,
+  PiTrashDuotone,
+  PiCaretDownDuotone,
+  PiCaretUpDuotone,
+  PiPencilLineDuotone,
+  PiCubeDuotone,
+  PiPackageDuotone,
+  PiCouchDuotone,
+  PiArmchairDuotone,
+  PiTableDuotone,
+  PiArchiveDuotone,
+  PiBicycleDuotone,
+  PiLockersDuotone,
+  PiBedDuotone,
+} from 'react-icons/pi';
+import type { IconBaseProps } from 'react-icons';
+
+// Map iconName strings from constants to Phosphor Duotone components
+const ICON_MAP: Record<string, ComponentType<IconBaseProps>> = {
+  Package: PiPackageDuotone,
+  Couch: PiCouchDuotone,
+  Armchair: PiArmchairDuotone,
+  Table: PiTableDuotone,
+  Archive: PiArchiveDuotone,
+  Bicycle: PiBicycleDuotone,
+  Lockers: PiLockersDuotone,
+  Bed: PiBedDuotone,
+};
 
 const CUSTOM_COLORS = [
   '#fb923c', '#a3e635', '#22d3ee', '#e879f9',
@@ -79,8 +107,6 @@ export default function Sidebar({
     setShowForm(false);
   };
 
-  const allItems = [...ITEM_TYPES, ...customItems];
-
   return (
     <div
       className={`order-2 lg:order-1 w-full lg:w-72 xl:w-80 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex-col overflow-y-auto shrink-0 ${
@@ -135,9 +161,7 @@ export default function Sidebar({
         {/* Predefined items */}
         <div className="grid grid-cols-3 lg:grid-cols-2 gap-2 mb-4">
           {ITEM_TYPES.map(item => {
-            const Icon = item.iconName
-              ? ((LucideIcons as Record<string, React.ComponentType<{ size?: number }>>)[item.iconName] ?? LucideIcons.Box)
-              : LucideIcons.Box;
+            const Icon = (item.iconName && ICON_MAP[item.iconName]) || PiCubeDuotone;
             return (
               <div
                 key={item.id}
@@ -183,14 +207,14 @@ export default function Sidebar({
                     className="absolute top-1 right-1 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                     title="Eliminar objeto"
                   >
-                    <Trash2 size={11} />
+                    <PiTrashDuotone size={11} />
                   </button>
 
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center mb-1 text-white shadow-sm"
                     style={{ backgroundColor: item.color }}
                   >
-                    <PenLine size={14} />
+                    <PiPencilLineDuotone size={14} />
                   </div>
                   <span className="text-[10px] font-medium text-slate-700 text-center leading-tight line-clamp-2">{item.name}</span>
                   <span className="text-[9px] text-slate-400 mt-0.5">{item.width}×{item.length}m</span>
@@ -207,10 +231,10 @@ export default function Sidebar({
             className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
           >
             <span className="flex items-center gap-1.5">
-              <Plus size={14} className="text-brand-red" />
+              <PiPlusDuotone size={14} className="text-brand-red" />
               Crear objeto personalizado
             </span>
-            {showForm ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+            {showForm ? <PiCaretUpDuotone size={14} /> : <PiCaretDownDuotone size={14} />}
           </button>
 
           {showForm && (

@@ -1,7 +1,13 @@
+import type { Metadata } from 'next';
 import SucursalPage from '@/components/SucursalPage';
 
-const e = (f: string) =>
-  `/images/sucursales/punto-sur/${f.replace(/ /g, '%20').replace(/\(/g, '%28').replace(/\)/g, '%29')}`;
+export const metadata: Metadata = {
+  title: 'Mini Bodegas Punto Sur, Tlajomulco — ToroBox',
+  description:
+    'Renta de mini bodegas y pensión vehicular en López Mateos Sur 5540, Tlajomulco. Acceso controlado y seguridad privada. Cotiza hoy.',
+};
+
+const base = '/images/sucursales/punto-sur';
 
 export default function SucursalPuntoSurPage() {
   return (
@@ -16,16 +22,16 @@ export default function SucursalPuntoSurPage() {
         email: 'ventaspuntosur@torobox.com.mx',
         direccion: 'Av. Adolfo López Mateos Sur 5540, Col. Los Gavilanes, C.P. 45645, Tlajomulco, Jalisco',
         mapQuery: 'Torobox+Av.+Adolfo+L%C3%B3pez+Mateos+Sur+5540,+Los+Gavilanes,+45645+Tlajomulco+de+Z%C3%BA%C3%B1iga,+Jal.,+M%C3%A9xico',
-        heroSrc: '/images/sucursales/punto-sur/hero.jpg',
+        heroSrc: `${base}/hero.webp`,
         gallery: [
-          e('hero.jpg'),
-          e('hero2.jpg'),
-          e('img1.jpg'),
-          e('img2.jpg'),
-          e('TOROLOPEZ.jpg'),
-          e('WhatsApp Image 2025-07-15 at 3.13.56 PM.jpeg'),
-          e('WhatsApp Image 2025-07-28 at 11.04.54 AM.jpeg'),
-          e('WhatsApp Image 2025-08-29 at 10.18.23 AM.jpeg'),
+          `${base}/hero.webp`,
+          `${base}/hero2.webp`,
+          `${base}/img1.webp`,
+          `${base}/img2.webp`,
+          `${base}/torolopez.webp`,
+          `${base}/2025-07-15-3.13.56-pm.webp`,
+          `${base}/2025-07-28-11.04.54-am.webp`,
+          `${base}/2025-08-29-10.18.23-am.webp`,
         ],
         servicios: [
           'Pensión vehicular disponible',

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
+import { PiCaretDownDuotone } from "react-icons/pi";
 
 export default function FAQPage() {
   const faqs = [
@@ -43,7 +44,7 @@ export default function FAQPage() {
                   >
                     <span className={`font-bold text-lg ${isOpen ? 'text-brand-red' : 'text-brand-black'}`}>{faq.q}</span>
                     <span className={`ml-4 transform transition-transform duration-200 ${isOpen ? 'rotate-180 text-brand-red' : 'text-gray-400'}`}>
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                      <PiCaretDownDuotone className="w-6 h-6" />
                     </span>
                   </button>
                   <div 

@@ -5,22 +5,23 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const photos = [
-  '/images/sucursales/zona-real/img1.jpg',
-  '/images/sucursales/av-vallarta/hero2.jpg',
-  '/images/sucursales/punto-sur/TOROLOPEZ.jpg',
-  '/images/sucursales/bucerias/hero.jpg',
-  '/images/sucursales/punto-sur/img1.jpg',
-  '/images/sucursales/zona-real/img2.jpg',
-  '/images/sucursales/zona-real/img3.jpg',
+  { src: '/images/sucursales/zona-real/img1.webp', alt: 'Interior de mini bodegas ToroBox Zona Real con pasillos iluminados' },
+  { src: '/images/sucursales/av-vallarta/hero2.webp', alt: 'Vista panorámica de las instalaciones ToroBox Av. Vallarta' },
+  { src: '/images/sucursales/punto-sur/torolopez.webp', alt: 'Fachada de la sucursal ToroBox Punto Sur en Tlajomulco' },
+  { src: '/images/sucursales/bucerias/hero.webp', alt: 'Mini bodegas ToroBox Bucerías con acceso para remolques' },
+  { src: '/images/sucursales/punto-sur/img1.webp', alt: 'Área de carga y pasillos de bodegas ToroBox Punto Sur' },
+  { src: '/images/sucursales/zona-real/img2.webp', alt: 'Puertas de seguridad de mini bodegas ToroBox Zona Real' },
+  { src: '/images/sucursales/zona-real/img3.webp', alt: 'Estacionamiento y acceso vehicular de ToroBox Zona Real' },
 ];
 
 export default function GaleriaHome() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const open = (i: number) => setLightboxIndex(i);
+  const open = (idx: number) => setLightboxIndex(idx);
   const close = () => setLightboxIndex(null);
-  const prev = useCallback(() => setLightboxIndex(i => i !== null ? (i - 1 + photos.length) % photos.length : 0), []);
-  const next = useCallback(() => setLightboxIndex(i => i !== null ? (i + 1) % photos.length : 0), []);
+  const total = photos.length;
+  const prev = useCallback(() => setLightboxIndex(i => i !== null ? (i - 1 + total) % total : 0), [total]);
+  const next = useCallback(() => setLightboxIndex(i => i !== null ? (i + 1) % total : 0), [total]);
 
   useEffect(() => {
     if (lightboxIndex === null) return;
@@ -46,7 +47,7 @@ export default function GaleriaHome() {
           onClick={() => open(0)}
           className="col-span-2 relative h-64 md:h-80 rounded-2xl overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red"
         >
-          <Image src={photos[0]} alt="Instalaciones Torobox" fill className="object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" sizes="(max-width: 768px) 100vw, 50vw" />
+          <Image src={photos[0].src} alt={photos[0].alt} fill className="object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" sizes="(max-width: 768px) 100vw, 50vw" />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors flex items-center justify-center">
             <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 backdrop-blur-sm rounded-full p-3">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,7 +62,7 @@ export default function GaleriaHome() {
             onClick={() => open(i)}
             className="relative h-64 md:h-80 rounded-2xl overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red"
           >
-            <Image src={photos[i]} alt="Bodega Torobox" fill className="object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" sizes="(max-width: 768px) 50vw, 25vw" />
+            <Image src={photos[i].src} alt={photos[i].alt} fill className="object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" sizes="(max-width: 768px) 50vw, 25vw" />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors flex items-center justify-center">
               <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 backdrop-blur-sm rounded-full p-3">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,13 +73,13 @@ export default function GaleriaHome() {
           </button>
         ))}
         {/* Row 2: 4 equal */}
-        {photos.slice(3).map((src, i) => (
+        {photos.slice(3).map((photo, i) => (
           <button
             key={i}
             onClick={() => open(i + 3)}
             className="relative h-48 md:h-56 rounded-2xl overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red"
           >
-            <Image src={src} alt="Bodega Torobox" fill className="object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" sizes="(max-width: 768px) 50vw, 25vw" />
+            <Image src={photo.src} alt={photo.alt} fill className="object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" sizes="(max-width: 768px) 50vw, 25vw" />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors flex items-center justify-center">
               <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 backdrop-blur-sm rounded-full p-3">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,7 +120,7 @@ export default function GaleriaHome() {
 
           {/* Counter */}
           <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/60 text-sm font-medium tabular-nums pointer-events-none">
-            {lightboxIndex + 1} / {photos.length}
+            {lightboxIndex + 1} / {total}
           </div>
 
           {/* Prev */}
@@ -139,8 +140,8 @@ export default function GaleriaHome() {
             onClick={(e) => e.stopPropagation()}
           >
             <Image
-              src={photos[lightboxIndex]}
-              alt="Instalaciones Torobox"
+              src={photos[lightboxIndex].src}
+              alt={photos[lightboxIndex].alt}
               fill
               className="object-contain"
               sizes="100vw"
@@ -161,7 +162,7 @@ export default function GaleriaHome() {
 
           {/* Thumbnail strip */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 px-4">
-            {photos.map((src, i) => (
+            {photos.map((photo, i) => (
               <button
                 key={i}
                 onClick={(e) => { e.stopPropagation(); setLightboxIndex(i); }}
@@ -169,7 +170,7 @@ export default function GaleriaHome() {
                   i === lightboxIndex ? 'border-white scale-110' : 'border-transparent opacity-50 hover:opacity-80'
                 }`}
               >
-                <Image src={src} alt="" fill className="object-cover" sizes="48px" />
+                <Image src={photo.src} alt="" fill className="object-cover" sizes="48px" />
               </button>
             ))}
           </div>

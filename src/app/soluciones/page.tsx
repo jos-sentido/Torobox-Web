@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Button from "@/components/Button";
+import { PiCheckCircleDuotone, PiBuildingOfficeDuotone, PiCarProfileDuotone } from "react-icons/pi";
+
+export const metadata: Metadata = {
+  title: "Soluciones de Almacenamiento Empresarial — ToroBox",
+  description:
+    "Bodega con oficina integrada para PyMES y pensión vehicular para autos, flotillas y remolques. Soluciones a la medida en Guadalajara, Zapopan y Bucerías.",
+};
 
 export default function SolucionesPage() {
   return (
@@ -13,13 +21,12 @@ export default function SolucionesPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        
+
         {/* Bodega con Oficina */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-16 flex flex-col lg:flex-row">
           <div className="w-full lg:w-1/2 bg-gray-200 relative min-h-[300px]">
-            {/* Aqui iría imagen real de bodega u oficina */}
             <div className="absolute inset-0 bg-brand-red flex items-center justify-center opacity-90 text-white p-8 text-center">
-              <svg className="w-20 h-20 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+              <PiBuildingOfficeDuotone className="w-20 h-20 opacity-50" />
             </div>
           </div>
           <div className="w-full lg:w-1/2 p-10 lg:p-14 flex flex-col justify-center">
@@ -31,7 +38,7 @@ export default function SolucionesPage() {
             <ul className="space-y-3 mb-8">
               {['Espacio híbrido configurable', 'Conexión a internet dedicada disponible', 'Recepción de paquetería', 'Acceso a sanitarios y áreas comunes'].map((ben, i) => (
                  <li key={i} className="flex items-start">
-                    <svg className="w-5 h-5 text-brand-red mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                    <PiCheckCircleDuotone className="w-5 h-5 text-brand-red mr-3 flex-shrink-0 mt-1" />
                     <span className="text-gray-700">{ben}</span>
                  </li>
               ))}
@@ -45,9 +52,8 @@ export default function SolucionesPage() {
         {/* Pensión o Resguardo de Autos */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col lg:flex-row-reverse">
           <div className="w-full lg:w-1/2 bg-gray-200 relative min-h-[300px]">
-            {/* Aqui iría imagen real de autos */}
             <div className="absolute inset-0 bg-brand-black flex items-center justify-center opacity-90 text-white p-8 text-center">
-               <svg className="w-20 h-20 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+               <PiCarProfileDuotone className="w-20 h-20 opacity-50" />
             </div>
           </div>
           <div className="w-full lg:w-1/2 p-10 lg:p-14 flex flex-col justify-center">
@@ -59,7 +65,7 @@ export default function SolucionesPage() {
             <ul className="space-y-3 mb-8">
               {['Espacios a pie de calle o planta baja', 'Maniobra sencilla', 'Seguridad CCTV 24/7 de alta definición', 'Control estricto de accesos'].map((ben, i) => (
                  <li key={i} className="flex items-start">
-                    <svg className="w-5 h-5 text-brand-red mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                    <PiCheckCircleDuotone className="w-5 h-5 text-brand-red mr-3 flex-shrink-0 mt-1" />
                     <span className="text-gray-700">{ben}</span>
                  </li>
               ))}

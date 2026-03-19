@@ -54,12 +54,12 @@ export const BRANCHES: Branch[] = [
 
 export const ITEM_TYPES: ItemType[] = [
   { id: 'box', name: 'Caja Estándar', width: 0.5, length: 0.5, height: 0.5, color: '#fbbf24', iconName: 'Package' },
-  { id: 'sofa', name: 'Sillón 3 Plazas', width: 2.2, length: 0.9, height: 0.9, color: '#f87171', iconName: 'Sofa' },
+  { id: 'sofa', name: 'Sillón 3 Plazas', width: 2.2, length: 0.9, height: 0.9, color: '#f87171', iconName: 'Couch' },
   { id: 'chair', name: 'Silla', width: 0.5, length: 0.5, height: 1.0, color: '#60a5fa', iconName: 'Armchair' },
   { id: 'table', name: 'Mesa de Comedor', width: 1.6, length: 0.9, height: 0.8, color: '#34d399', iconName: 'Table' },
   { id: 'cabinet', name: 'Archivero', width: 0.5, length: 0.6, height: 1.3, color: '#a78bfa', iconName: 'Archive' },
-  { id: 'bike', name: 'Bicicleta', width: 1.8, length: 0.6, height: 1.0, color: '#9ca3af', iconName: 'Bike' },
-  { id: 'fridge', name: 'Refrigerador', width: 0.8, length: 0.8, height: 1.8, color: '#e2e8f0', iconName: 'Refrigerator' },
+  { id: 'bike', name: 'Bicicleta', width: 1.8, length: 0.6, height: 1.0, color: '#9ca3af', iconName: 'Bicycle' },
+  { id: 'fridge', name: 'Refrigerador', width: 0.8, length: 0.8, height: 1.8, color: '#e2e8f0', iconName: 'Lockers' },
   { id: 'bed', name: 'Cama Matrimonial', width: 1.4, length: 1.9, height: 0.6, color: '#f472b6', iconName: 'Bed' },
 ];
 

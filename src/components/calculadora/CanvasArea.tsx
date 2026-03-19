@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { Stage, Layer, Rect, Text, Group } from 'react-konva';
 import { Unit, PlacedItem, ItemType } from './types';
 import { ITEM_TYPES, PIXELS_PER_METER } from './constants';
@@ -26,6 +26,7 @@ export default function CanvasArea({
 }: CanvasAreaProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+  const lastTapRef = useRef<{ id: string; time: number } | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -40,6 +41,19 @@ export default function CanvasArea({
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
+
+  // Double-tap detection for mobile rotate
+  const handleTap = useCallback((id: string) => {
+    const now = Date.now();
+    const last = lastTapRef.current;
+    if (last && last.id === id && now - last.time < 350) {
+      // Double tap — rotate
+      onItemRotate(id);
+      lastTapRef.current = null;
+    } else {
+      lastTapRef.current = { id, time: now };
+    }
+  }, [onItemRotate]);
 
   const unitWidthPx = unit.width * PIXELS_PER_METER;
   const unitLengthPx = unit.length * PIXELS_PER_METER;
@@ -125,6 +139,11 @@ export default function CanvasArea({
             const isOverHeight = itemZ + itemType.height > unit.height;
             const hasError = isOverHeight || item.stackingError;
 
+            // Adaptive font size: shrink for small items
+            const minDim = Math.min(w, h);
+            const nameFontSize = Math.max(8, Math.min(12, minDim / 4)) / scale;
+            const zFontSize = Math.max(7, Math.min(11, minDim / 5)) / scale;
+
             return (
               <Group
                 key={item.id}
@@ -138,11 +157,12 @@ export default function CanvasArea({
                   onItemMove(item.id, e.target.x() - offsetX, e.target.y() - offsetY);
                 }}
                 onDblClick={() => onItemRotate(item.id)}
+                onDblTap={() => onItemRotate(item.id)}
                 onContextMenu={e => {
                   e.evt.preventDefault();
                   onItemDelete(item.id);
                 }}
-                onTap={() => onItemRotate(item.id)}
+                onTap={() => handleTap(item.id)}
               >
                 <Rect
                   width={w}
@@ -163,9 +183,11 @@ export default function CanvasArea({
                   align="center"
                   verticalAlign="middle"
                   fill="#ffffff"
-                  fontSize={Math.max(12, 12 / scale)}
+                  fontSize={nameFontSize}
                   fontStyle="bold"
                   padding={4 / scale}
+                  ellipsis={true}
+                  wrap="none"
                 />
                 {itemZ > 0 && (
                   <Text
@@ -175,7 +197,7 @@ export default function CanvasArea({
                     width={w}
                     align="center"
                     fill="#ffffff"
-                    fontSize={Math.max(11, 11 / scale)}
+                    fontSize={zFontSize}
                     fontStyle="bold"
                     shadowColor="black"
                     shadowBlur={4 / scale}
@@ -189,7 +211,7 @@ export default function CanvasArea({
 
       <div className="absolute bottom-4 right-4 bg-white/80 backdrop-blur-sm px-3 py-2 rounded-lg text-xs font-medium text-slate-600 shadow-sm pointer-events-none">
         <span className="hidden lg:inline">Doble clic para rotar • Clic derecho para eliminar</span>
-        <span className="inline lg:hidden">Toca para rotar • Elimina desde la lista</span>
+        <span className="inline lg:hidden">Doble toque para rotar • Elimina desde la lista</span>
       </div>
     </div>
   );

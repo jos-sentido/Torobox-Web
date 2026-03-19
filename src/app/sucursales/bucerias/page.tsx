@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
 import SucursalPage from '@/components/SucursalPage';
+
+export const metadata: Metadata = {
+  title: 'Mini Bodegas Bucerías, Nayarit — ToroBox',
+  description:
+    'Almacenamiento vacacional y clima controlado en Bucerías, Nayarit. Espacios para botes, motos y equipos marinos. Cotiza hoy.',
+};
 
 export default function SucursalBuceriasPage() {
   return (
@@ -13,16 +20,16 @@ export default function SucursalBuceriasPage() {
         email: null,
         direccion: 'Carr. Tepic-Vallarta, Bucerías, Nayarit',
         mapQuery: 'Buce%C3%ADas,+Nayarit,+M%C3%A9xico',
-        heroSrc: '/images/sucursales/bucerias/hero.jpg',
+        heroSrc: '/images/sucursales/bucerias/hero.webp',
         gallery: [
-          '/images/sucursales/bucerias/hero.jpg',
-          '/images/sucursales/bucerias/hero2.jpg',
-          '/images/sucursales/bucerias/IMG20260210162048.jpg',
-          '/images/sucursales/bucerias/IMG20260210162055.jpg',
-          '/images/sucursales/bucerias/IMG20260210162058.jpg',
-          '/images/sucursales/bucerias/IMG20260210162126.jpg',
-          '/images/sucursales/bucerias/IMG20260210162147.jpg',
-          '/images/sucursales/bucerias/IMG20260210162153.jpg',
+          '/images/sucursales/bucerias/hero.webp',
+          '/images/sucursales/bucerias/hero2.webp',
+          '/images/sucursales/bucerias/img20260210162048.webp',
+          '/images/sucursales/bucerias/img20260210162055.webp',
+          '/images/sucursales/bucerias/img20260210162058.webp',
+          '/images/sucursales/bucerias/img20260210162126.webp',
+          '/images/sucursales/bucerias/img20260210162147.webp',
+          '/images/sucursales/bucerias/img20260210162153.webp',
         ],
         servicios: [
           'Control de humedad',

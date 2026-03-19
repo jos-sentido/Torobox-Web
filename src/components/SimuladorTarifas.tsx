@@ -1,81 +1,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-
-// ─── Datos de precios reales (PDF Version T-40326) ───────────────────────────
-
-type Piso = 'alta' | 'baja';
-
-interface Bodega {
-  id: string;
-  label: string;
-  area?: number;
-  precios: Partial<Record<Piso, number>>;
-}
-
-interface Sucursal {
-  id: string;
-  nombre: string;
-  bodegas: Bodega[];
-}
-
-const SUCURSALES: Sucursal[] = [
-  {
-    id: 'vallarta',
-    nombre: 'Av. Vallarta',
-    bodegas: [
-      { id: '1.75', label: '1.75 m²', area: 1.75, precios: { alta: 900, baja: 750 } },
-      { id: '3.5',  label: '3.5 m²',  area: 3.5,  precios: { baja: 1700 } },
-      { id: '7',    label: '7 m²',    area: 7,    precios: { alta: 3150, baja: 2940 } },
-      { id: '10',   label: '10 m²',   area: 10,   precios: { alta: 4050, baja: 3780 } },
-      { id: '15',   label: '15 m²',   area: 15,   precios: { alta: 6750, baja: 6300 } },
-      { id: '30',   label: '30 m²',   area: 30,   precios: { alta: 13500 } },
-      { id: 'oficina', label: 'Bodega con Oficina', precios: { baja: 20416 } },
-    ],
-  },
-  {
-    id: 'zona-real',
-    nombre: 'Zona Real',
-    bodegas: [
-      { id: '3.5',  label: '3.5 m²',  area: 3.5,  precios: { alta: 1800, baja: 1700 } },
-      { id: '7',    label: '7 m²',    area: 7,    precios: { alta: 3150, baja: 2940 } },
-      { id: '8',    label: '8 m²',    area: 8,    precios: { alta: 3600, baja: 3360 } },
-      { id: '9',    label: '9 m²',    area: 9,    precios: { alta: 4050, baja: 3780 } },
-      { id: '11',   label: '11 m²',   area: 11,   precios: { alta: 4950, baja: 4620 } },
-      { id: '15',   label: '15 m²',   area: 15,   precios: { alta: 6750, baja: 6300 } },
-      { id: '30',   label: '30 m²',   area: 30,   precios: { baja: 13500 } },
-    ],
-  },
-  {
-    id: 'punto-sur',
-    nombre: 'Punto Sur',
-    bodegas: [
-      { id: '3.5',  label: '3.5 m²',  area: 3.5,  precios: { alta: 1700, baja: 1505 } },
-      { id: '7',    label: '7 m²',    area: 7,    precios: { alta: 3150, baja: 2940 } },
-      { id: '10',   label: '10 m²',   area: 10,   precios: { alta: 4050, baja: 3780 } },
-      { id: '15',   label: '15 m²',   area: 15,   precios: { alta: 6750, baja: 6300 } },
-      { id: '30',   label: '30 m²',   area: 30,   precios: { alta: 13500 } },
-    ],
-  },
-  {
-    id: 'bucerias',
-    nombre: 'Bucerías',
-    bodegas: [
-      { id: '3.5',  label: '3.5 m²',  area: 3.5,  precios: { alta: 1700, baja: 1505 } },
-      { id: '7',    label: '7 m²',    area: 7,    precios: { alta: 3150, baja: 2940 } },
-      { id: '10',   label: '10 m²',   area: 10,   precios: { alta: 4050, baja: 3780 } },
-      { id: '15',   label: '15 m²',   area: 15,   precios: { alta: 6750, baja: 6300 } },
-      { id: '30',   label: '30 m²',   area: 30,   precios: { alta: 13500 } },
-      { id: 'oficina', label: 'Bodega con Oficina', precios: { baja: 15000 } },
-    ],
-  },
-];
-
-const PLAZOS = [
-  { id: 'mensual',   label: 'Mensual',   meses: 1,  descuento: 0,    badge: null },
-  { id: '3-meses',  label: '3 Meses',   meses: 3,  descuento: 0.10, badge: '10% off' },
-  { id: '12-meses', label: '12 Meses',  meses: 12, descuento: 0.15, badge: '15% off' },
-] as const;
+import { SUCURSALES, PLAZOS } from '@/data/sucursales';
+import type { Sucursal, Bodega, Piso } from '@/data/sucursales';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -104,15 +31,22 @@ export interface SeleccionSimulador {
 interface SimuladorTarifasProps {
   onSolicitar?: (data: SeleccionSimulador) => void;
   initialSucursalId?: string;
+  initialBodegaId?: string;
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '' }: SimuladorTarifasProps = {}) {
+export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', initialBodegaId = '' }: SimuladorTarifasProps = {}) {
   const [sucursalId, setSucursalId] = useState(initialSucursalId);
-  const [bodegaId, setBodegaId]     = useState('');
+  const [bodegaId, setBodegaId]     = useState(initialBodegaId);
   const [piso, setPiso]             = useState<Piso | ''>('');
   const [plazoId, setPlazoId]       = useState('mensual');
+
+  // When a bodega is pre-selected without a sucursal, filter available sucursales
+  const sucursalesDisponibles = useMemo(() => {
+    if (!bodegaId) return SUCURSALES;
+    return SUCURSALES.filter(s => s.bodegas.some(b => b.id === bodegaId));
+  }, [bodegaId]);
 
   // Derived data
   const sucursal = SUCURSALES.find(s => s.id === sucursalId);
@@ -149,10 +83,13 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '' }
 
   const isComplete = precioBase !== null && precioMensualConDescuento !== null;
 
-  // Reset bodega when branch changes
+  // Reset bodega when branch changes (but keep pre-filled bodega if it exists in the new branch)
   const handleSucursal = (id: string) => {
     setSucursalId(id);
-    setBodegaId('');
+    const newSucursal = SUCURSALES.find(s => s.id === id);
+    if (!newSucursal?.bodegas.some(b => b.id === bodegaId)) {
+      setBodegaId('');
+    }
     setPiso('');
   };
 
@@ -207,7 +144,7 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '' }
                 </label>
                 <select value={sucursalId} onChange={e => handleSucursal(e.target.value)} className={selectClass}>
                   <option value="">Selecciona una sucursal</option>
-                  {SUCURSALES.map(s => (
+                  {sucursalesDisponibles.map(s => (
                     <option key={s.id} value={s.id}>{s.nombre}</option>
                   ))}
                 </select>
@@ -221,20 +158,27 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '' }
                 <select
                   value={bodegaId}
                   onChange={e => handleBodega(e.target.value)}
-                  disabled={!sucursal}
+                  disabled={!sucursal && !bodegaId}
                   className={`${selectClass} disabled:opacity-40 disabled:cursor-not-allowed`}
                 >
                   <option value="">
                     {sucursal ? 'Selecciona un tamaño' : 'Primero elige una sucursal'}
                   </option>
-                  {sucursal?.bodegas.map(b => {
-                    const desde = Math.min(...Object.values(b.precios).filter(Boolean) as number[]);
-                    return (
-                      <option key={b.id} value={b.id}>
-                        {b.label} — desde {fmt(desde)}/mes
-                      </option>
-                    );
-                  })}
+                  {sucursal
+                    ? sucursal.bodegas.map(b => {
+                        const desde = Math.min(...Object.values(b.precios).filter(Boolean) as number[]);
+                        return (
+                          <option key={b.id} value={b.id}>
+                            {b.label} — desde {fmt(desde)}/mes
+                          </option>
+                        );
+                      })
+                    : bodegaId && (() => {
+                        // Show pre-filled bodega label when no sucursal is selected yet
+                        const anyBodega = SUCURSALES.flatMap(s => s.bodegas).find(b => b.id === bodegaId);
+                        return anyBodega ? <option value={anyBodega.id}>{anyBodega.label}</option> : null;
+                      })()
+                  }
                 </select>
               </div>
 

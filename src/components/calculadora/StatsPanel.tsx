@@ -2,8 +2,16 @@
 
 import { Unit, PlacedItem, ItemType } from './types';
 import { ITEM_TYPES } from './constants';
-import { AlertTriangle, CheckCircle2, Trash2, Layers, Sparkles, Loader2 } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import { AIAnalysis, OverflowInfo } from './CalculadoraApp';
+import {
+  PiWarningDuotone,
+  PiCheckCircleDuotone,
+  PiTrashDuotone,
+  PiStackDuotone,
+  PiSparkleDuotone,
+  PiSpinnerDuotone,
+  PiMagicWandDuotone,
+} from 'react-icons/pi';
 
 interface StatsPanelProps {
   unit: Unit;
@@ -12,8 +20,12 @@ interface StatsPanelProps {
   onClear: () => void;
   onItemDelete: (id: string) => void;
   onAnalyze: () => void;
+  onAutoArrange: () => void;
+  onRemoveOverflow: () => void;
+  onKeepOverflow: () => void;
   isAnalyzing: boolean;
-  aiFeedback: string | null;
+  aiAnalysis: AIAnalysis | null;
+  overflowInfo: OverflowInfo | null;
   mobileTab?: 'bodega' | 'objetos' | 'resumen';
 }
 
@@ -24,14 +36,18 @@ export default function StatsPanel({
   onClear,
   onItemDelete,
   onAnalyze,
+  onAutoArrange,
+  onRemoveOverflow,
+  onKeepOverflow,
   isAnalyzing,
-  aiFeedback,
+  aiAnalysis,
+  overflowInfo,
   mobileTab,
 }: StatsPanelProps) {
   const unitArea = unit.width * unit.length;
   const unitVolume = unitArea * unit.height;
 
-  let usedArea = 0;
+  let floorArea = 0; // Only items on the floor (z=0)
   let usedVolume = 0;
   let maxHeight = 0;
 
@@ -39,7 +55,7 @@ export default function StatsPanel({
     const type = allItemTypes.find(t => t.id === item.typeId);
     if (type) {
       const itemArea = type.width * type.length;
-      usedArea += itemArea;
+      if ((item.z || 0) === 0) floorArea += itemArea;
       usedVolume += itemArea * type.height;
       const top = (item.z || 0) + type.height;
       if (top > maxHeight) maxHeight = top;
@@ -48,11 +64,11 @@ export default function StatsPanel({
 
   const volumePercentage = Math.min(100, Math.round((usedVolume / unitVolume) * 100));
   const heightPercentage = Math.min(100, Math.round((maxHeight / unit.height) * 100));
-  const areaPercentage = Math.min(100, Math.round((usedArea / unitArea) * 100));
+  const areaPercentage = Math.min(100, Math.round((floorArea / unitArea) * 100));
 
   const isOverHeight = maxHeight > unit.height;
   const isOverVolume = usedVolume > unitVolume;
-  const isStacking = usedArea > unitArea;
+  const isStacking = floorArea > unitArea;
   const hasStackingError = items.some(item => item.stackingError);
 
   return (
@@ -98,9 +114,9 @@ export default function StatsPanel({
 
           <div>
             <div className="flex justify-between text-xs mb-1.5">
-              <span className="font-medium text-slate-700">Área Total (objetos)</span>
+              <span className="font-medium text-slate-700">Área de Piso</span>
               <span className={`font-bold ${isStacking ? 'text-blue-600' : 'text-slate-900'}`}>
-                {usedArea.toFixed(1)} / {unitArea.toFixed(1)} m²
+                {floorArea.toFixed(1)} / {unitArea.toFixed(1)} m²
               </span>
             </div>
             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
@@ -115,7 +131,7 @@ export default function StatsPanel({
         <div className="mt-4">
           {hasStackingError ? (
             <div className="flex items-start gap-2 p-3 bg-red-50 text-red-800 rounded-lg border border-red-200">
-              <AlertTriangle className="shrink-0 mt-0.5" size={15} />
+              <PiWarningDuotone className="shrink-0 mt-0.5" size={15} />
               <div className="text-xs">
                 <p className="font-bold">¡Apilamiento Inválido!</p>
                 <p className="mt-0.5 opacity-90">Revisa los objetos marcados en rojo.</p>
@@ -123,7 +139,7 @@ export default function StatsPanel({
             </div>
           ) : isOverHeight ? (
             <div className="flex items-start gap-2 p-3 bg-red-50 text-red-800 rounded-lg border border-red-200">
-              <AlertTriangle className="shrink-0 mt-0.5" size={15} />
+              <PiWarningDuotone className="shrink-0 mt-0.5" size={15} />
               <div className="text-xs">
                 <p className="font-bold">¡Altura Excedida!</p>
                 <p className="mt-0.5 opacity-90">Los objetos superan el techo ({unit.height}m).</p>
@@ -131,7 +147,7 @@ export default function StatsPanel({
             </div>
           ) : isOverVolume ? (
             <div className="flex items-start gap-2 p-3 bg-red-50 text-red-800 rounded-lg border border-red-200">
-              <AlertTriangle className="shrink-0 mt-0.5" size={15} />
+              <PiWarningDuotone className="shrink-0 mt-0.5" size={15} />
               <div className="text-xs">
                 <p className="font-bold">¡Capacidad Excedida!</p>
                 <p className="mt-0.5 opacity-90">Necesitas una bodega más grande.</p>
@@ -139,7 +155,7 @@ export default function StatsPanel({
             </div>
           ) : isStacking ? (
             <div className="flex items-start gap-2 p-3 bg-blue-50 text-blue-800 rounded-lg border border-blue-200">
-              <Layers className="shrink-0 mt-0.5" size={15} />
+              <PiStackDuotone className="shrink-0 mt-0.5" size={15} />
               <div className="text-xs">
                 <p className="font-bold">Apilamiento Activo</p>
                 <p className="mt-0.5 opacity-90">Aprovechando el espacio vertical.</p>
@@ -147,7 +163,7 @@ export default function StatsPanel({
             </div>
           ) : (
             <div className="flex items-start gap-2 p-3 bg-emerald-50 text-emerald-800 rounded-lg border border-emerald-200">
-              <CheckCircle2 className="shrink-0 mt-0.5" size={15} />
+              <PiCheckCircleDuotone className="shrink-0 mt-0.5" size={15} />
               <div className="text-xs">
                 <p className="font-bold">¡Todo Cabe Perfecto!</p>
                 <p className="mt-0.5 opacity-90">Tienes suficiente espacio en el piso.</p>
@@ -192,7 +208,7 @@ export default function StatsPanel({
                     onClick={() => onItemDelete(item.id)}
                     className="text-slate-400 hover:text-red-500 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity p-1 shrink-0"
                   >
-                    <Trash2 size={13} />
+                    <PiTrashDuotone size={13} />
                   </button>
                 </div>
               );
@@ -200,34 +216,78 @@ export default function StatsPanel({
           )}
         </div>
 
-        <button
-          onClick={onClear}
-          disabled={items.length === 0}
-          className="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-2 text-sm"
-        >
-          Vaciar Bodega
-        </button>
+        {/* Action buttons — always visible, independent */}
+        <div className="space-y-2">
+          <button
+            onClick={onClear}
+            disabled={items.length === 0}
+            className="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          >
+            Vaciar Bodega
+          </button>
 
-        <button
-          onClick={onAnalyze}
-          disabled={items.length === 0 || isAnalyzing}
-          className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
-        >
-          {isAnalyzing ? (
-            <><Loader2 size={15} className="animate-spin" />Analizando...</>
-          ) : (
-            <><Sparkles size={15} />Analizar con IA</>
-          )}
-        </button>
+          <button
+            onClick={onAutoArrange}
+            disabled={items.length === 0}
+            className="w-full py-2.5 px-4 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+          >
+            <PiMagicWandDuotone size={15} />
+            Acomodo Automático
+          </button>
 
-        {aiFeedback && (
-          <div className="mt-3 p-3 bg-indigo-50 border border-indigo-100 rounded-xl text-indigo-900">
-            <div className="flex items-center gap-1.5 font-bold mb-2 text-indigo-700 text-xs">
-              <Sparkles size={13} />
-              Análisis de IA
+          <button
+            onClick={onAnalyze}
+            disabled={items.length === 0 || isAnalyzing}
+            className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+          >
+            {isAnalyzing ? (
+              <><PiSpinnerDuotone size={15} className="animate-spin" />Analizando...</>
+            ) : (
+              <><PiSparkleDuotone size={15} />Analizar con IA</>
+            )}
+          </button>
+        </div>
+
+        {/* Overflow decision — user chooses what to do */}
+        {overflowInfo && (
+          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+            <div className="flex items-start gap-2 mb-2">
+              <PiWarningDuotone size={14} className="text-amber-600 shrink-0 mt-0.5" />
+              <div className="text-xs text-amber-900">
+                <p className="font-bold mb-1">Estos objetos no cupieron:</p>
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {overflowInfo.names.map((name, i) => (
+                    <span key={i} className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium">
+                      {name}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-amber-700">¿Qué prefieres hacer?</p>
+              </div>
             </div>
-            <div className="text-xs leading-relaxed [&_p]:mb-2 [&_strong]:font-bold [&_ul]:list-disc [&_ul]:pl-4">
-              <ReactMarkdown>{aiFeedback}</ReactMarkdown>
+            <div className="flex gap-2">
+              <button
+                onClick={onRemoveOverflow}
+                className="flex-1 py-2 px-3 bg-red-100 hover:bg-red-200 text-red-800 font-semibold rounded-lg transition-colors text-xs"
+              >
+                Eliminarlos
+              </button>
+              <button
+                onClick={onKeepOverflow}
+                className="flex-1 py-2 px-3 bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold rounded-lg transition-colors text-xs"
+              >
+                Conservarlos
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* AI Feedback — compact */}
+        {aiAnalysis && !overflowInfo && (
+          <div className="mt-3 p-3 bg-indigo-50 border border-indigo-100 rounded-xl">
+            <div className="flex items-start gap-2">
+              <PiSparkleDuotone size={14} className="text-indigo-600 shrink-0 mt-0.5" />
+              <p className="text-xs text-indigo-900 leading-relaxed">{aiAnalysis.summary}</p>
             </div>
           </div>
         )}

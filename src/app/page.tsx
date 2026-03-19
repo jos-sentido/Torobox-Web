@@ -1,8 +1,30 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/Button";
 import PromotionsSection from "@/components/PromotionsSection";
 import GaleriaHome from "@/components/GaleriaHome";
+import {
+  PiHouseDuotone,
+  PiPackageDuotone,
+  PiArchiveDuotone,
+  PiWrenchDuotone,
+  PiWifiHighDuotone,
+  PiShieldCheckDuotone,
+  PiSecurityCameraDuotone,
+  PiCarProfileDuotone,
+  PiStairsDuotone,
+  PiKeyDuotone,
+  PiTrolleyDuotone,
+  PiHandshakeDuotone,
+  PiArrowRightDuotone,
+} from "react-icons/pi";
+
+export const metadata: Metadata = {
+  title: "ToroBox — Renta de Mini Bodegas Seguras en Guadalajara y Nayarit",
+  description:
+    "Renta de mini bodegas seguras, limpias y accesibles en Guadalajara, Zapopan, Tlajomulco y Bucerías. Vigilancia 24/7, acceso controlado y bodegas desde 1.75 m². Cotiza hoy.",
+};
 
 export default function Home() {
   return (
@@ -10,12 +32,13 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative bg-brand-black text-white py-20 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image 
-            src="/images/sucursales/av-vallarta/hero.jpg" 
-            alt="Bodegas ToroBox" 
+          <Image
+            src="/images/sucursales/av-vallarta/hero.webp"
+            alt="Pasillo iluminado de mini bodegas ToroBox con puertas rojas y vigilancia"
             fill
             className="object-cover opacity-30"
             priority
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-brand-black/90 to-brand-black/40" />
         </div>
@@ -48,69 +71,26 @@ export default function Home() {
               {
                 title: "Hogar y Mudanza",
                 desc: "El sitio seguro para tus muebles y cajas mientras te instalas.",
-                icon: (
-                  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
-                    {/* Roof */}
-                    <polygon points="24,4 44,22 4,22" fill="#D0272C"/>
-                    {/* Wall */}
-                    <rect x="8" y="22" width="32" height="22" rx="1" fill="#1a1a1a"/>
-                    {/* Door */}
-                    <rect x="19" y="30" width="10" height="14" rx="2" fill="#D0272C"/>
-                    {/* Chimney */}
-                    <rect x="31" y="10" width="5" height="12" rx="1" fill="#D0272C"/>
-                  </svg>
-                ),
+                icon: <PiHouseDuotone className="w-8 h-8" />,
               },
               {
                 title: "Negocio e Inventario",
                 desc: "Libera espacio valioso almacenando tu mercancía o equipo.",
-                icon: (
-                  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
-                    {/* Box body */}
-                    <rect x="6" y="18" width="36" height="26" rx="2" fill="#1a1a1a"/>
-                    {/* Box flap left */}
-                    <path d="M6 18 L6 10 L20 10 L20 18 Z" fill="#D0272C"/>
-                    {/* Box flap right */}
-                    <path d="M28 10 L42 10 L42 18 L28 18 Z" fill="#D0272C"/>
-                    {/* Box top center strip */}
-                    <rect x="20" y="8" width="8" height="12" rx="1" fill="#b01e22"/>
-                    {/* Tape line on body */}
-                    <rect x="6" y="28" width="36" height="4" rx="1" fill="#D0272C"/>
-                  </svg>
-                ),
+                icon: <PiPackageDuotone className="w-8 h-8" />,
               },
               {
                 title: "Archivo Muerto",
                 desc: "Cumple con las leyes resguardando tus documentos importantes de forma organizada.",
-                icon: (
-                  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
-                    {/* Folder back */}
-                    <rect x="4" y="14" width="40" height="30" rx="3" fill="#1a1a1a"/>
-                    {/* Folder tab */}
-                    <path d="M4 14 L4 10 Q4 8 6 8 L20 8 L24 14 Z" fill="#D0272C"/>
-                    {/* Document lines */}
-                    <rect x="12" y="22" width="24" height="3" rx="1.5" fill="#D0272C"/>
-                    <rect x="12" y="29" width="18" height="3" rx="1.5" fill="#D0272C" opacity="0.7"/>
-                    <rect x="12" y="36" width="20" height="3" rx="1.5" fill="#D0272C" opacity="0.5"/>
-                  </svg>
-                ),
+                icon: <PiArchiveDuotone className="w-8 h-8" />,
               },
               {
                 title: "Herramientas",
                 desc: "Tus equipos de trabajo seguros y listos para tu próximo proyecto.",
-                icon: (
-                  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
-                    {/* Wrench */}
-                    <path d="M10 38 L28 18 C26 14 27 8 32 6 C34 5.5 36 6 38 7 L33 12 L36 15 L41 10 C42 12 42 15 41 17 C39 21 34 22 30 20 L12 40 C10.5 41.5 8 41.5 6.5 40 C5 38.5 8.5 36.5 10 38Z" fill="#1a1a1a"/>
-                    {/* Screwdriver */}
-                    <rect x="26" y="26" width="6" height="18" rx="3" transform="rotate(-45 26 26)" fill="#D0272C"/>
-                    <rect x="35" y="8" width="4" height="10" rx="1" transform="rotate(-45 35 8)" fill="#D0272C"/>
-                  </svg>
-                ),
+                icon: <PiWrenchDuotone className="w-8 h-8" />,
               },
             ].map((uso, i) => (
               <div key={i} className="bg-gray-50 border border-gray-100 rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-                <div className="mb-6 bg-white w-16 h-16 rounded-lg flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                <div className="mb-6 bg-brand-black text-brand-red w-16 h-16 rounded-lg flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                   {uso.icon}
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-brand-black">{uso.title}</h3>
@@ -134,14 +114,14 @@ export default function Home() {
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 text-center">
             {[
-              { name: "Wifi", icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-brand-red mb-3"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg> },
-              { name: "Vigilancia 24/7", icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-brand-red mb-3"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg> },
-              { name: "Circuito cerrado", icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-brand-red mb-3"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg> },
-              { name: "Área de estacionamiento", icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-brand-red mb-3"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg> },
-              { name: "Escaleras para planta alta", icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-brand-red mb-3"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg> },
-              { name: "Acceso controlado", icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-brand-red mb-3"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg> },
-              { name: "Carritos de apoyo", icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-brand-red mb-3"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> },
-              { name: "Asistencia a mujeres y adultos", icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-brand-red mb-3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> }
+              { name: "Wifi", icon: <PiWifiHighDuotone className="w-8 h-8 text-brand-red mb-3" /> },
+              { name: "Vigilancia 24/7", icon: <PiShieldCheckDuotone className="w-8 h-8 text-brand-red mb-3" /> },
+              { name: "Circuito cerrado", icon: <PiSecurityCameraDuotone className="w-8 h-8 text-brand-red mb-3" /> },
+              { name: "Área de estacionamiento", icon: <PiCarProfileDuotone className="w-8 h-8 text-brand-red mb-3" /> },
+              { name: "Escaleras para planta alta", icon: <PiStairsDuotone className="w-8 h-8 text-brand-red mb-3" /> },
+              { name: "Acceso controlado", icon: <PiKeyDuotone className="w-8 h-8 text-brand-red mb-3" /> },
+              { name: "Carritos de apoyo", icon: <PiTrolleyDuotone className="w-8 h-8 text-brand-red mb-3" /> },
+              { name: "Asistencia personalizada", icon: <PiHandshakeDuotone className="w-8 h-8 text-brand-red mb-3" /> },
             ].map((ben, i) => (
               <div key={i} className="flex flex-col items-center justify-center p-6 bg-brand-black rounded-lg border border-gray-800 hover:border-brand-red transition-colors">
                 {ben.icon}
@@ -211,9 +191,7 @@ export default function Home() {
               </ul>
               <Link href="/calculadora" className="inline-flex items-center gap-2 bg-brand-red hover:bg-brand-red-hover text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-lg hover:shadow-brand-red/30">
                 Probar Calculadora
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <PiArrowRightDuotone className="w-5 h-5" />
               </Link>
             </div>
           </div>
@@ -256,13 +234,13 @@ export default function Home() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                 {[
-                  { name: "Av Vallarta", id: "av-vallarta", img: "/images/sucursales/av-vallarta/hero.jpg" },
-                  { name: "Zona Real", id: "zona-real", img: "/images/sucursales/zona-real/hero.jpg" },
-                  { name: "Punto Sur", id: "punto-sur", img: "/images/sucursales/punto-sur/hero.jpg" },
-                  { name: "Bucerías", id: "bucerias", img: "/images/sucursales/bucerias/hero.jpg" }
+                  { name: "Av Vallarta", id: "av-vallarta", img: "/images/sucursales/av-vallarta/hero.webp", alt: "Fachada de mini bodegas ToroBox sucursal Av. Vallarta en Zapopan" },
+                  { name: "Zona Real", id: "zona-real", img: "/images/sucursales/zona-real/hero.webp", alt: "Instalaciones de mini bodegas ToroBox sucursal Zona Real en Zapopan" },
+                  { name: "Punto Sur", id: "punto-sur", img: "/images/sucursales/punto-sur/hero.webp", alt: "Entrada de mini bodegas ToroBox sucursal Punto Sur en Tlajomulco" },
+                  { name: "Bucerías", id: "bucerias", img: "/images/sucursales/bucerias/hero.webp", alt: "Mini bodegas ToroBox sucursal Bucerías en Nayarit, zona costera" }
                 ].map((suc, i) => (
                   <Link href={`/sucursales/${suc.id}`} key={i} className="group relative h-40 rounded-lg overflow-hidden flex items-end p-4">
-                    <Image src={suc.img} alt={`Sucursal ${suc.name}`} fill className="object-cover bg-gray-200 group-hover:scale-105 transition-transform duration-500" />
+                    <Image src={suc.img} alt={suc.alt} fill sizes="(max-width: 640px) 100vw, 50vw" className="object-cover bg-gray-200 group-hover:scale-105 transition-transform duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <span className="relative z-10 text-white font-bold text-lg">{suc.name}</span>
                   </Link>

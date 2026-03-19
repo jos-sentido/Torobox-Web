@@ -1,5 +1,6 @@
-import { openai } from '@ai-sdk/openai';
-import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { generateObject } from 'ai';
+import { z } from 'zod';
 
 interface ItemDescription {
   typeName: string;
@@ -14,33 +15,51 @@ interface Unit {
   height: number;
 }
 
+const responseSchema = z.object({
+  summary: z.string().describe('Resumen breve de 1-2 oraciones sobre el acomodo'),
+  canOptimize: z.boolean().describe('true si el acomodo puede mejorarse significativamente'),
+  itemsToRemove: z.array(z.string()).describe('Nombres de objetos que se recomienda quitar si no caben. Array vacío si todo cabe.'),
+});
+
 export async function POST(req: Request) {
-  const { items, unit }: { items: ItemDescription[]; unit: Unit } = await req.json();
+  try {
+    const { items, unit }: { items: ItemDescription[]; unit: Unit } = await req.json();
 
-  if (!items || items.length === 0) {
-    return Response.json({ feedback: 'Agrega objetos a la bodega para analizarlos.' });
-  }
+    if (!items || items.length === 0) {
+      return Response.json({
+        summary: 'Agrega objetos a la bodega para analizarlos.',
+        canOptimize: false,
+        itemsToRemove: [],
+      });
+    }
 
-  const itemList = items
-    .map(item => `- ${item.typeName} (altura en pila: ${item.z.toFixed(2)}m, apilado sobre: ${item.stackedOnName}${item.stackingError ? ' ⚠️ APILAMIENTO INVÁLIDO' : ''})`)
-    .join('\n');
+    const itemList = items
+      .map(item => `- ${item.typeName} (z: ${item.z.toFixed(2)}m, sobre: ${item.stackedOnName}${item.stackingError ? ' ⚠️ INVÁLIDO' : ''})`)
+      .join('\n');
 
-  const prompt = `Eres "Constractor AI", un experto en logística y almacenamiento en mini bodegas.
-Analiza el siguiente acomodo de objetos en una mini bodega de ${unit.width}m × ${unit.length}m × ${unit.height}m.
+    const prompt = `Eres "Constractor AI", experto en almacenamiento en mini bodegas.
+Bodega: ${unit.width}m × ${unit.length}m × ${unit.height}m (${(unit.width * unit.length).toFixed(1)}m² de piso, ${(unit.width * unit.length * unit.height).toFixed(1)}m³ de volumen).
 
-Objetos almacenados:
+Objetos:
 ${itemList}
 
-Evalúa si el acomodo es lógico, seguro y eficiente en la vida real.
-Considera el peso, fragilidad y forma de los objetos (p. ej. no se debe poner un refrigerador sobre una cama).
-Si hay errores de apilamiento marcados, indícalos claramente.
-Si el acomodo es bueno, da un consejo práctico para optimizar el espacio.
-Responde en español. Sé breve y directo (máximo 3 párrafos cortos).`;
+Analiza brevemente: ¿el acomodo es seguro y eficiente? Si hay apilamientos inválidos, menciónalo.
+Si hay demasiados objetos para el espacio, indica cuáles quitar (los menos prioritarios primero: bicicletas, sillas sueltas, etc.).
+Sé MUY breve: máximo 2 oraciones cortas para el resumen.`;
 
-  const result = await generateText({
-    model: openai('gpt-4o-mini'),
-    prompt,
-  });
+    const result = await generateObject({
+      model: anthropic('claude-haiku-4-5-20251001'),
+      prompt,
+      schema: responseSchema,
+    });
 
-  return Response.json({ feedback: result.text });
+    return Response.json(result.object);
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('calculadora-ai error:', msg);
+    return Response.json(
+      { summary: 'Error al analizar. Intenta de nuevo.', canOptimize: false, itemsToRemove: [] },
+      { status: 500 },
+    );
+  }
 }
