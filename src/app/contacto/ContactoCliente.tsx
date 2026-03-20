@@ -16,8 +16,8 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
 
   // Controlled form fields (those that can be pre-filled)
   const [sucursal, setSucursal] = useState(initialSucursal);
-  const [tamano, setTamano] = useState(initialTamano);
-  const [plazo, setPlazo] = useState('');
+  const [tamano, setTamano] = useState(initialTamano || 'asesoria');
+  const [plazo, setPlazo] = useState('asesoria');
 
   // Form fields
   const [nombre, setNombre] = useState('');
@@ -148,8 +148,8 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
       setTelefono('');
       setCorreo('');
       setSucursal('');
-      setTamano('');
-      setPlazo('');
+      setTamano('asesoria');
+      setPlazo('asesoria');
       setMensaje('');
       setPreseleccion(null);
     } catch {
