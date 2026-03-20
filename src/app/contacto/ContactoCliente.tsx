@@ -19,6 +19,17 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
   const [tamano, setTamano] = useState(initialTamano);
   const [plazo, setPlazo] = useState('');
 
+  // Form fields
+  const [nombre, setNombre] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [mensaje, setMensaje] = useState('');
+
+  // Submission state
+  const [enviando, setEnviando] = useState(false);
+  const [enviado, setEnviado] = useState(false);
+  const [errorEnvio, setErrorEnvio] = useState('');
+
   const handleSolicitar = (data: SeleccionSimulador) => {
     setPreseleccion(data);
     setSucursal(data.sucursalId);
@@ -30,6 +41,58 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
   };
 
   const clearPreseleccion = () => setPreseleccion(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (enviando) return;
+    setEnviando(true);
+    setErrorEnvio('');
+
+    const sucursalNombre = SUCURSALES.find(s => s.id === sucursal)?.nombre || sucursal;
+    const tamanoLabel = allTamanos.find(t => t.id === tamano)?.label || tamano;
+    const plazoLabels: Record<string, string> = {
+      'mensual': 'Mensual',
+      '3-meses': '3 Meses (10% desc.)',
+      '12-meses': '12 Meses (15% desc.)',
+    };
+
+    const cotizacionText = preseleccion
+      ? `${preseleccion.sucursalNombre} · ${preseleccion.bodegaLabel} · ${preseleccion.pisoLabel} · ${preseleccion.plazoLabel}${preseleccion.descuento > 0 ? ` (${preseleccion.descuento * 100}% desc.)` : ''} · ${fmt(preseleccion.precioMensual)}/mes`
+      : '';
+
+    try {
+      const res = await fetch('/api/contacto', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre,
+          telefono,
+          correo,
+          sucursal: sucursalNombre,
+          tamano: tamanoLabel,
+          plazo: plazoLabels[plazo] || plazo,
+          mensaje,
+          cotizacion: cotizacionText,
+        }),
+      });
+
+      if (!res.ok) throw new Error('Error al enviar');
+
+      setEnviado(true);
+      setNombre('');
+      setTelefono('');
+      setCorreo('');
+      setSucursal('');
+      setTamano('');
+      setPlazo('');
+      setMensaje('');
+      setPreseleccion(null);
+    } catch {
+      setErrorEnvio('Hubo un error al enviar tu solicitud. Por favor intenta de nuevo o contáctanos directamente.');
+    } finally {
+      setEnviando(false);
+    }
+  };
 
   // All unique bodega sizes across all branches
   const allTamanos = useMemo(() => {
@@ -125,21 +188,39 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
 
             <h3 className="text-2xl font-bold mb-6 text-brand-black">Solicitar Información</h3>
 
-            <form className="space-y-6">
+            {enviado ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h4 className="text-xl font-bold text-brand-black mb-2">¡Solicitud enviada!</h4>
+                <p className="text-gray-600 mb-6">Nuestro equipo te contactará a la brevedad posible.</p>
+                <button
+                  onClick={() => setEnviado(false)}
+                  className="text-brand-red font-semibold hover:underline"
+                >
+                  Enviar otra solicitud
+                </button>
+              </div>
+            ) : (
+
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-2">Nombre completo</label>
-                  <input type="text" id="nombre" className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="Tu nombre" required />
+                  <input type="text" id="nombre" value={nombre} onChange={e => setNombre(e.target.value)} className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="Tu nombre" required />
                 </div>
                 <div>
                   <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
-                  <input type="tel" id="telefono" className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="Tu número" required />
+                  <input type="tel" id="telefono" value={telefono} onChange={e => setTelefono(e.target.value)} className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="Tu número" required />
                 </div>
               </div>
 
               <div>
                 <label htmlFor="correo" className="block text-sm font-medium text-gray-700 mb-2">Correo electrónico</label>
-                <input type="email" id="correo" className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="tucorreo@ejemplo.com" required />
+                <input type="email" id="correo" value={correo} onChange={e => setCorreo(e.target.value)} className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="tucorreo@ejemplo.com" required />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -205,13 +286,20 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
 
               <div>
                 <label htmlFor="mensaje" className="block text-sm font-medium text-gray-700 mb-2">Mensaje o comentarios adicionales</label>
-                <textarea id="mensaje" rows={4} className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="Dinos qué necesitas almacenar..."></textarea>
+                <textarea id="mensaje" rows={4} value={mensaje} onChange={e => setMensaje(e.target.value)} className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="Dinos qué necesitas almacenar..."></textarea>
               </div>
 
-              <Button type="submit" variant="primary" fullWidth className="py-4 text-lg mt-4 shadow-lg shadow-red-500/30">
-                Solicitar información ahora
+              {errorEnvio && (
+                <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-4">
+                  {errorEnvio}
+                </div>
+              )}
+
+              <Button type="submit" variant="primary" fullWidth className="py-4 text-lg mt-4 shadow-lg shadow-red-500/30" disabled={enviando}>
+                {enviando ? 'Enviando...' : 'Solicitar información ahora'}
               </Button>
             </form>
+            )}
           </div>
 
         </div>
