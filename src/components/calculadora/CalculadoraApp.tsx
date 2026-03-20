@@ -7,7 +7,6 @@ import Sidebar from './Sidebar';
 import CanvasArea from './CanvasArea';
 import StatsPanel from './StatsPanel';
 import { applyGravity } from './utils';
-import { autoArrange } from './binPacking';
 
 export interface AIAnalysis {
   summary: string;
@@ -26,6 +25,8 @@ export default function CalculadoraApp() {
   const [items, setItems] = useState<PlacedItem[]>([]);
   const [customItems, setCustomItems] = useState<ItemType[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isArranging, setIsArranging] = useState(false);
+  const [hasArranged, setHasArranged] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysis | null>(null);
   const [overflowInfo, setOverflowInfo] = useState<OverflowInfo | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -43,6 +44,7 @@ export default function CalculadoraApp() {
   const clearFeedback = useCallback(() => {
     setAiAnalysis(null);
     setOverflowInfo(null);
+    setHasArranged(false);
   }, []);
 
   const handleSelectBranch = (branch: Branch) => {
@@ -230,29 +232,93 @@ export default function CalculadoraApp() {
     }
   };
 
-  const handleAutoArrange = () => {
-    const { arranged, overflow } = autoArrange(items, allItemTypes, selectedUnit);
-
-    setItems(arranged);
-
-    if (overflow.length > 0) {
-      const overflowNames = overflow.map(item => {
+  const handleAutoArrange = async () => {
+    setIsArranging(true);
+    clearFeedback();
+    try {
+      // Build item descriptions for the AI
+      const itemInputs = items.map(item => {
         const type = allItemTypes.find(t => t.id === item.typeId);
-        return type?.name ?? item.typeId;
+        return {
+          id: item.id,
+          typeId: item.typeId,
+          typeName: type?.name ?? item.typeId,
+          width: type?.width ?? 0.5,
+          length: type?.length ?? 0.5,
+          height: type?.height ?? 0.5,
+        };
       });
-      setOverflowInfo({ items: overflow, names: overflowNames });
-      setAiAnalysis({
-        summary: `Se acomodaron ${arranged.length} objetos. ${overflow.length} no cupieron.`,
-        canOptimize: false,
-        itemsToRemove: [],
+
+      const res = await fetch('/api/calculadora-arrange', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: itemInputs,
+          unit: { width: selectedUnit.width, length: selectedUnit.length, height: selectedUnit.height },
+        }),
       });
-    } else {
-      setOverflowInfo(null);
-      setAiAnalysis({
-        summary: `Se acomodaron ${arranged.length} objetos de forma segura y óptima.`,
-        canOptimize: false,
-        itemsToRemove: [],
-      });
+
+      const data = await res.json();
+
+      if (!data.placements || data.placements.length === 0) {
+        showToast('La IA no pudo generar un acomodo. Intenta de nuevo.');
+        return;
+      }
+
+      // Map AI placements back to PlacedItem format
+      const arranged: PlacedItem[] = [];
+      const overflowItems: PlacedItem[] = [];
+      const overflowIds = new Set<string>(data.overflow ?? []);
+
+      for (const item of items) {
+        if (overflowIds.has(item.id)) {
+          overflowItems.push(item);
+          continue;
+        }
+
+        const placement = data.placements.find((p: { id: string }) => p.id === item.id);
+        if (!placement) {
+          overflowItems.push(item);
+          continue;
+        }
+
+        arranged.push({
+          ...item,
+          x: placement.x * PIXELS_PER_METER,
+          y: placement.y * PIXELS_PER_METER,
+          z: placement.z ?? 0,
+          rotation: placement.rotation ?? 0,
+          stackedOn: placement.stackedOnId ?? undefined,
+          stackingError: false,
+        });
+      }
+
+      setItems(arranged);
+      setHasArranged(true);
+
+      if (overflowItems.length > 0) {
+        const overflowNames = overflowItems.map(item => {
+          const type = allItemTypes.find(t => t.id === item.typeId);
+          return type?.name ?? item.typeId;
+        });
+        setOverflowInfo({ items: overflowItems, names: overflowNames });
+        setAiAnalysis({
+          summary: data.summary ?? `Se acomodaron ${arranged.length} objetos. ${overflowItems.length} no cupieron.`,
+          canOptimize: false,
+          itemsToRemove: [],
+        });
+      } else {
+        setOverflowInfo(null);
+        setAiAnalysis({
+          summary: data.summary ?? `Se acomodaron ${arranged.length} objetos con IA.`,
+          canOptimize: false,
+          itemsToRemove: [],
+        });
+      }
+    } catch {
+      showToast('Error al conectar con la IA. Intenta de nuevo.');
+    } finally {
+      setIsArranging(false);
     }
   };
 
@@ -285,7 +351,7 @@ export default function CalculadoraApp() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-5rem)] bg-slate-50 text-slate-900 overflow-hidden">
+    <div className="flex flex-col h-[calc(100dvh-5rem)] bg-slate-50 text-slate-900 overflow-hidden lg:overflow-hidden">
       {/* Toast notification */}
       {toast && (
         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl shadow-lg animate-fade-in">
@@ -310,8 +376,8 @@ export default function CalculadoraApp() {
         ))}
       </div>
 
-      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
-        <main className="order-1 lg:order-2 flex-none lg:flex-1 p-2 lg:p-4 h-[45vh] lg:h-auto bg-slate-50 border-b border-slate-200 lg:border-none overflow-hidden">
+      <div className="flex flex-col lg:flex-row flex-1 overflow-y-auto lg:overflow-hidden">
+        <main className="order-1 lg:order-2 flex-none lg:flex-1 p-2 lg:p-4 h-[40vh] min-h-[250px] lg:h-auto bg-slate-50 border-b border-slate-200 lg:border-none overflow-hidden">
           <CanvasArea
             unit={selectedUnit}
             items={items}
@@ -346,6 +412,8 @@ export default function CalculadoraApp() {
           onRemoveOverflow={handleRemoveOverflow}
           onKeepOverflow={handleKeepOverflow}
           isAnalyzing={isAnalyzing}
+          isArranging={isArranging}
+          hasArranged={hasArranged}
           aiAnalysis={aiAnalysis}
           overflowInfo={overflowInfo}
           mobileTab={mobileTab}

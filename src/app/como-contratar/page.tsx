@@ -21,15 +21,15 @@ export default function ComoContratarPage() {
       <div className="bg-brand-red text-white py-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Cómo Contratar</h1>
-          <p className="text-xl text-red-100">
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6">Cómo Contratar</h1>
+          <p className="text-base md:text-xl text-red-100">
             Nuestro proceso está diseñado para ser rápido, transparente y sin complicaciones. Tu espacio listo el mismo día.
           </p>
         </div>
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 md:p-8 lg:p-12">
           
           <div className="space-y-12">
             {steps.map((step, idx) => (
@@ -45,8 +45,8 @@ export default function ComoContratarPage() {
                 </div>
                 
                 <div className="bg-gray-50 rounded-xl p-6 md:p-8 flex-grow border border-gray-100 hover:border-brand-red transition-colors w-full">
-                  <h3 className="text-2xl font-bold text-brand-black mb-3">{step.title}</h3>
-                  <p className="text-gray-600 text-lg">{step.desc}</p>
+                  <h3 className="text-lg md:text-2xl font-bold text-brand-black mb-2 md:mb-3">{step.title}</h3>
+                  <p className="text-gray-600 text-sm md:text-lg">{step.desc}</p>
                 </div>
               </div>
             ))}
@@ -55,7 +55,7 @@ export default function ComoContratarPage() {
         </div>
 
         <div className="mt-16 text-center">
-          <h2 className="text-3xl font-bold mb-8 text-brand-black">¿Listo para comenzar tu contratación?</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-brand-black">¿Listo para comenzar tu contratación?</h2>
           <Button href="/contacto" variant="primary" className="px-10 py-5 text-lg shadow-xl shadow-red-500/20">
             Ir a formulario de contacto
           </Button>

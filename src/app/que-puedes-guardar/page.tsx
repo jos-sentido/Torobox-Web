@@ -28,17 +28,17 @@ export default function QuePuedesGuardarPage() {
     <div className="bg-white min-h-screen pb-20">
       <div className="bg-brand-black text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Qué Puedes Guardar</h1>
-          <p className="text-xl text-gray-300">
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6">Qué Puedes Guardar</h1>
+          <p className="text-base md:text-xl text-gray-300">
             Nuestras mini bodegas están diseñadas para adaptarse a cualquier necesidad de almacenamiento, comercial o personal.
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-3 gap-4 md:gap-8 mb-10 md:mb-16">
           {categorias.map((cat, idx) => (
-            <div key={idx} className="bg-gray-50 rounded-xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+            <div key={idx} className="bg-gray-50 rounded-xl p-5 md:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
               <h2 className="text-2xl font-bold text-brand-red mb-6 border-b border-gray-200 pb-4">{cat.titulo}</h2>
               <ul className="space-y-4">
                 {cat.items.map((item, i) => (

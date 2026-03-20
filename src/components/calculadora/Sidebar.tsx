@@ -109,7 +109,7 @@ export default function Sidebar({
 
   return (
     <div
-      className={`order-2 lg:order-1 w-full lg:w-72 xl:w-80 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex-col overflow-y-auto shrink-0 ${
+      className={`order-2 lg:order-1 w-full lg:w-72 xl:w-80 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex-col overflow-y-auto shrink-0 pb-4 lg:pb-0 ${
         mobileTab === 'resumen' ? 'hidden lg:flex' : 'flex'
       }`}
     >

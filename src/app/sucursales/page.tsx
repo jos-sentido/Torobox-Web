@@ -61,8 +61,8 @@ export default function SucursalesPage() {
     <div className="bg-brand-light min-h-screen pb-20">
       <div className="bg-brand-black text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Nuestras Sucursales</h1>
-          <p className="text-xl text-gray-300 max-w-2xl">
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">Nuestras Sucursales</h1>
+          <p className="text-base md:text-xl text-gray-300 max-w-2xl">
             Encuentra la mini bodega más cercana a tu hogar o negocio. Instalaciones de primer nivel en ubicaciones estratégicas.
           </p>
         </div>

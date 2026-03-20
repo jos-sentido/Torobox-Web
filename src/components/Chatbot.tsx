@@ -3,13 +3,90 @@
 import { useChat } from "@ai-sdk/react";
 import { type UIMessage } from "ai";
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+
+const SUGGESTED_QUESTIONS: Record<string, { label: string; question: string }[]> = {
+  "/": [
+    { label: "¿Qué tamaños de bodega tienen?", question: "¿Qué tamaños de bodega manejan y para qué sirve cada uno?" },
+    { label: "¿Qué incluye la renta?", question: "¿Qué beneficios están incluidos sin costo extra al rentar una bodega?" },
+    { label: "¿Dónde están ubicados?", question: "¿En qué ciudades y zonas tienen sucursales?" },
+  ],
+  "/soluciones": [
+    { label: "¿Cómo funciona la bodega con oficina?", question: "¿Cómo funciona la bodega con oficina integrada? ¿Qué incluye?" },
+    { label: "¿Tienen pensión vehicular?", question: "¿Ofrecen servicio de pensión o resguardo vehicular? ¿Qué tipo de vehículos aceptan?" },
+    { label: "¿Cuánto cuesta una bodega con oficina?", question: "¿Cuál es el precio de una bodega con oficina integrada?" },
+  ],
+  "/sucursales": [
+    { label: "¿Cuál sucursal me queda más cerca?", question: "¿Cuáles son las direcciones exactas de todas las sucursales?" },
+    { label: "¿Qué diferencia hay entre sucursales?", question: "¿Qué diferencia hay entre las sucursales? ¿Cuál es la mejor opción?" },
+    { label: "¿Cuáles son los teléfonos de contacto?", question: "¿Cuáles son los teléfonos y correos de cada sucursal?" },
+  ],
+  "/sucursales/av-vallarta": [
+    { label: "¿Qué precios maneja Av. Vallarta?", question: "¿Cuáles son los precios de las bodegas en la sucursal Av. Vallarta?" },
+    { label: "¿Qué servicios tiene esta sucursal?", question: "¿Qué servicios y características tiene la sucursal Av. Vallarta?" },
+    { label: "¿Cómo llego a Av. Vallarta?", question: "¿Cuál es la dirección exacta de la sucursal Av. Vallarta?" },
+  ],
+  "/sucursales/zona-real": [
+    { label: "¿Qué precios maneja Zona Real?", question: "¿Cuáles son los precios de las bodegas en la sucursal Zona Real?" },
+    { label: "¿Por qué es la sucursal Premium?", question: "¿Qué tiene de especial la sucursal Zona Real que la hace Premium?" },
+    { label: "¿Tienen montacargas disponible?", question: "¿La sucursal Zona Real cuenta con montacargas y apoyo logístico?" },
+  ],
+  "/sucursales/punto-sur": [
+    { label: "¿Qué precios maneja Punto Sur?", question: "¿Cuáles son los precios de las bodegas en la sucursal Punto Sur?" },
+    { label: "¿Tienen pensión vehicular aquí?", question: "¿La sucursal Punto Sur ofrece pensión vehicular? ¿Cómo funciona?" },
+    { label: "¿Tienen app de acceso?", question: "¿Cómo funciona la app de control de acceso en Punto Sur?" },
+  ],
+  "/sucursales/bucerias": [
+    { label: "¿Qué precios maneja Bucerías?", question: "¿Cuáles son los precios de las bodegas en la sucursal Bucerías?" },
+    { label: "¿Puedo guardar mi lancha ahí?", question: "¿Puedo guardar lanchas, motos o vehículos recreativos en Bucerías?" },
+    { label: "¿Tienen control de humedad?", question: "¿Cómo manejan la humedad y el salitre en la sucursal de Bucerías?" },
+  ],
+  "/calculadora": [
+    { label: "¿Cómo funciona la calculadora?", question: "¿Cómo funciona la calculadora de espacio? ¿Cómo la uso?" },
+    { label: "¿Qué bodega necesito para una mudanza?", question: "Me voy a mudar de un departamento de 2 recámaras, ¿qué tamaño de bodega necesito?" },
+    { label: "¿Puedo guardar muebles y cajas juntos?", question: "¿Puedo guardar muebles grandes y cajas en la misma bodega? ¿Cómo optimizo el espacio?" },
+  ],
+  "/faq": [
+    { label: "¿Puedo rentar solo un mes?", question: "¿Puedo rentar una bodega solo por un mes o necesito contrato largo?" },
+    { label: "¿Qué documentos necesito?", question: "¿Qué documentos necesito para contratar una bodega?" },
+    { label: "¿Tienen descuentos por pago anual?", question: "¿Qué descuentos ofrecen si pago por varios meses por adelantado?" },
+  ],
+  "/contacto": [
+    { label: "¿Cómo puedo contratar?", question: "¿Cuál es el proceso para contratar una bodega paso a paso?" },
+    { label: "¿Atienden por WhatsApp?", question: "¿Puedo contactarlos por WhatsApp? ¿Cuál es el número?" },
+    { label: "¿Cuánto tarda el proceso?", question: "¿Cuánto tiempo tarda todo el proceso desde que contacto hasta que puedo usar la bodega?" },
+  ],
+  "/como-contratar": [
+    { label: "¿Qué identificación aceptan?", question: "¿Qué tipo de identificación oficial aceptan para contratar?" },
+    { label: "¿Puedo contratar como empresa?", question: "¿Puedo contratar como persona moral? ¿Facturan?" },
+    { label: "¿El contrato tiene penalización?", question: "¿El contrato tiene penalización si quiero cancelar antes de tiempo?" },
+  ],
+  "/que-puedes-guardar": [
+    { label: "¿Puedo guardar electrodomésticos?", question: "¿Puedo guardar electrodomésticos como refrigeradores o lavadoras en la bodega?" },
+    { label: "¿Aceptan inventario de negocio?", question: "¿Puedo guardar inventario de mi tienda en línea o e-commerce?" },
+    { label: "¿Guardan archivo muerto?", question: "¿Ofrecen servicio para guardar archivo muerto de empresas o notarías?" },
+  ],
+  "/articulos-no-permitidos": [
+    { label: "¿Puedo guardar pintura?", question: "¿Puedo guardar latas de pintura o solventes en mi bodega?" },
+    { label: "¿Puedo guardar alimentos?", question: "¿Se permite guardar alimentos enlatados o no perecederos?" },
+    { label: "¿Por qué hay restricciones?", question: "¿Por qué existen restricciones sobre lo que se puede guardar?" },
+  ],
+};
+
+function getSuggestedQuestions(pathname: string) {
+  // Exact match first
+  if (SUGGESTED_QUESTIONS[pathname]) return SUGGESTED_QUESTIONS[pathname];
+  // Default
+  return SUGGESTED_QUESTIONS["/"];
+}
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const { messages, sendMessage, status } = useChat();
   const isLoading = status === "streaming" || status === "submitted";
+  const pathname = usePathname();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -28,6 +105,14 @@ export default function Chatbot() {
     setInput("");
     await sendMessage({ text });
   };
+
+  const handleSuggestion = async (question: string) => {
+    if (isLoading) return;
+    await sendMessage({ text: question });
+  };
+
+  const suggestions = getSuggestedQuestions(pathname);
+  const showSuggestions = messages.length === 0;
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -51,13 +136,15 @@ export default function Chatbot() {
 
       {/* Ventana de Chat */}
       {isOpen && (
-        <div className="absolute bottom-20 right-0 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-300 h-[30rem] max-h-[80vh]">
+        <div className="fixed inset-4 sm:inset-auto sm:absolute sm:bottom-20 sm:right-0 sm:w-[32rem] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-300 sm:h-[42rem] sm:max-h-[90vh] z-50">
 
           {/* Header */}
           <div className="bg-brand-black text-white p-4 flex items-center gap-3">
-            <div className="bg-brand-red w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">
-              T
-            </div>
+            <img
+              src="/logos/perfil_f.jpg"
+              alt="ToroBox"
+              className="w-10 h-10 rounded-full object-cover"
+            />
             <div>
               <h3 className="font-bold text-lg leading-tight">Asistente ToroBox</h3>
               <p className="text-xs text-gray-300">Responde al instante con IA</p>
@@ -67,12 +154,28 @@ export default function Chatbot() {
           {/* Área de mensajes */}
           <div className="flex-1 p-4 overflow-y-auto bg-gray-50 flex flex-col gap-4">
 
-            {/* Mensaje de bienvenida inicial (hardcodeado por UX) */}
+            {/* Mensaje de bienvenida inicial */}
             <div className="flex justify-start">
               <div className="bg-white text-gray-800 border-gray-200 border rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[85%] text-sm shadow-sm">
-                ¡Hola! 👋 Soy el asistente virtual de ToroBox. ¿En qué te puedo ayudar hoy? (Precios, ubicaciones, tamaños...)
+                ¡Hola! 👋 Soy el asistente virtual de ToroBox. ¿En qué te puedo ayudar hoy?
               </div>
             </div>
+
+            {/* Preguntas sugeridas — solo si no hay mensajes aún */}
+            {showSuggestions && (
+              <div className="flex flex-col gap-2">
+                {suggestions.map((s, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSuggestion(s.question)}
+                    disabled={isLoading}
+                    className="text-left text-xs bg-white border border-indigo-200 text-indigo-700 rounded-xl px-3 py-2 hover:bg-indigo-50 hover:border-indigo-300 transition-colors disabled:opacity-50 shadow-sm"
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {messages.map((m: UIMessage) => {
               const text = m.parts
@@ -107,7 +210,6 @@ export default function Chatbot() {
               </div>
             )}
 
-            {/* Div invisible para hacer scroll automático al final */}
             <div ref={messagesEndRef} />
           </div>
 
@@ -126,13 +228,13 @@ export default function Chatbot() {
                 disabled={!input.trim() || isLoading}
                 className="bg-brand-black hover:bg-black text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <svg className="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </button>
             </form>
             <div className="text-[10px] text-center text-gray-400 mt-2">
-              ToroBox AI puede cometer errores. Considera verificar la información importante.
+              ToroBox AI puede cometer errores. Verifica información importante.
             </div>
           </div>
 

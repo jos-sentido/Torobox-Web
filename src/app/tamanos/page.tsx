@@ -57,15 +57,15 @@ export default function TamanosPage() {
     <div className="bg-brand-light pb-20">
       <div className="bg-brand-black text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Tamaños de Mini Bodegas</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">Tamaños de Mini Bodegas</h1>
+          <p className="text-base md:text-xl text-gray-300 max-w-2xl mx-auto">
             Desde necesidades personales hasta requerimientos empresariales. Encuentra el espacio perfecto para ti.
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
           {tamanos.map((t, idx) => (
             <div key={idx} className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow flex flex-col h-full">
               <div className="bg-brand-red text-white p-6 text-center">
@@ -98,7 +98,7 @@ export default function TamanosPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 text-center">
-        <div className="bg-white p-10 rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-white p-6 md:p-10 rounded-xl shadow-sm border border-gray-200">
           <h2 className="text-2xl font-bold mb-4 text-brand-black">¿Aún no estás seguro de qué tamaño elegir?</h2>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
             Nuestros asesores están capacitados para ayudarte a calcular el espacio exacto que necesitas para no pagar de más.

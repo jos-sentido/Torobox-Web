@@ -3,7 +3,7 @@ import { PIXELS_PER_METER } from './constants';
 import { canStack } from './utils';
 
 // ─── Safety constraints ───────────────────────────────────────────
-const MAX_STACK_HEIGHT_RATIO = 0.55;  // Max 55% of unit height for stacking (~1.5m in 2.78m unit)
+const MAX_STACK_HEIGHT_RATIO = 0.85;  // Max 85% of unit height for stacking (~2.36m in 2.78m unit)
 const MAX_BOX_LEVELS = 2;             // Max 2 boxes stacked on each other
 const ACCESS_CORRIDOR = 0.60;         // 60cm corridor reserved for access
 const FLOOR_ONLY_IDS = new Set([      // Heavy/tall items: floor only, never stacked

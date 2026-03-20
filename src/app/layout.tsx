@@ -18,7 +18,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "ToroBox - Renta de Mini Bodegas",
+  title: "Torobox",
   description: "Espacios seguros para almacenar pertenencias personales, muebles, archivo o inventario de negocios. Instalaciones con vigilancia 24/7.",
 };
 

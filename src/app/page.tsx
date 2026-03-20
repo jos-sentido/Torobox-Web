@@ -21,7 +21,7 @@ import {
 } from "react-icons/pi";
 
 export const metadata: Metadata = {
-  title: "ToroBox — Renta de Mini Bodegas Seguras en Guadalajara y Nayarit",
+  title: "Torobox",
   description:
     "Renta de mini bodegas seguras, limpias y accesibles en Guadalajara, Zapopan, Tlajomulco y Bucerías. Vigilancia 24/7, acceso controlado y bodegas desde 1.75 m². Cotiza hoy.",
 };
@@ -45,7 +45,7 @@ export default function Home() {
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-start text-left">
           <span className="text-brand-red font-bold tracking-wider uppercase text-sm mb-4">Almacenamiento Seguro y Profesional</span>
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 max-w-3xl leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-6 max-w-3xl leading-tight">
             Más espacio para tu vida y tu negocio.
           </h1>
           <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl">
@@ -59,14 +59,14 @@ export default function Home() {
       </section>
 
       {/* Usos Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-brand-black mb-4">¿Para qué necesitas espacio?</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">Soluciones de almacenamiento diseñadas para cubrir cualquier necesidad, desde tu hogar hasta tu corporativo.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
             {[
               {
                 title: "Hogar y Mudanza",
@@ -89,7 +89,7 @@ export default function Home() {
                 icon: <PiWrenchDuotone className="w-8 h-8" />,
               },
             ].map((uso, i) => (
-              <div key={i} className="bg-gray-50 border border-gray-100 rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+              <div key={i} className="bg-gray-50 border border-gray-100 rounded-xl p-5 md:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
                 <div className="mb-6 bg-brand-black text-brand-red w-16 h-16 rounded-lg flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                   {uso.icon}
                 </div>
@@ -105,7 +105,7 @@ export default function Home() {
       </section>
 
       {/* Beneficios Incluidos Section */}
-      <section className="py-20 bg-brand-dark text-white">
+      <section className="py-12 md:py-20 bg-brand-dark text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Tu tranquilidad está incluida</h2>
@@ -123,7 +123,7 @@ export default function Home() {
               { name: "Carritos de apoyo", icon: <PiTrolleyDuotone className="w-8 h-8 text-brand-red mb-3" /> },
               { name: "Asistencia personalizada", icon: <PiHandshakeDuotone className="w-8 h-8 text-brand-red mb-3" /> },
             ].map((ben, i) => (
-              <div key={i} className="flex flex-col items-center justify-center p-6 bg-brand-black rounded-lg border border-gray-800 hover:border-brand-red transition-colors">
+              <div key={i} className="flex flex-col items-center justify-center p-3 md:p-6 bg-brand-black rounded-lg border border-gray-800 hover:border-brand-red transition-colors">
                 {ben.icon}
                 <span className="font-semibold text-sm md:text-base">{ben.name}</span>
               </div>
@@ -133,7 +133,7 @@ export default function Home() {
       </section>
 
       {/* Galería de Instalaciones */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <span className="text-brand-red font-bold uppercase tracking-wider text-sm mb-2 block">Instalaciones reales</span>
@@ -146,7 +146,7 @@ export default function Home() {
       </section>
 
       {/* Calculadora de Espacio CTA */}
-      <section className="py-20 bg-brand-black text-white overflow-hidden relative">
+      <section className="py-12 md:py-20 bg-brand-black text-white overflow-hidden relative">
         <div className="absolute inset-0 opacity-5 pointer-events-none select-none">
           <div className="absolute top-4 left-8 text-[120px] font-black text-white leading-none">m²</div>
           <div className="absolute bottom-4 right-8 text-[120px] font-black text-white leading-none">3D</div>
@@ -202,7 +202,7 @@ export default function Home() {
       <PromotionsSection />
 
       {/* Tamaños y Sucursales */}
-      <section className="py-20 bg-white">
+      <section className="py-12 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16">
             

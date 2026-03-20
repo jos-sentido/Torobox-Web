@@ -22,8 +22,8 @@ export default function ArticulosNoPermitidosPage() {
     <div className="bg-white min-h-screen pb-20">
       <div className="bg-brand-black text-white py-16 border-b-4 border-brand-red">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Artículos No Permitidos</h1>
-          <p className="text-xl text-gray-300">
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6">Artículos No Permitidos</h1>
+          <p className="text-base md:text-xl text-gray-300">
             Para garantizar la seguridad de todas las pertenencias y de nuestras instalaciones, existen restricciones estrictas.
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function ArticulosNoPermitidosPage() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {prohibidos.map((item, idx) => (
-            <div key={idx} className="border border-gray-200 rounded-xl p-8 hover:border-brand-red transition-colors">
+            <div key={idx} className="border border-gray-200 rounded-xl p-5 md:p-8 hover:border-brand-red transition-colors">
               <div className="text-4xl mb-4">{item.icon}</div>
               <h3 className="text-xl font-bold text-brand-black mb-2">{item.title}</h3>
               <p className="text-gray-600">{item.desc}</p>
@@ -56,7 +56,7 @@ export default function ArticulosNoPermitidosPage() {
 
         <div className="mt-16 text-center">
           <p className="text-gray-600 mb-6">Si tienes dudas sobre algo en específico, por favor consulta nuestra sección completa de FAQ o contáctanos.</p>
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
              <Button href="/faq" variant="secondary">Leer FAQ completo</Button>
              <Button href="/contacto" variant="outline">Consultar Asesor</Button>
           </div>

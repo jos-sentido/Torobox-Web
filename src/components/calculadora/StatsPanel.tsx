@@ -24,6 +24,8 @@ interface StatsPanelProps {
   onRemoveOverflow: () => void;
   onKeepOverflow: () => void;
   isAnalyzing: boolean;
+  isArranging?: boolean;
+  hasArranged?: boolean;
   aiAnalysis: AIAnalysis | null;
   overflowInfo: OverflowInfo | null;
   mobileTab?: 'bodega' | 'objetos' | 'resumen';
@@ -40,6 +42,8 @@ export default function StatsPanel({
   onRemoveOverflow,
   onKeepOverflow,
   isAnalyzing,
+  isArranging = false,
+  hasArranged = false,
   aiAnalysis,
   overflowInfo,
   mobileTab,
@@ -73,7 +77,7 @@ export default function StatsPanel({
 
   return (
     <div
-      className={`order-3 w-full lg:w-72 xl:w-80 bg-white border-t lg:border-t-0 lg:border-l border-slate-200 flex-col overflow-y-auto shrink-0 ${
+      className={`order-3 w-full lg:w-72 xl:w-80 bg-white border-t lg:border-t-0 lg:border-l border-slate-200 flex-col overflow-y-auto shrink-0 pb-6 lg:pb-0 ${
         mobileTab !== 'resumen' ? 'hidden lg:flex' : 'flex'
       }`}
     >
@@ -179,7 +183,7 @@ export default function StatsPanel({
           Objetos en Bodega ({items.length})
         </h3>
 
-        <div className="flex-1 overflow-y-auto space-y-1.5 mb-4 min-h-0 max-h-48 lg:max-h-none">
+        <div className="flex-1 overflow-y-auto space-y-1.5 mb-4 min-h-0 max-h-[40vh] lg:max-h-none">
           {items.length === 0 ? (
             <p className="text-xs text-slate-500 italic text-center py-6">La bodega está vacía</p>
           ) : (
@@ -228,24 +232,19 @@ export default function StatsPanel({
 
           <button
             onClick={onAutoArrange}
-            disabled={items.length === 0}
+            disabled={items.length === 0 || isArranging || hasArranged}
             className="w-full py-2.5 px-4 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
           >
-            <PiMagicWandDuotone size={15} />
-            Acomodo Automático
-          </button>
-
-          <button
-            onClick={onAnalyze}
-            disabled={items.length === 0 || isAnalyzing}
-            className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
-          >
-            {isAnalyzing ? (
-              <><PiSpinnerDuotone size={15} className="animate-spin" />Analizando...</>
+            {isArranging ? (
+              <><PiSpinnerDuotone size={15} className="animate-spin" />Acomodando con IA...</>
+            ) : hasArranged ? (
+              <><PiMagicWandDuotone size={15} />Ya acomodado con IA</>
             ) : (
-              <><PiSparkleDuotone size={15} />Analizar con IA</>
+              <><PiMagicWandDuotone size={15} />Acomodo Inteligente IA</>
             )}
           </button>
+
+          {/* Botón Analizar con IA oculto por ahora */}
         </div>
 
         {/* Overflow decision — user chooses what to do */}
@@ -289,6 +288,11 @@ export default function StatsPanel({
               <PiSparkleDuotone size={14} className="text-indigo-600 shrink-0 mt-0.5" />
               <p className="text-xs text-indigo-900 leading-relaxed">{aiAnalysis.summary}</p>
             </div>
+            {hasArranged && (
+              <p className="text-[10px] text-indigo-400 mt-2 leading-snug">
+                El acomodo con IA es una sugerencia aproximada. Te recomendamos verificar visualmente que todo se vea bien y ajustar lo que necesites.
+              </p>
+            )}
           </div>
         )}
       </div>
