@@ -9,6 +9,7 @@ interface ButtonProps {
   className?: string;
   type?: "button" | "submit" | "reset";
   fullWidth?: boolean;
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -19,6 +20,7 @@ export default function Button({
   className = "",
   type = "button",
   fullWidth = false,
+  disabled = false,
 }: ButtonProps) {
   
   const baseStyles = "inline-flex items-center justify-center font-medium rounded-md transition-colors duration-200";
@@ -42,7 +44,7 @@ export default function Button({
   }
 
   return (
-    <button type={type} onClick={onClick} className={combinedClasses}>
+    <button type={type} onClick={onClick} className={`${combinedClasses} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={disabled}>
       {children}
     </button>
   );
