@@ -25,6 +25,9 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
   const [correo, setCorreo] = useState('');
   const [mensaje, setMensaje] = useState('');
 
+  // Validation errors
+  const [errores, setErrores] = useState<Record<string, string>>({});
+
   // Submission state
   const [enviando, setEnviando] = useState(false);
   const [enviado, setEnviado] = useState(false);
@@ -42,9 +45,70 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
 
   const clearPreseleccion = () => setPreseleccion(null);
 
+  const handleNombre = (value: string) => {
+    // Only allow letters, spaces, accents, and common name characters
+    const cleaned = value.replace(/[0-9]/g, '');
+    setNombre(cleaned);
+    if (errores.nombre) setErrores(prev => ({ ...prev, nombre: '' }));
+  };
+
+  const handleTelefono = (value: string) => {
+    // Only allow digits, spaces, dashes, parentheses, and +
+    const cleaned = value.replace(/[^0-9+\-() ]/g, '');
+    setTelefono(cleaned);
+    if (errores.telefono) setErrores(prev => ({ ...prev, telefono: '' }));
+  };
+
+  const handleCorreo = (value: string) => {
+    setCorreo(value);
+    if (errores.correo) setErrores(prev => ({ ...prev, correo: '' }));
+  };
+
+  const validarFormulario = (): boolean => {
+    const nuevosErrores: Record<string, string> = {};
+
+    const nombreLimpio = nombre.trim();
+    if (!nombreLimpio) {
+      nuevosErrores.nombre = 'El nombre es obligatorio';
+    } else if (nombreLimpio.length < 3) {
+      nuevosErrores.nombre = 'Ingresa tu nombre completo';
+    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s.'-]+$/.test(nombreLimpio)) {
+      nuevosErrores.nombre = 'El nombre solo puede contener letras';
+    }
+
+    const telLimpio = telefono.replace(/[\s\-()]/g, '');
+    if (!telLimpio) {
+      nuevosErrores.telefono = 'El teléfono es obligatorio';
+    } else if (!/^\+?\d{7,15}$/.test(telLimpio)) {
+      nuevosErrores.telefono = 'Ingresa un número de teléfono válido (7-15 dígitos)';
+    }
+
+    if (!correo.trim()) {
+      nuevosErrores.correo = 'El correo es obligatorio';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo.trim())) {
+      nuevosErrores.correo = 'Ingresa un correo electrónico válido';
+    }
+
+    if (!sucursal) {
+      nuevosErrores.sucursal = 'Selecciona una sucursal';
+    }
+
+    if (!tamano) {
+      nuevosErrores.tamano = 'Selecciona un tamaño de bodega';
+    }
+
+    if (!plazo) {
+      nuevosErrores.plazo = 'Selecciona un plazo de contrato';
+    }
+
+    setErrores(nuevosErrores);
+    return Object.keys(nuevosErrores).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (enviando) return;
+    if (!validarFormulario()) return;
     setEnviando(true);
     setErrorEnvio('');
 
@@ -209,58 +273,63 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-2">Nombre completo</label>
-                  <input type="text" id="nombre" value={nombre} onChange={e => setNombre(e.target.value)} className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="Tu nombre" required />
+                  <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-2">Nombre completo <span className="text-brand-red">*</span></label>
+                  <input type="text" id="nombre" value={nombre} onChange={e => handleNombre(e.target.value)} className={`w-full border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none ${errores.nombre ? 'border-red-400 bg-red-50' : 'border-gray-300'}`} placeholder="Tu nombre" />
+                  {errores.nombre && <p className="text-red-500 text-xs mt-1">{errores.nombre}</p>}
                 </div>
                 <div>
-                  <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
-                  <input type="tel" id="telefono" value={telefono} onChange={e => setTelefono(e.target.value)} className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="Tu número" required />
+                  <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-2">Teléfono <span className="text-brand-red">*</span></label>
+                  <input type="tel" id="telefono" inputMode="tel" value={telefono} onChange={e => handleTelefono(e.target.value)} className={`w-full border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none ${errores.telefono ? 'border-red-400 bg-red-50' : 'border-gray-300'}`} placeholder="33 1234 5678" />
+                  {errores.telefono && <p className="text-red-500 text-xs mt-1">{errores.telefono}</p>}
                 </div>
               </div>
 
               <div>
-                <label htmlFor="correo" className="block text-sm font-medium text-gray-700 mb-2">Correo electrónico</label>
-                <input type="email" id="correo" value={correo} onChange={e => setCorreo(e.target.value)} className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none" placeholder="tucorreo@ejemplo.com" required />
+                <label htmlFor="correo" className="block text-sm font-medium text-gray-700 mb-2">Correo electrónico <span className="text-brand-red">*</span></label>
+                <input type="email" id="correo" inputMode="email" value={correo} onChange={e => handleCorreo(e.target.value)} className={`w-full border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none ${errores.correo ? 'border-red-400 bg-red-50' : 'border-gray-300'}`} placeholder="tucorreo@ejemplo.com" />
+                {errores.correo && <p className="text-red-500 text-xs mt-1">{errores.correo}</p>}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="sucursal" className="block text-sm font-medium text-gray-700 mb-2">Sucursal de interés</label>
+                  <label htmlFor="sucursal" className="block text-sm font-medium text-gray-700 mb-2">Sucursal de interés <span className="text-brand-red">*</span></label>
                   <select
                     id="sucursal"
                     value={sucursalesFiltradas.some(s => s.id === sucursal) ? sucursal : ''}
-                    onChange={e => setSucursal(e.target.value)}
-                    className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none bg-white"
+                    onChange={e => { setSucursal(e.target.value); if (errores.sucursal) setErrores(prev => ({ ...prev, sucursal: '' })); }}
+                    className={`w-full border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none bg-white ${errores.sucursal ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                   >
                     <option value="">Selecciona una opción</option>
                     {sucursalesFiltradas.map(s => (
                       <option key={s.id} value={s.id}>{s.nombre}</option>
                     ))}
                   </select>
+                  {errores.sucursal && <p className="text-red-500 text-xs mt-1">{errores.sucursal}</p>}
                 </div>
                 <div>
-                  <label htmlFor="tamano" className="block text-sm font-medium text-gray-700 mb-2">Tamaño de bodega</label>
+                  <label htmlFor="tamano" className="block text-sm font-medium text-gray-700 mb-2">Tamaño de bodega <span className="text-brand-red">*</span></label>
                   <select
                     id="tamano"
                     value={tamano}
-                    onChange={e => setTamano(e.target.value)}
-                    className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none bg-white"
+                    onChange={e => { setTamano(e.target.value); if (errores.tamano) setErrores(prev => ({ ...prev, tamano: '' })); }}
+                    className={`w-full border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none bg-white ${errores.tamano ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                   >
                     <option value="">Aún no lo sé, necesito asesoría</option>
                     {allTamanos.map(t => (
                       <option key={t.id} value={t.id}>{t.label}</option>
                     ))}
                   </select>
+                  {errores.tamano && <p className="text-red-500 text-xs mt-1">{errores.tamano}</p>}
                 </div>
               </div>
 
               <div>
-                <label htmlFor="plazo" className="block text-sm font-medium text-gray-700 mb-2">Plazo de contrato</label>
+                <label htmlFor="plazo" className="block text-sm font-medium text-gray-700 mb-2">Plazo de contrato <span className="text-brand-red">*</span></label>
                 <select
                   id="plazo"
                   value={plazo}
-                  onChange={e => setPlazo(e.target.value)}
-                  className="w-full border-gray-300 border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none bg-white"
+                  onChange={e => { setPlazo(e.target.value); if (errores.plazo) setErrores(prev => ({ ...prev, plazo: '' })); }}
+                  className={`w-full border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none bg-white ${errores.plazo ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 >
                   <option value="">No lo sé todavía, necesito asesoría</option>
                   <option value="mensual">Mensual — precio estándar, sin compromiso</option>
@@ -282,6 +351,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                     <p className="text-brand-black font-black text-base">15% off</p>
                   </div>
                 </div>
+                {errores.plazo && <p className="text-red-500 text-xs mt-1">{errores.plazo}</p>}
               </div>
 
               <div>
