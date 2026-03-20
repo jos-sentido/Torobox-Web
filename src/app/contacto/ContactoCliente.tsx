@@ -113,8 +113,9 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
     setErrorEnvio('');
 
     const sucursalNombre = SUCURSALES.find(s => s.id === sucursal)?.nombre || sucursal;
-    const tamanoLabel = allTamanos.find(t => t.id === tamano)?.label || tamano;
+    const tamanoLabel = tamano === 'asesoria' ? 'Necesita asesoría' : (allTamanos.find(t => t.id === tamano)?.label || tamano);
     const plazoLabels: Record<string, string> = {
+      'asesoria': 'Necesita asesoría',
       'mensual': 'Mensual',
       '3-meses': '3 Meses (10% desc.)',
       '12-meses': '12 Meses (15% desc.)',
@@ -171,7 +172,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
 
   // Filter sucursales based on selected tamaño
   const sucursalesFiltradas = useMemo(() => {
-    if (!tamano) return SUCURSALES;
+    if (!tamano || tamano === 'asesoria') return SUCURSALES;
     return SUCURSALES.filter(s => s.bodegas.some(b => b.id === tamano));
   }, [tamano]);
 
@@ -314,7 +315,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                     onChange={e => { setTamano(e.target.value); if (errores.tamano) setErrores(prev => ({ ...prev, tamano: '' })); }}
                     className={`w-full border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none bg-white ${errores.tamano ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                   >
-                    <option value="">Aún no lo sé, necesito asesoría</option>
+                    <option value="asesoria">Aún no lo sé, necesito asesoría</option>
                     {allTamanos.map(t => (
                       <option key={t.id} value={t.id}>{t.label}</option>
                     ))}
@@ -331,7 +332,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                   onChange={e => { setPlazo(e.target.value); if (errores.plazo) setErrores(prev => ({ ...prev, plazo: '' })); }}
                   className={`w-full border rounded-md shadow-sm py-3 px-4 focus:ring-brand-red focus:border-brand-red outline-none bg-white ${errores.plazo ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 >
-                  <option value="">No lo sé todavía, necesito asesoría</option>
+                  <option value="asesoria">No lo sé todavía, necesito asesoría</option>
                   <option value="mensual">Mensual — precio estándar, sin compromiso</option>
                   <option value="3-meses">3 Meses — 10% de descuento ⭐ Más Popular</option>
                   <option value="12-meses">12 Meses — 15% de descuento, el mayor ahorro</option>
