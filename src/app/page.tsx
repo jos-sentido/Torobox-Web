@@ -145,6 +145,80 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Bodega con Oficina — Diferenciador */}
+      <section className="py-20 bg-brand-dark text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="lg:w-1/2">
+              <span className="inline-flex items-center gap-2 bg-brand-red/20 text-brand-red border border-brand-red/30 px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider mb-6">
+                ★ Exclusivo — Disponible en 2 sucursales
+              </span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                Bodega + Oficina<br /><span className="text-brand-red">en un solo espacio</span>
+              </h2>
+              <p className="text-gray-300 text-lg mb-6 leading-relaxed">
+                La única bodega del mercado que incluye una <strong className="text-white">oficina privada integrada</strong>. Almacena tu mercancía y opera tu negocio desde el mismo lugar — sin pagar dos rentas distintas.
+              </p>
+              <ul className="space-y-3 mb-8">
+                {[
+                  "Oficina privada dentro de tu misma bodega",
+                  "Ideal para negocios que necesitan almacenar y operar",
+                  "Wi-Fi, seguridad 24/7 y acceso controlado incluidos",
+                  "Una sola renta, doble funcionalidad",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-gray-300">
+                    <span className="text-brand-red font-bold mt-0.5">✓</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/tamanos#bodega-con-oficina" className="inline-flex items-center gap-2 bg-brand-red hover:bg-brand-red-hover text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-lg">
+                Ver disponibilidad y precios
+                <PiArrowRightDuotone className="w-5 h-5" />
+              </Link>
+            </div>
+            <div className="lg:w-1/2 w-full space-y-4">
+              <div className="bg-brand-black border border-gray-700 rounded-xl p-6 hover:border-brand-red transition-colors">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-brand-red text-sm font-bold uppercase tracking-wide mb-1">Sucursal Av. Vallarta</div>
+                    <div className="text-gray-400 text-sm">Guadalajara, Jalisco</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-white font-bold text-2xl">$20,416</div>
+                    <div className="text-gray-400 text-sm">/mes</div>
+                  </div>
+                </div>
+                <div className="border-t border-gray-700 pt-4 flex items-center justify-between">
+                  <span className="text-gray-400 text-sm">2.44m × 8.60m + oficina 3.40m</span>
+                  <Link href="/sucursales/av-vallarta" className="text-brand-red text-sm font-semibold hover:underline inline-flex items-center gap-1">
+                    Ver sucursal <PiArrowRightDuotone className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+              <div className="bg-brand-black border border-gray-700 rounded-xl p-6 hover:border-brand-red transition-colors">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-brand-red text-sm font-bold uppercase tracking-wide mb-1">Sucursal Bucerías</div>
+                    <div className="text-gray-400 text-sm">Nayarit</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-white font-bold text-2xl">$15,000</div>
+                    <div className="text-gray-400 text-sm">/mes</div>
+                  </div>
+                </div>
+                <div className="border-t border-gray-700 pt-4 flex items-center justify-between">
+                  <span className="text-gray-400 text-sm">2.44m × 8.60m + oficina 3.40m</span>
+                  <Link href="/sucursales/bucerias" className="text-brand-red text-sm font-semibold hover:underline inline-flex items-center gap-1">
+                    Ver sucursal <PiArrowRightDuotone className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Calculadora de Espacio CTA */}
       <section className="py-12 md:py-20 bg-brand-black text-white overflow-hidden relative">
         <div className="absolute inset-0 opacity-5 pointer-events-none select-none">
