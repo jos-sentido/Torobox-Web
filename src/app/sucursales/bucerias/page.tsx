@@ -16,7 +16,7 @@ export default function SucursalBuceriasPage() {
         etiqueta: 'Sucursal Costa',
         descripcion:
           'Espacios adaptados para el clima de la costa. Ideal para desarrollos turísticos, equipos marinos y almacenamiento vacacional.',
-        telefono: null,
+        telefono: '3225100051',
         email: null,
         direccion: 'Carr. Tepic-Vallarta, Bucerías, Nayarit',
         mapQuery: 'Buce%C3%ADas,+Nayarit,+M%C3%A9xico',

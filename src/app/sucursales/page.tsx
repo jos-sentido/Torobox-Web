@@ -46,7 +46,7 @@ const sucursales = [
   {
     id: "bucerias",
     nombre: "Bucerías",
-    telefono: null,
+    telefono: "322-510-00-51",
     email: null,
     direccion: "Carr. Tepic-Vallarta, Bucerías, Nayarit",
     mapQuery: "Buce%C3%ADas,+Nayarit,+M%C3%A9xico",
