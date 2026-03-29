@@ -16,10 +16,10 @@ export default function SucursalBuceriasPage() {
         etiqueta: 'Sucursal Costa',
         descripcion:
           'Espacios adaptados para el clima de la costa. Ideal para desarrollos turísticos, equipos marinos y almacenamiento vacacional.',
-        telefono: '3225100051',
-        email: null,
-        direccion: 'Carr. Tepic-Vallarta, Bucerías, Nayarit',
-        mapQuery: 'Buce%C3%ADas,+Nayarit,+M%C3%A9xico',
+        telefono: '3296880742',
+        email: 'ventasbucerias@torobox.com.mx',
+        direccion: 'Heroes De Nacozari 210, Col. Los Mangos y Flamingos Residencial, C.P. 63735, Bucerías, Nayarit',
+        mapQuery: 'Heroes+De+Nacozari+210,+Bucer%C3%ADas,+Nayarit,+M%C3%A9xico',
         heroSrc: '/images/sucursales/bucerias/hero.webp',
         gallery: [
           '/images/sucursales/bucerias/hero.webp',

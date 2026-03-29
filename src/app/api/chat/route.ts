@@ -50,13 +50,13 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Email: ventasvallarta@torobox.com.mx
 - Características: Acceso 24/7, bodegas desde 1.75m², cerca de vías principales, patio de maniobras, candados de seguridad incluidos, atención personalizada Lun-Sáb
 - Precios:
-  · 1.75 m²: Planta alta $900/mes, Planta baja $750/mes
-  · 3.5 m²: Planta baja $1,700/mes
-  · 7 m²: Planta alta $3,150/mes, Planta baja $2,940/mes
-  · 10 m²: Planta alta $4,050/mes, Planta baja $3,780/mes
-  · 15 m²: Planta alta $6,750/mes, Planta baja $6,300/mes
-  · 30 m²: Planta alta $13,500/mes
-  · Bodega con Oficina: Planta baja $20,416/mes
+  · 1.75 m²: Planta baja $900/mes, Planta alta $750/mes
+  · 3.5 m²: Planta baja $1,800/mes, Planta alta $1,700/mes
+  · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
+  · 10 m²: Planta baja $4,500/mes, Planta alta $4,200/mes
+  · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
+  · 30 m²: Planta baja $13,500/mes
+  · Bodega con Oficina: Planta baja $18,000/mes
 
 **Sucursal Zona Real (Sucursal Premium)**
 - Dirección: Prol. Jesús 3777, Col. Los Girasoles, C.P. 45136, Zapopan, Jalisco
@@ -78,27 +78,31 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Email: ventaspuntosur@torobox.com.mx
 - Características: Pensión vehicular disponible, bodegas domésticas y comerciales, acceso controlado, seguridad privada, app de control de acceso, ideal para zona residencial, carritos de carga, atención personalizada Lun-Sáb
 - Precios:
-  · 3.5 m²: Planta alta $1,700/mes, Planta baja $1,505/mes
-  · 7 m²: Planta alta $3,150/mes, Planta baja $2,940/mes
-  · 10 m²: Planta alta $4,050/mes, Planta baja $3,780/mes
-  · 15 m²: Planta alta $6,750/mes, Planta baja $6,300/mes
-  · 30 m²: Planta alta $13,500/mes
+  · 3.5 m²: Planta baja $1,700/mes, Planta alta $1,505/mes
+  · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
+  · 10 m²: Planta baja $4,500/mes, Planta alta $4,200/mes
+  · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
+  · 30 m²: Planta baja $13,500/mes
 
 **Sucursal Bucerías (Sucursal Costa)**
-- Dirección: Carr. Tepic-Vallarta, Bucerías, Nayarit
+- Dirección: Heroes De Nacozari 210, Col. Los Mangos y Flamingos Residencial, C.P. 63735, Bucerías, Nayarit
+- WhatsApp: 322-510-00-51
+- Teléfono fijo: 329-688-07-42
+- Email: ventasbucerias@torobox.com.mx
 - Características: Control de humedad, protección contra salitre, espacios para lanchas y motos, acceso para remolques, bodega vacacional, clima controlado, seguridad 24/7, ideal para turismo y zona costera
 - Precios:
-  · 3.5 m²: Planta alta $1,700/mes, Planta baja $1,505/mes
-  · 7 m²: Planta alta $3,150/mes, Planta baja $2,940/mes
-  · 10 m²: Planta alta $4,050/mes, Planta baja $3,780/mes
-  · 15 m²: Planta alta $6,750/mes, Planta baja $6,300/mes
-  · 30 m²: Planta alta $13,500/mes
+  · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
+  · 10 m²: Planta baja $4,500/mes, Planta alta $4,200/mes
+  · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
+  · 30 m²: Planta baja $13,500/mes
   · Bodega con Oficina: Planta baja $15,000/mes
 
-### Planes de pago y descuentos:
+### Planes de pago y descuentos (aplican a bodegas de 7 m² en adelante):
 - Mensual: precio normal (sin descuento)
-- 3 meses: 10% de descuento
-- 12 meses: 15% de descuento
+- 3 a 6 meses: 10% de descuento (11% en Bucerías)
+- 7 meses o más: 15% de descuento
+- Anualidad (12 meses): 20% de descuento
+Nota: Las bodegas de 1.75 m² y 3.5 m² no aplican descuentos por plazo.
 
 ### Proceso de contratación (5 pasos):
 1. Contacto: Llama, manda WhatsApp o llena el formulario web. Un asesor te atiende de inmediato.

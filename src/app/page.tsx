@@ -17,6 +17,7 @@ import {
   PiKeyDuotone,
   PiTrolleyDuotone,
   PiHandshakeDuotone,
+  PiDeskDuotone,
   PiArrowRightDuotone,
 } from "react-icons/pi";
 
@@ -122,6 +123,7 @@ export default function Home() {
               { name: "Acceso controlado", icon: <PiKeyDuotone className="w-8 h-8 text-brand-red mb-3" /> },
               { name: "Carritos de apoyo", icon: <PiTrolleyDuotone className="w-8 h-8 text-brand-red mb-3" /> },
               { name: "Asistencia personalizada", icon: <PiHandshakeDuotone className="w-8 h-8 text-brand-red mb-3" /> },
+              { name: "Cowork", icon: <PiDeskDuotone className="w-8 h-8 text-brand-red mb-3" /> },
             ].map((ben, i) => (
               <div key={i} className="flex flex-col items-center justify-center p-3 md:p-6 bg-brand-black rounded-lg border border-gray-800 hover:border-brand-red transition-colors">
                 {ben.icon}
@@ -157,12 +159,13 @@ export default function Home() {
                 Bodega + Oficina<br /><span className="text-brand-red">en un solo espacio</span>
               </h2>
               <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-                La única bodega del mercado que incluye una <strong className="text-white">oficina privada integrada</strong>. Almacena tu mercancía y opera tu negocio desde el mismo lugar — sin pagar dos rentas distintas.
+                La única bodega del mercado que incluye una <strong className="text-white">oficina privada integrada</strong> en 30 m² totales. Almacena tu mercancía y opera tu negocio desde el mismo lugar — sin pagar dos rentas distintas.
               </p>
               <ul className="space-y-3 mb-8">
                 {[
-                  "Oficina privada dentro de tu misma bodega",
-                  "Ideal para negocios que necesitan almacenar y operar",
+                  "30 m² totales — Oficina privada dentro de tu misma bodega",
+                  "Fondo 2.44m · Bodega 8.60m · Oficina 3.40m · Alto 2.78m",
+                  "Planta baja — carga y descarga sin escaleras",
                   "Wi-Fi, seguridad 24/7 y acceso controlado incluidos",
                   "Una sola renta, doble funcionalidad",
                 ].map((item, i) => (
@@ -185,12 +188,12 @@ export default function Home() {
                     <div className="text-gray-400 text-sm">Guadalajara, Jalisco</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-white font-bold text-2xl">$20,416</div>
+                    <div className="text-white font-bold text-2xl">$18,000</div>
                     <div className="text-gray-400 text-sm">/mes</div>
                   </div>
                 </div>
                 <div className="border-t border-gray-700 pt-4 flex items-center justify-between">
-                  <span className="text-gray-400 text-sm">2.44m × 8.60m + oficina 3.40m</span>
+                  <span className="text-gray-400 text-sm">Fondo 2.44m · Bodega 8.60m · Oficina 3.40m · Alto 2.78m</span>
                   <Link href="/sucursales/av-vallarta" className="text-brand-red text-sm font-semibold hover:underline inline-flex items-center gap-1">
                     Ver sucursal <PiArrowRightDuotone className="w-4 h-4" />
                   </Link>
@@ -208,7 +211,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="border-t border-gray-700 pt-4 flex items-center justify-between">
-                  <span className="text-gray-400 text-sm">2.44m × 8.60m + oficina 3.40m</span>
+                  <span className="text-gray-400 text-sm">Fondo 2.44m · Bodega 8.60m · Oficina 3.40m · Alto 2.78m</span>
                   <Link href="/sucursales/bucerias" className="text-brand-red text-sm font-semibold hover:underline inline-flex items-center gap-1">
                     Ver sucursal <PiArrowRightDuotone className="w-4 h-4" />
                   </Link>

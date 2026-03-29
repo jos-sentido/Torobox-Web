@@ -1,6 +1,14 @@
 import Image from 'next/image';
 import Button from '@/components/Button';
 import { PiCheckCircleDuotone, PiMapPinDuotone, PiPhoneDuotone, PiEnvelopeDuotone } from 'react-icons/pi';
+import { SUCURSALES } from '@/data/sucursales';
+
+const SUCURSAL_ID_MAP: Record<string, string> = {
+  'av-vallarta': 'vallarta',
+};
+
+const fmt = (n: number) =>
+  n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 });
 
 export interface SucursalData {
   sucursalId: string;
@@ -18,6 +26,9 @@ export interface SucursalData {
 
 export default function SucursalPage({ data }: { data: SucursalData }) {
   const { sucursalId, nombre, etiqueta, descripcion, telefono, email, direccion, mapQuery, heroSrc, gallery, servicios } = data;
+
+  const dataId = SUCURSAL_ID_MAP[sucursalId] || sucursalId;
+  const sucursalInfo = SUCURSALES.find(s => s.id === dataId);
 
   return (
     <div className="bg-white min-h-screen">
@@ -74,6 +85,56 @@ export default function SucursalPage({ data }: { data: SucursalData }) {
                 ))}
               </ul>
             </section>
+
+            {/* Medidas disponibles */}
+            {sucursalInfo && (
+              <section>
+                <h2 className="text-2xl font-bold text-brand-black mb-6">Medidas Disponibles</h2>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {sucursalInfo.bodegas.map(b => {
+                    const precios = Object.values(b.precios).filter(Boolean) as number[];
+                    const min = Math.min(...precios);
+                    const max = Math.max(...precios);
+                    const tieneAmbas = precios.length > 1;
+                    const maxDescuento = b.descuentos
+                      ? Math.max(...Object.values(b.descuentos).filter(Boolean) as number[])
+                      : 0;
+
+                    return (
+                      <div key={b.id} className="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl p-4 hover:border-brand-red/40 transition-colors">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="bg-brand-red text-white text-xs font-bold px-2.5 py-1 rounded-lg">{b.label}</span>
+                            {maxDescuento > 0 && (
+                              <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
+                                Hasta {Math.round(maxDescuento * 100)}% off
+                              </span>
+                            )}
+                          </div>
+                          <div className="mt-1.5 text-sm text-gray-600">
+                            {tieneAmbas ? (
+                              <>
+                                <span>P. Alta <strong className="text-gray-800">{fmt(b.precios.alta!)}</strong></span>
+                                <span className="mx-1.5 text-gray-300">|</span>
+                                <span>P. Baja <strong className="text-gray-800">{fmt(b.precios.baja!)}</strong></span>
+                              </>
+                            ) : (
+                              <span>Desde <strong className="text-gray-800">{fmt(min)}</strong>/mes</span>
+                            )}
+                          </div>
+                        </div>
+                        <a
+                          href={`/contacto?sucursal=${sucursalId}&tamano=${b.id}`}
+                          className="shrink-0 ml-3 text-brand-red text-xs font-bold hover:underline"
+                        >
+                          Cotizar
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
 
             {/* Map */}
             <section>

@@ -53,6 +53,19 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
   const bodega   = sucursal?.bodegas.find(b => b.id === bodegaId);
   const plazo    = PLAZOS.find(p => p.id === plazoId)!;
 
+  // Descuento: viene de la bodega según el plazo seleccionado
+  const descuento = useMemo(() => {
+    if (!bodega?.descuentos) return 0;
+    return bodega.descuentos[plazoId] ?? 0;
+  }, [bodega, plazoId]);
+
+  // Plazos disponibles: solo muestra plazos con descuento si la bodega los tiene
+  const plazosDisponibles = useMemo(() => {
+    if (!bodega) return PLAZOS;
+    if (!bodega.descuentos) return PLAZOS.filter(p => p.id === 'mensual');
+    return PLAZOS;
+  }, [bodega]);
+
   const pisosDisponibles = useMemo<Piso[]>(() => {
     if (!bodega) return [];
     return (Object.keys(bodega.precios) as Piso[]).filter(k => bodega.precios[k] !== undefined);
@@ -70,14 +83,14 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
   }, [bodega, pisoEfectivo]);
 
   const precioMensualConDescuento = precioBase !== null
-    ? Math.round(precioBase * (1 - plazo.descuento) * 100) / 100
+    ? Math.round(precioBase * (1 - descuento) * 100) / 100
     : null;
 
   const totalPeriodo = precioMensualConDescuento !== null
     ? precioMensualConDescuento * plazo.meses
     : null;
 
-  const ahorroTotal = (precioBase !== null && plazo.descuento > 0 && totalPeriodo !== null)
+  const ahorroTotal = (precioBase !== null && descuento > 0 && totalPeriodo !== null)
     ? precioBase * plazo.meses - totalPeriodo
     : null;
 
@@ -91,12 +104,14 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
       setBodegaId('');
     }
     setPiso('');
+    setPlazoId('mensual');
   };
 
   // Reset piso when bodega changes
   const handleBodega = (id: string) => {
     setBodegaId(id);
     setPiso('');
+    setPlazoId('mensual');
   };
 
   const handleSolicitarClick = () => {
@@ -112,7 +127,7 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
         plazoLabel: plazo.label,
         precioBase: precioBase!,
         precioMensual: precioMensualConDescuento!,
-        descuento: plazo.descuento,
+        descuento,
       });
     } else {
       document.getElementById('formulario-contacto')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -215,32 +230,35 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
                 <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                   Plazo de contrato
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {PLAZOS.map(p => (
-                    <button
-                      key={p.id}
-                      onClick={() => setPlazoId(p.id)}
-                      className={`relative py-3 px-2 rounded-xl border text-center text-xs font-semibold transition-all ${
-                        plazoId === p.id
-                          ? 'bg-brand-red border-brand-red text-white shadow-lg shadow-brand-red/20'
-                          : 'bg-white/5 border-white/10 text-gray-300 hover:border-white/30'
-                      }`}
-                    >
-                      {p.id === '3-meses' && (
-                        <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-white text-brand-black text-[8px] font-black px-1.5 py-0.5 rounded-full whitespace-nowrap leading-none">
-                          Popular
-                        </span>
-                      )}
-                      <span className="block font-bold text-sm mt-1">{p.label}</span>
-                      {p.badge ? (
-                        <span className={`block text-[10px] mt-0.5 font-bold ${plazoId === p.id ? 'text-white/90' : 'text-emerald-400'}`}>
-                          {p.badge}
-                        </span>
-                      ) : (
-                        <span className="block text-[10px] mt-0.5 opacity-60">estándar</span>
-                      )}
-                    </button>
-                  ))}
+                <div className={`grid gap-2 ${plazosDisponibles.length <= 1 ? 'grid-cols-1' : plazosDisponibles.length === 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-3'}`}>
+                  {plazosDisponibles.map(p => {
+                    const pDescuento = bodega?.descuentos?.[p.id] ?? 0;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => setPlazoId(p.id)}
+                        className={`relative py-3 px-2 rounded-xl border text-center text-xs font-semibold transition-all ${
+                          plazoId === p.id
+                            ? 'bg-brand-red border-brand-red text-white shadow-lg shadow-brand-red/20'
+                            : 'bg-white/5 border-white/10 text-gray-300 hover:border-white/30'
+                        }`}
+                      >
+                        {p.id === 'anualidad' && (
+                          <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-white text-brand-black text-[8px] font-black px-1.5 py-0.5 rounded-full whitespace-nowrap leading-none">
+                            Mejor ahorro
+                          </span>
+                        )}
+                        <span className="block font-bold text-sm mt-1">{p.label}</span>
+                        {pDescuento > 0 ? (
+                          <span className={`block text-[10px] mt-0.5 font-bold ${plazoId === p.id ? 'text-white/90' : 'text-emerald-400'}`}>
+                            {Math.round(pDescuento * 100)}% off
+                          </span>
+                        ) : (
+                          <span className="block text-[10px] mt-0.5 opacity-60">estándar</span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -266,12 +284,12 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
                     <p><span className="text-white font-semibold">Sucursal:</span> {sucursal?.nombre}</p>
                     <p><span className="text-white font-semibold">Bodega:</span> {bodega?.label}{bodega?.area ? ` — ${bodega.area} m²` : ''}</p>
                     <p><span className="text-white font-semibold">Planta:</span> {pisoEfectivo === 'alta' ? 'Planta Alta' : 'Planta Baja'}</p>
-                    <p><span className="text-white font-semibold">Plazo:</span> {plazo.label}{plazo.descuento > 0 ? ` (${plazo.descuento * 100}% descuento)` : ''}</p>
+                    <p><span className="text-white font-semibold">Plazo:</span> {plazo.label}{descuento > 0 ? ` (${Math.round(descuento * 100)}% descuento)` : ''}</p>
                   </div>
 
                   {/* Precio mensual */}
                   <div className="bg-brand-red/10 border border-brand-red/30 rounded-xl p-5 text-center">
-                    {plazo.descuento > 0 && (
+                    {descuento > 0 && (
                       <p className="text-xs text-gray-400 line-through mb-1">{fmt(precioBase!)}/mes</p>
                     )}
                     <p className="text-4xl font-black text-white">{fmt(precioMensualConDescuento!)}</p>
@@ -288,7 +306,7 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
                     )}
                     {ahorroTotal !== null && ahorroTotal > 0 && (
                       <div className="flex justify-between items-center py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-3">
-                        <span className="text-sm text-emerald-400 font-semibold">🎉 Ahorras en total</span>
+                        <span className="text-sm text-emerald-400 font-semibold">Ahorras en total</span>
                         <span className="text-sm font-black text-emerald-400">{fmt(ahorroTotal)}</span>
                       </div>
                     )}

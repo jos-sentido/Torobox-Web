@@ -4,6 +4,26 @@ import { useState } from 'react';
 import type { ComponentType } from 'react';
 import { Branch, Unit, ItemType } from './types';
 import { BRANCHES, ITEM_TYPES } from './constants';
+import { SUCURSALES } from '@/data/sucursales';
+
+const BRANCH_ID_MAP: Record<string, string> = { vallarta: 'vallarta' };
+
+const fmt = (n: number) =>
+  n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 });
+
+function getBodegaPrecio(branchId: string, unitId: string): string | null {
+  const sucursalDataId = BRANCH_ID_MAP[branchId] || branchId;
+  const sucursal = SUCURSALES.find(s => s.id === sucursalDataId);
+  if (!sucursal) return null;
+  // unitId is like 'v-7', 'ps-10', 'b-oficina' — extract bodega id after the prefix
+  const bodegaId = unitId.replace(/^[a-z]+-/, '');
+  const bodega = sucursal.bodegas.find(b => b.id === bodegaId);
+  if (!bodega) return null;
+  const precios = Object.values(bodega.precios).filter(Boolean) as number[];
+  if (precios.length === 0) return null;
+  const min = Math.min(...precios);
+  return `Desde ${fmt(min)}/mes`;
+}
 import {
   PiPlusDuotone,
   PiTrashDuotone,
@@ -134,22 +154,34 @@ export default function Sidebar({
       <div className={`p-4 lg:p-5 border-b border-slate-200 shrink-0 ${mobileTab === 'objetos' ? 'hidden lg:block' : 'block'}`}>
         <h2 className="text-sm lg:text-base font-bold text-slate-900 mb-3">2. Selecciona tu Bodega</h2>
         <div className="flex overflow-x-auto lg:flex-col gap-2 pb-1 lg:pb-0 snap-x">
-          {selectedBranch.units.map(unit => (
-            <button
-              key={unit.id}
-              onClick={() => onSelectUnit(unit)}
-              className={`min-w-[150px] lg:w-full text-left px-3 py-2 rounded-xl border-2 transition-all snap-start shrink-0 ${
-                selectedUnit.id === unit.id
-                  ? 'border-brand-red bg-red-50 text-red-900'
-                  : 'border-slate-200 hover:border-slate-300 text-slate-700'
-              }`}
-            >
-              <div className="font-semibold text-xs lg:text-sm">{unit.name}</div>
-              <div className="text-[10px] lg:text-xs opacity-70 mt-0.5">
-                {unit.width}m × {unit.length}m × {unit.height}m
-              </div>
-            </button>
-          ))}
+          {selectedBranch.units.map(unit => {
+            const precio = getBodegaPrecio(selectedBranch.id, unit.id);
+            return (
+              <button
+                key={unit.id}
+                onClick={() => onSelectUnit(unit)}
+                className={`min-w-[160px] lg:w-full text-left px-3 py-2.5 rounded-xl border-2 transition-all snap-start shrink-0 ${
+                  selectedUnit.id === unit.id
+                    ? 'border-brand-red bg-red-50 text-red-900'
+                    : 'border-slate-200 hover:border-slate-300 text-slate-700'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-semibold text-xs lg:text-sm">{unit.name}</span>
+                  {precio && (
+                    <span className={`text-[10px] font-bold whitespace-nowrap ${
+                      selectedUnit.id === unit.id ? 'text-brand-red' : 'text-slate-400'
+                    }`}>{precio}</span>
+                  )}
+                </div>
+                <div className="text-[10px] lg:text-xs opacity-70 mt-1 flex gap-2 flex-wrap">
+                  <span>Fondo {unit.width}m</span>
+                  <span>Frente {unit.length}m</span>
+                  <span>Alto {unit.height}m</span>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
