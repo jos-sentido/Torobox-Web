@@ -113,7 +113,7 @@ export default function Home() {
             <p className="text-gray-400 max-w-2xl mx-auto">Nuestras instalaciones cuentan con los más altos estándares de seguridad y servicios complementarios sin costo extra.</p>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 text-center">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 text-center">
             {[
               { name: "Wifi", icon: <PiWifiHighDuotone className="w-8 h-8 text-brand-red mb-3" /> },
               { name: "Vigilancia 24/7", icon: <PiShieldCheckDuotone className="w-8 h-8 text-brand-red mb-3" /> },
@@ -176,7 +176,7 @@ export default function Home() {
                 ))}
               </ul>
               <Link href="/tamanos#bodega-con-oficina" className="inline-flex items-center gap-2 bg-brand-red hover:bg-brand-red-hover text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-lg">
-                Ver disponibilidad y precios
+                Ver más
                 <PiArrowRightDuotone className="w-5 h-5" />
               </Link>
             </div>

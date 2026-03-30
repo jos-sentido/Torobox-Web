@@ -124,7 +124,7 @@ export default function SucursalPage({ data }: { data: SucursalData }) {
                           </div>
                         </div>
                         <a
-                          href={`/contacto?sucursal=${sucursalId}&tamano=${b.id}`}
+                          href={`/contacto?sucursal=${dataId}&tamano=${b.id}`}
                           className="shrink-0 ml-3 text-brand-red text-xs font-bold hover:underline"
                         >
                           Cotizar
@@ -208,7 +208,7 @@ export default function SucursalPage({ data }: { data: SucursalData }) {
                 <p className="text-gray-400 text-sm mb-6 leading-relaxed">
                   Simula el costo de tu bodega y solicita información con un asesor de esta sucursal.
                 </p>
-                <Button href={`/contacto?sucursal=${sucursalId}`} variant="primary" fullWidth>
+                <Button href={`/contacto?sucursal=${dataId}`} variant="primary" fullWidth>
                   Cotizar en {nombre}
                 </Button>
                 <p className="text-xs text-gray-500 text-center mt-3">Te respondemos de inmediato · Lun–Sáb</p>

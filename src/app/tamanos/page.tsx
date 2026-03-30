@@ -112,7 +112,7 @@ export default function TamanosPage() {
                       </div>
                     </div>
                     <div className="flex gap-3">
-                      <Button href="/contacto?tamano=oficina&sucursal=av-vallarta" fullWidth variant="primary">Solicitar Información</Button>
+                      <Button href="/contacto?tamano=oficina&sucursal=vallarta" fullWidth variant="primary">Solicitar Información</Button>
                       <Link href="/sucursales/av-vallarta" className="shrink-0 border border-gray-600 hover:border-brand-red text-gray-300 hover:text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center">
                         Ver sucursal
                       </Link>
