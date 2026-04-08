@@ -20,12 +20,13 @@ export interface SucursalData {
   direccion: string;
   mapQuery: string;
   heroSrc: string;
+  heroPosition?: string;
   gallery: string[];
   servicios: string[];
 }
 
 export default function SucursalPage({ data }: { data: SucursalData }) {
-  const { sucursalId, nombre, etiqueta, descripcion, telefono, email, direccion, mapQuery, heroSrc, gallery, servicios } = data;
+  const { sucursalId, nombre, etiqueta, descripcion, telefono, email, direccion, mapQuery, heroSrc, heroPosition, gallery, servicios } = data;
 
   const dataId = SUCURSAL_ID_MAP[sucursalId] || sucursalId;
   const sucursalInfo = SUCURSALES.find(s => s.id === dataId);
@@ -36,7 +37,7 @@ export default function SucursalPage({ data }: { data: SucursalData }) {
       {/* Hero */}
       <div className="relative bg-brand-black text-white py-24 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image src={heroSrc} alt={`Fachada e instalaciones de la sucursal ToroBox ${nombre}`} fill sizes="100vw" className="object-cover opacity-30" priority />
+          <Image src={heroSrc} alt={`Fachada e instalaciones de la sucursal ToroBox ${nombre}`} fill sizes="100vw" className="object-cover opacity-30" style={heroPosition ? { objectPosition: heroPosition } : undefined} priority />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
           <span className="text-brand-red font-bold uppercase tracking-wider text-sm mb-2 block">{etiqueta}</span>

@@ -42,6 +42,7 @@ export const BRANCHES: Branch[] = [
     id: 'bucerias',
     name: 'Sucursal Bucerías',
     units: [
+      { id: 'b-3.5', name: 'Bodega 3.5 m²', width: 1.5, length: 2.44, height: 2.78 },
       { id: 'b-7', name: 'Bodega 7 m²', width: 2.44, length: 2.86, height: 2.78 },
       { id: 'b-10', name: 'Bodega 10 m²', width: 2.44, length: 4, height: 2.78 },
       { id: 'b-15', name: 'Bodega 15 m²', width: 2.44, length: 6, height: 2.78 },

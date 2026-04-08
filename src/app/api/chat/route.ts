@@ -62,21 +62,22 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Dirección: Prol. Jesús 3777, Col. Los Girasoles, C.P. 45136, Zapopan, Jalisco
 - Teléfono: 33-31-31-21-64
 - Email: karen.diaz@torobox.com.mx
-- Características: WiFi de alta velocidad, vigilancia armada 24/7, CCTV HD, estacionamiento amplio, montacargas disponible, control de plagas, facturación disponible, personal de apoyo logístico
+- Características: Acceso controlado, acceso 24/7, vigilancia 24/7, wifi, circuito cerrado, carritos de carga, atención personalizada Lun-Sáb, amplio estacionamiento, cerca de vías rápidas, control de plagas, perros de detección, venta de accesorios
+- Descuentos: 10% (3-6 meses), 15% (anualidad). NO hay descuento de 7+ meses en esta sucursal.
 - Precios:
-  · 3.5 m²: Planta alta $1,800/mes, Planta baja $1,700/mes
-  · 7 m²: Planta alta $3,150/mes, Planta baja $2,940/mes
-  · 8 m²: Planta alta $3,600/mes, Planta baja $3,360/mes
-  · 9 m²: Planta alta $4,050/mes, Planta baja $3,780/mes
-  · 11 m²: Planta alta $4,950/mes, Planta baja $4,620/mes
-  · 15 m²: Planta alta $6,750/mes, Planta baja $6,300/mes
+  · 3.5 m²: Planta baja $1,800/mes, Planta alta $1,700/mes
+  · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
+  · 8 m²: Planta baja $3,600/mes, Planta alta $3,360/mes
+  · 9 m²: Planta baja $4,050/mes, Planta alta $3,780/mes
+  · 11 m²: Planta baja $4,950/mes, Planta alta $4,620/mes
+  · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
   · 30 m²: Planta baja $13,500/mes
 
 **Sucursal Punto Sur (Sucursal Sur)**
 - Dirección: Av. Adolfo López Mateos Sur 5540, Col. Los Gavilanes, C.P. 45645, Tlajomulco, Jalisco
 - Teléfono: 33-32-58-26-36
 - Email: ventaspuntosur@torobox.com.mx
-- Características: Pensión vehicular disponible, bodegas domésticas y comerciales, acceso controlado, seguridad privada, app de control de acceso, ideal para zona residencial, carritos de carga, atención personalizada Lun-Sáb
+- Características: Pensión vehicular, acceso controlado, acceso 24/7, vigilancia 24/7, wifi, circuito cerrado, carritos de carga, atención personalizada Lun-Sáb, amplio estacionamiento, cerca de vías rápidas, control de plagas, perros de detección, venta de accesorios
 - Precios:
   · 3.5 m²: Planta baja $1,700/mes, Planta alta $1,505/mes
   · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
@@ -85,12 +86,12 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
   · 30 m²: Planta baja $13,500/mes
 
 **Sucursal Bucerías (Sucursal Costa)**
-- Dirección: Heroes De Nacozari 210, Col. Los Mangos y Flamingos Residencial, C.P. 63735, Bucerías, Nayarit
-- WhatsApp: 322-510-00-51
-- Teléfono fijo: 329-688-07-42
+- Dirección: Heroes De Nacozari 210, Col. Los Mangos y Flamingos Residencial, C.P. 63732, Bucerías, Nayarit
+- Teléfono/WhatsApp: 322-510-00-51
 - Email: ventasbucerias@torobox.com.mx
-- Características: Control de humedad, protección contra salitre, espacios para lanchas y motos, acceso para remolques, bodega vacacional, clima controlado, seguridad 24/7, ideal para turismo y zona costera
+- Características: Acceso controlado, acceso Lun-Vie 9am a 6pm y Sáb 9am a 2pm, cámaras de vigilancia 24/7, wifi, circuito cerrado, carritos de carga, atención personalizada Lun-Sáb, amplio estacionamiento, cerca de vías rápidas, control de plagas, perros de detección, venta de accesorios, ideal turismo y zona costera, espacio para botes y motos, bodegas con oficina
 - Precios:
+  · 3.5 m²: Planta baja $1,700/mes, Planta alta $1,505/mes
   · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
   · 10 m²: Planta baja $4,500/mes, Planta alta $4,200/mes
   · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
@@ -100,8 +101,8 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 ### Planes de pago y descuentos (aplican a bodegas de 7 m² en adelante):
 - Mensual: precio normal (sin descuento)
 - 3 a 6 meses: 10% de descuento (11% en Bucerías)
-- 7 meses o más: 15% de descuento
-- Anualidad (12 meses): 20% de descuento
+- 7 meses o más: 15% de descuento (NO disponible en Zona Real)
+- Anualidad (12 meses): 20% de descuento (15% en Zona Real)
 Nota: Las bodegas de 1.75 m² y 3.5 m² no aplican descuentos por plazo.
 
 ### Proceso de contratación (5 pasos):

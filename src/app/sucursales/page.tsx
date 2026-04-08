@@ -46,12 +46,13 @@ const sucursales = [
   {
     id: "bucerias",
     nombre: "Bucerías",
-    telefono: "329-688-07-42",
+    telefono: "322-510-00-51",
     email: "ventasbucerias@torobox.com.mx",
-    direccion: "Heroes De Nacozari 210, Col. Los Mangos y Flamingos Residencial, C.P. 63735, Bucerías, Nayarit",
+    direccion: "Heroes De Nacozari 210, Col. Los Mangos y Flamingos Residencial, C.P. 63732, Bucerías, Nayarit",
     mapQuery: "Heroes+De+Nacozari+210,+Bucer%C3%ADas,+Nayarit,+M%C3%A9xico",
     img: "/images/sucursales/bucerias/hero.webp",
     alt: "Sucursal ToroBox Bucerías en Nayarit, almacenamiento vacacional cerca de la playa",
+    imgPosition: "center 30%",
     caracteristicas: ["Almacén vacacional", "Clima controlado", "Espacios para botes y motos"],
   },
 ];
@@ -86,6 +87,7 @@ export default function SucursalesPage() {
                     fill
                     sizes="(max-width: 1024px) 100vw, 66vw"
                     className="object-cover"
+                    style={'imgPosition' in suc && suc.imgPosition ? { objectPosition: suc.imgPosition as string } : undefined}
                   />
                 </div>
 

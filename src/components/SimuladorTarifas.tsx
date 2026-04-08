@@ -63,7 +63,7 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
   const plazosDisponibles = useMemo(() => {
     if (!bodega) return PLAZOS;
     if (!bodega.descuentos) return PLAZOS.filter(p => p.id === 'mensual');
-    return PLAZOS;
+    return PLAZOS.filter(p => p.id === 'mensual' || bodega.descuentos![p.id] !== undefined);
   }, [bodega]);
 
   const pisosDisponibles = useMemo<Piso[]>(() => {
@@ -93,6 +93,12 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
   const ahorroTotal = (precioBase !== null && descuento > 0 && totalPeriodo !== null)
     ? precioBase * plazo.meses - totalPeriodo
     : null;
+
+  const ahorroMensual = (precioBase !== null && descuento > 0 && precioMensualConDescuento !== null)
+    ? precioBase - precioMensualConDescuento
+    : null;
+
+  const isAnual = plazoId === 'anualidad';
 
   const isComplete = precioBase !== null && precioMensualConDescuento !== null;
 
@@ -287,27 +293,39 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
                     <p><span className="text-white font-semibold">Plazo:</span> {plazo.label}{descuento > 0 ? ` (${Math.round(descuento * 100)}% descuento)` : ''}</p>
                   </div>
 
-                  {/* Precio mensual */}
-                  <div className="bg-brand-red/10 border border-brand-red/30 rounded-xl p-5 text-center">
-                    {descuento > 0 && (
-                      <p className="text-xs text-gray-400 line-through mb-1">{fmt(precioBase!)}/mes</p>
-                    )}
-                    <p className="text-4xl font-black text-white">{fmt(precioMensualConDescuento!)}</p>
-                    <p className="text-xs text-gray-400 mt-1">por mes</p>
-                  </div>
+                  {/* Precio */}
+                  {isAnual ? (
+                    /* Anualidad: solo pago total + ahorro */
+                    <div className="bg-brand-red/10 border border-brand-red/30 rounded-xl p-5 text-center">
+                      {descuento > 0 && (
+                        <p className="text-xs text-gray-400 line-through mb-1">{fmt(precioBase! * plazo.meses)}</p>
+                      )}
+                      <p className="text-4xl font-black text-white">{fmt(totalPeriodo!)}</p>
+                      <p className="text-xs text-gray-400 mt-1">*Pago anual único</p>
+                    </div>
+                  ) : (
+                    /* Mensual / 3-6 / 7+: solo pago mensual */
+                    <div className="bg-brand-red/10 border border-brand-red/30 rounded-xl p-5 text-center">
+                      {descuento > 0 && (
+                        <p className="text-xs text-gray-400 line-through mb-1">{fmt(precioBase!)}/mes</p>
+                      )}
+                      <p className="text-4xl font-black text-white">{fmt(precioMensualConDescuento!)}</p>
+                      <p className="text-xs text-gray-400 mt-1">por mes</p>
+                    </div>
+                  )}
 
-                  {/* Desglose */}
+                  {/* Ahorro */}
                   <div className="space-y-2">
-                    {plazo.meses > 1 && (
-                      <div className="flex justify-between items-center py-2 border-b border-white/10">
-                        <span className="text-sm text-gray-400">Total {plazo.meses} meses</span>
-                        <span className="text-sm font-bold text-white">{fmt(totalPeriodo!)}</span>
-                      </div>
-                    )}
-                    {ahorroTotal !== null && ahorroTotal > 0 && (
+                    {isAnual && ahorroTotal !== null && ahorroTotal > 0 && (
                       <div className="flex justify-between items-center py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-3">
                         <span className="text-sm text-emerald-400 font-semibold">Ahorras en total</span>
                         <span className="text-sm font-black text-emerald-400">{fmt(ahorroTotal)}</span>
+                      </div>
+                    )}
+                    {!isAnual && ahorroMensual !== null && ahorroMensual > 0 && (
+                      <div className="flex justify-between items-center py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-3">
+                        <span className="text-sm text-emerald-400 font-semibold">Ahorro sobre la mensualidad</span>
+                        <span className="text-sm font-black text-emerald-400">{fmt(ahorroMensual)}</span>
                       </div>
                     )}
                   </div>
