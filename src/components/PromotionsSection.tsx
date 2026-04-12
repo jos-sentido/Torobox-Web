@@ -52,6 +52,44 @@ export default function PromotionsSection() {
   // Check if we have a complete selection with prices to show
   const showPrices = precioBase !== null && bodega;
 
+  // Compute discount percentages progressively based on selection level
+  const descuentosPorPlazo = useMemo(() => {
+    const plazoIds = ['3-6-meses', '7-meses', 'anualidad'] as const;
+    const result: Record<string, { value: number; isMax: boolean }> = {};
+
+    if (bodega) {
+      // Level 3: specific bodega selected → exact discounts
+      for (const pid of plazoIds) {
+        const d = bodega.descuentos?.[pid] ?? 0;
+        result[pid] = { value: d, isMax: false };
+      }
+    } else if (sucursal) {
+      // Level 2: sucursal selected → max across its bodegas, with "Hasta"
+      for (const pid of plazoIds) {
+        let max = 0;
+        for (const b of sucursal.bodegas) {
+          const d = b.descuentos?.[pid] ?? 0;
+          if (d > max) max = d;
+        }
+        result[pid] = { value: max, isMax: true };
+      }
+    } else {
+      // Level 1: nothing selected → max across ALL sucursales
+      for (const pid of plazoIds) {
+        let max = 0;
+        for (const s of SUCURSALES) {
+          for (const b of s.bodegas) {
+            const d = b.descuentos?.[pid] ?? 0;
+            if (d > max) max = d;
+          }
+        }
+        result[pid] = { value: max, isMax: true };
+      }
+    }
+
+    return result;
+  }, [sucursal, bodega]);
+
   return (
     <section className="py-20 bg-brand-red relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -117,6 +155,7 @@ export default function PromotionsSection() {
 
         {/* Tarjetas de plazos */}
         {showPrices ? (
+          /* Full selection: show prices, totals, savings */
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch max-w-6xl mx-auto mb-12">
             {PLAZOS.map(plazo => {
               const descuento = bodega.descuentos?.[plazo.id] ?? 0;
@@ -126,7 +165,6 @@ export default function PromotionsSection() {
               const esMejor = plazo.id === 'anualidad' && descuento > 0;
               const sinDescuento = plazo.id !== 'mensual' && descuento === 0;
 
-              // Si la bodega no tiene descuentos y no es mensual, no mostrar
               if (sinDescuento) return null;
 
               return (
@@ -190,31 +228,55 @@ export default function PromotionsSection() {
             })}
           </div>
         ) : (
-          /* Tarjetas estáticas cuando no hay selección */
+          /* Progressive badges: update as user selects */
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-center max-w-6xl mx-auto mb-12">
-            <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-8 text-center border border-white/20 transition-transform duration-300 hover:scale-105">
-              <h3 className="text-xl font-bold text-brand-black mb-2">Mensual</h3>
-              <div className="text-4xl md:text-5xl font-bold text-white mb-4">Estándar</div>
-              <p className="text-white/90">Flexibilidad total mes a mes.</p>
-            </div>
-            <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-8 text-center border border-white/20 transition-transform duration-300 hover:scale-105">
-              <h3 className="text-xl font-bold text-brand-black mb-2">3 – 6 Meses</h3>
-              <div className="text-5xl md:text-6xl font-bold text-white mb-4">10%</div>
-              <p className="text-white/90">Ahorra desde el tercer mes.</p>
-            </div>
-            <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-8 text-center border border-white/20 transition-transform duration-300 hover:scale-105">
-              <h3 className="text-xl font-bold text-brand-black mb-2">7+ Meses</h3>
-              <div className="text-5xl md:text-6xl font-bold text-white mb-4">15%</div>
-              <p className="text-white/90">Mayor ahorro a mediano plazo.</p>
-            </div>
-            <div className="bg-white rounded-2xl p-10 text-center shadow-2xl relative transform lg:-translate-y-4 lg:scale-110 z-10">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-black text-white px-6 py-1.5 rounded-full text-sm font-bold tracking-wider uppercase whitespace-nowrap">
-                Mejor Ahorro
-              </div>
-              <h3 className="text-xl font-bold text-brand-black mb-2 mt-2">Anualidad</h3>
-              <div className="text-6xl font-bold text-brand-red mb-4">20%</div>
-              <p className="text-gray-600 font-medium">El mayor descuento en tu renta.</p>
-            </div>
+            {PLAZOS.map(plazo => {
+              const info = descuentosPorPlazo[plazo.id];
+              const desc = info?.value ?? 0;
+              const isMax = info?.isMax ?? true;
+              const esMejor = plazo.id === 'anualidad' && desc > 0;
+              const noDisponible = plazo.id !== 'mensual' && desc === 0 && bodega;
+
+              if (noDisponible) return null;
+
+              const displayValue = plazo.id === 'mensual'
+                ? 'Estándar'
+                : desc > 0
+                  ? `${isMax ? 'Hasta ' : ''}${Math.round(desc * 100)}%`
+                  : 'Estándar';
+
+              return (
+                <div
+                  key={plazo.id}
+                  className={`rounded-2xl text-center transition-transform duration-300 hover:scale-105 ${
+                    esMejor
+                      ? 'bg-white p-10 shadow-2xl relative transform lg:-translate-y-4 lg:scale-110 z-10'
+                      : 'bg-white/15 backdrop-blur-sm p-8 border border-white/20'
+                  }`}
+                >
+                  {esMejor && (
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-black text-white px-6 py-1.5 rounded-full text-sm font-bold tracking-wider uppercase whitespace-nowrap">
+                      Mejor Ahorro
+                    </div>
+                  )}
+                  <h3 className={`text-xl font-bold mb-2 ${esMejor ? 'text-brand-black mt-2' : 'text-brand-black'}`}>
+                    {plazo.label}
+                  </h3>
+                  <div className={`font-bold mb-4 ${
+                    plazo.id === 'mensual'
+                      ? 'text-4xl md:text-5xl text-white'
+                      : esMejor
+                        ? 'text-6xl text-brand-red'
+                        : 'text-5xl md:text-6xl text-white'
+                  }`}>
+                    {displayValue}
+                  </div>
+                  <p className={esMejor ? 'text-gray-600 font-medium' : 'text-white/90'}>
+                    {PLAZO_META[plazo.id]?.descripcion}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         )}
 
