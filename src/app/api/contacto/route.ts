@@ -9,185 +9,37 @@ function escapeHtml(text: string): string {
     .replace(/"/g, "&quot;");
 }
 
-interface UtmData {
+const GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/C8HeFtWI5ohKrH5SpKub/webhook-trigger/86aff748-93a8-486d-9b11-4bdec3fca6c3";
+
+async function sendToGhlWebhook(data: {
+  nombre: string;
+  telefono: string;
+  correo: string;
+  sucursal: string;
+  tamano: string;
+  plazo: string;
+  mensaje: string;
+  cotizacion: string;
   utm_source?: string;
   utm_medium?: string;
   utm_campaign?: string;
   utm_content?: string;
   utm_term?: string;
   gclid?: string;
-}
-
-async function createGhlContact(
-  nombre: string,
-  telefono: string,
-  correo: string,
-  sucursal: string,
-  tamano: string,
-  plazo: string,
-  utm: UtmData,
-) {
-  const apiKey = process.env.GHL_API_KEY;
-  const locationId = process.env.GHL_LOCATION_ID;
-  if (!apiKey || !locationId) return { error: "missing_env", hasKey: !!apiKey, hasLoc: !!locationId };
-
-  // Build origen_del_lead from UTMs
-  const origenParts = [utm.utm_source, utm.utm_medium, utm.utm_campaign].filter(Boolean);
-  const origenDelLead = origenParts.length > 0
-    ? origenParts.join(" / ")
-    : "sitio web / orgánico";
-
-  // Split nombre into first/last
-  const parts = nombre.trim().split(/\s+/);
-  const firstName = parts[0] || "";
-  const lastName = parts.slice(1).join(" ") || "";
-
-  const body: Record<string, unknown> = {
-    locationId,
-    firstName,
-    lastName,
-    email: correo,
-    phone: telefono,
-    source: "sitio web torobox.mx",
-    customFields: [
-      { id: "zCKGssV2MZkjp4N9199L", value: origenDelLead },
-      { id: "7WhwsrEt1rNwVRSZsuwU", value: sucursal },
-      { id: "hVZRW1n3EO8P6GapXYhm", value: tamano },
-    ],
-  };
-
-  // Add UTM custom fields only if they have values
-  if (utm.utm_source) {
-    (body.customFields as Array<{id: string; value: string}>).push({ id: "KaDrxlpdWJZyErfwJQZ8", value: utm.utm_source });
-  }
-  if (utm.utm_medium) {
-    (body.customFields as Array<{id: string; value: string}>).push({ id: "pU4wPTalEz8OqjbGeG0V", value: utm.utm_medium });
-  }
-  if (utm.utm_campaign) {
-    (body.customFields as Array<{id: string; value: string}>).push({ id: "QMPXq4nsZNEcnp2sBSL4", value: utm.utm_campaign });
-  }
-  if (utm.gclid) {
-    (body.customFields as Array<{id: string; value: string}>).push({ id: "n859ohT5iyKVOiVPwn2H", value: utm.gclid });
-  }
-
+  origen_del_lead: string;
+}) {
   try {
-    const res = await fetch("https://services.leadconnectorhq.com/contacts/upsert", {
+    const res = await fetch(GHL_WEBHOOK_URL, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        Version: "2021-07-28",
-      },
-      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     });
 
     if (!res.ok) {
-      const err = await res.text();
-      return { error: "upsert_failed", status: res.status, detail: err };
-    }
-
-    const data = await res.json();
-    const contactId = data.contact?.id;
-
-    // Create opportunity in pipeline
-    if (contactId) {
-      await createOrUpdateGhlOpportunity(contactId, nombre, sucursal, tamano, plazo, apiKey);
-    }
-    return { ok: true, contactId };
-  } catch (err) {
-    return { error: "exception", detail: String(err) };
-  }
-}
-
-async function createOrUpdateGhlOpportunity(
-  contactId: string,
-  nombre: string,
-  sucursal: string,
-  tamano: string,
-  plazo: string,
-  apiKey: string,
-) {
-  const pipelineId = process.env.GHL_PIPELINE_ID;
-  const stageId = process.env.GHL_STAGE_NUEVO_LEAD;
-  const locationId = process.env.GHL_LOCATION_ID;
-  if (!pipelineId || !stageId || !locationId) return;
-
-  const details = [sucursal, tamano, plazo].filter(Boolean).join(" · ");
-  const title = `${nombre.trim()}${details ? ` — ${details}` : ""}`;
-
-  try {
-    // Try to create new opportunity
-    const createRes = await fetch("https://services.leadconnectorhq.com/opportunities/", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        Version: "2021-07-28",
-      },
-      body: JSON.stringify({
-        pipelineId,
-        pipelineStageId: stageId,
-        locationId,
-        contactId,
-        name: title,
-        status: "open",
-        source: "sitio web torobox.mx",
-      }),
-    });
-
-    if (createRes.ok) {
-      const data = await createRes.json();
-      console.log("GHL opportunity created:", data.opportunity?.id);
-      return;
-    }
-
-    // If duplicate, search for existing opportunity and update it
-    const searchRes = await fetch(
-      `https://services.leadconnectorhq.com/opportunities/search?location_id=${locationId}&pipeline_id=${pipelineId}&contact_id=${contactId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          Version: "2021-07-28",
-        },
-      },
-    );
-
-    if (!searchRes.ok) {
-      console.error("GHL opportunity search error:", searchRes.status);
-      return;
-    }
-
-    const searchData = await searchRes.json();
-    const existingOpp = searchData.opportunities?.[0];
-
-    if (existingOpp) {
-      // Update existing opportunity name with form details
-      const updateRes = await fetch(
-        `https://services.leadconnectorhq.com/opportunities/${existingOpp.id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            "Content-Type": "application/json",
-            Version: "2021-07-28",
-          },
-          body: JSON.stringify({
-            pipelineId,
-            name: title,
-            source: "sitio web torobox.mx",
-          }),
-        },
-      );
-
-      if (updateRes.ok) {
-        console.log("GHL opportunity updated:", existingOpp.id);
-      } else {
-        const err = await updateRes.text();
-        console.error("GHL opportunity update error:", updateRes.status, err);
-      }
+      console.error("GHL webhook error:", res.status, await res.text());
     }
   } catch (err) {
-    console.error("GHL opportunity failed:", err);
+    console.error("GHL webhook failed:", err);
   }
 }
 
@@ -208,9 +60,32 @@ export async function POST(req: Request) {
     const safeMensaje = mensaje ? escapeHtml(mensaje) : "";
     const safeCotizacion = cotizacion ? escapeHtml(cotizacion) : "";
 
-    // Create/upsert contact in GHL first (before email setup which might fail)
-    const ghlDebug = await createGhlContact(nombre, telefono, correo, safeSucursal, safeTamano, safePlazo, utm as UtmData);
+    // Build origen_del_lead from UTMs
+    const origenParts = [utm.utm_source, utm.utm_medium, utm.utm_campaign].filter(Boolean);
+    const origenDelLead = origenParts.length > 0
+      ? origenParts.join(" / ")
+      : "sitio web / orgánico";
 
+    // Send to GHL via webhook (no env vars needed)
+    await sendToGhlWebhook({
+      nombre,
+      telefono,
+      correo,
+      sucursal: sucursal || "",
+      tamano: tamano || "",
+      plazo: plazo || "",
+      mensaje: mensaje || "",
+      cotizacion: cotizacion || "",
+      utm_source: utm.utm_source || "",
+      utm_medium: utm.utm_medium || "",
+      utm_campaign: utm.utm_campaign || "",
+      utm_content: utm.utm_content || "",
+      utm_term: utm.utm_term || "",
+      gclid: utm.gclid || "",
+      origen_del_lead: origenDelLead,
+    });
+
+    // Send email notifications
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT) || 587,
@@ -364,42 +239,41 @@ export async function POST(req: Request) {
 </html>
     `;
 
-    // TODO: TEMPORALMENTE DESACTIVADO PARA PRUEBAS — reactivar después
-    // const subject = `${safeNombre} - Solicitud de bodega${safeSucursal ? ` (${safeSucursal})` : ""}`;
-    //
-    // // Send to admin
-    // await transporter.sendMail({
-    //   from: `"ToroBox" <${process.env.SMTP_USER}>`,
-    //   to: process.env.CONTACT_RECIPIENT,
-    //   replyTo: correo,
-    //   subject,
-    //   html: htmlBody,
-    // });
-    //
-    // // Send to branch email if a sucursal was selected
-    // const sucursalEmails: Record<string, string> = {
-    //   "Av. Vallarta": "ventasvallarta@torobox.com.mx",
-    //   "Zona Real": "karen.diaz@torobox.com.mx",
-    //   "Punto Sur": "ventaspuntosur@torobox.com.mx",
-    //   "Bucerías": "ventasbucerias@torobox.com.mx",
-    // };
-    //
-    // const branchEmail = safeSucursal ? sucursalEmails[sucursal] : undefined;
-    // if (branchEmail) {
-    //   await transporter.sendMail({
-    //     from: `"ToroBox" <${process.env.SMTP_USER}>`,
-    //     to: branchEmail,
-    //     replyTo: correo,
-    //     subject,
-    //     html: htmlBody,
-    //   }).catch((err: unknown) => {
-    //     console.error("Error enviando correo a sucursal:", err);
-    //   });
-    // }
+    const subject = `${safeNombre} - Solicitud de bodega${safeSucursal ? ` (${safeSucursal})` : ""}`;
 
-    return NextResponse.json({ ok: true, _debug: ghlDebug });
+    // Send to admin
+    await transporter.sendMail({
+      from: `"ToroBox" <${process.env.SMTP_USER}>`,
+      to: process.env.CONTACT_RECIPIENT,
+      replyTo: correo,
+      subject,
+      html: htmlBody,
+    });
+
+    // Send to branch email if a sucursal was selected
+    const sucursalEmails: Record<string, string> = {
+      "Av. Vallarta": "ventasvallarta@torobox.com.mx",
+      "Zona Real": "karen.diaz@torobox.com.mx",
+      "Punto Sur": "ventaspuntosur@torobox.com.mx",
+      "Bucerías": "ventasbucerias@torobox.com.mx",
+    };
+
+    const branchEmail = safeSucursal ? sucursalEmails[sucursal] : undefined;
+    if (branchEmail) {
+      await transporter.sendMail({
+        from: `"ToroBox" <${process.env.SMTP_USER}>`,
+        to: branchEmail,
+        replyTo: correo,
+        subject,
+        html: htmlBody,
+      }).catch((err: unknown) => {
+        console.error("Error enviando correo a sucursal:", err);
+      });
+    }
+
+    return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("Error enviando correo:", error);
-    return NextResponse.json({ error: "Error al enviar el correo" }, { status: 500 });
+    console.error("Error en API contacto:", error);
+    return NextResponse.json({ error: "Error al procesar la solicitud" }, { status: 500 });
   }
 }
