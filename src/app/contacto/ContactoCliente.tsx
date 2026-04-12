@@ -143,7 +143,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
           correo,
           sucursal: sucursalNombre,
           tamano: tamanoLabel,
-          piso: piso === 'baja' ? 'Planta Baja' : piso === 'alta' ? 'Planta Alta' : 'Sin preferencia',
+          piso: piso === 'baja' ? 'Baja' : piso === 'alta' ? 'Alta' : 'Sin preferencia',
           plazo: plazoLabels[plazo] || plazo,
           mensaje,
           cotizacion: cotizacionText,
