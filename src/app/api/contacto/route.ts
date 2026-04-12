@@ -24,6 +24,7 @@ async function createGhlContact(
   correo: string,
   sucursal: string,
   tamano: string,
+  plazo: string,
   utm: UtmData,
 ) {
   const apiKey = process.env.GHL_API_KEY;
@@ -92,28 +93,32 @@ async function createGhlContact(
 
     // Create opportunity in pipeline
     if (contactId) {
-      await createGhlOpportunity(contactId, nombre, sucursal, tamano, apiKey);
+      await createOrUpdateGhlOpportunity(contactId, nombre, sucursal, tamano, plazo, apiKey);
     }
   } catch (err) {
     console.error("GHL API call failed:", err);
   }
 }
 
-async function createGhlOpportunity(
+async function createOrUpdateGhlOpportunity(
   contactId: string,
   nombre: string,
   sucursal: string,
   tamano: string,
+  plazo: string,
   apiKey: string,
 ) {
   const pipelineId = process.env.GHL_PIPELINE_ID;
   const stageId = process.env.GHL_STAGE_NUEVO_LEAD;
-  if (!pipelineId || !stageId) return;
+  const locationId = process.env.GHL_LOCATION_ID;
+  if (!pipelineId || !stageId || !locationId) return;
 
-  const title = `${nombre.trim()} — ${sucursal || "Sin sucursal"}${tamano ? ` · ${tamano}` : ""}`;
+  const details = [sucursal, tamano, plazo].filter(Boolean).join(" · ");
+  const title = `${nombre.trim()}${details ? ` — ${details}` : ""}`;
 
   try {
-    const res = await fetch("https://services.leadconnectorhq.com/opportunities/", {
+    // Try to create new opportunity
+    const createRes = await fetch("https://services.leadconnectorhq.com/opportunities/", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -123,7 +128,7 @@ async function createGhlOpportunity(
       body: JSON.stringify({
         pipelineId,
         pipelineStageId: stageId,
-        locationId: process.env.GHL_LOCATION_ID,
+        locationId,
         contactId,
         name: title,
         status: "open",
@@ -131,15 +136,59 @@ async function createGhlOpportunity(
       }),
     });
 
-    if (!res.ok) {
-      const err = await res.text();
-      console.error("GHL opportunity error:", res.status, err);
-    } else {
-      const data = await res.json();
+    if (createRes.ok) {
+      const data = await createRes.json();
       console.log("GHL opportunity created:", data.opportunity?.id);
+      return;
+    }
+
+    // If duplicate, search for existing opportunity and update it
+    const searchRes = await fetch(
+      `https://services.leadconnectorhq.com/opportunities/search?location_id=${locationId}&pipeline_id=${pipelineId}&contact_id=${contactId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          Version: "2021-07-28",
+        },
+      },
+    );
+
+    if (!searchRes.ok) {
+      console.error("GHL opportunity search error:", searchRes.status);
+      return;
+    }
+
+    const searchData = await searchRes.json();
+    const existingOpp = searchData.opportunities?.[0];
+
+    if (existingOpp) {
+      // Update existing opportunity name with form details
+      const updateRes = await fetch(
+        `https://services.leadconnectorhq.com/opportunities/${existingOpp.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+            Version: "2021-07-28",
+          },
+          body: JSON.stringify({
+            pipelineId,
+            name: title,
+            source: "sitio web torobox.mx",
+          }),
+        },
+      );
+
+      if (updateRes.ok) {
+        console.log("GHL opportunity updated:", existingOpp.id);
+      } else {
+        const err = await updateRes.text();
+        console.error("GHL opportunity update error:", updateRes.status, err);
+      }
     }
   } catch (err) {
-    console.error("GHL opportunity creation failed:", err);
+    console.error("GHL opportunity failed:", err);
   }
 }
 
@@ -314,7 +363,7 @@ export async function POST(req: Request) {
     `;
 
     // Create/upsert contact in GHL (non-blocking — email still sends if GHL fails)
-    await createGhlContact(nombre, telefono, correo, safeSucursal, safeTamano, utm as UtmData);
+    await createGhlContact(nombre, telefono, correo, safeSucursal, safeTamano, safePlazo, utm as UtmData);
 
     // TODO: TEMPORALMENTE DESACTIVADO PARA PRUEBAS — reactivar después
     // const subject = `${safeNombre} - Solicitud de bodega${safeSucursal ? ` (${safeSucursal})` : ""}`;
