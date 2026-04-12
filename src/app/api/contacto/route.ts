@@ -229,7 +229,7 @@ export async function POST(req: Request) {
                     <p style="margin: 0; font-size: 12px; color: #6b7280;">Formulario de contacto &middot; torobox.mx</p>
                   </td>
                   <td align="right">
-                    <a href="https://app.gohighlevel.com/v2/location/C8HeFtWI5ohKrH5SpKub/opportunities" style="font-size: 12px; color: #dc2626; text-decoration: none; font-weight: 600;">Ir a CRM</a>
+                    <a href="https://highlevel.com/location/C8HeFtWI5ohKrH5SpKub/opportunities" style="font-size: 12px; color: #dc2626; text-decoration: none; font-weight: 600;">Ir a CRM</a>
                   </td>
                 </tr>
               </table>
