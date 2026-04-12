@@ -122,9 +122,9 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
     const plazoLabels: Record<string, string> = {
       'asesoria': 'Necesita asesoría',
       'mensual': 'Mensual',
-      '3-6-meses': '3 – 6 Meses (hasta 20% desc.)',
-      '7-meses': '7+ Meses (hasta 25% desc.)',
-      'anualidad': 'Anualidad (hasta 35% desc.)',
+      '3-6-meses': '3 – 6 Meses',
+      '7-meses': '7+ Meses',
+      'anualidad': 'Anualidad',
     };
 
     const cotizacionText = preseleccion

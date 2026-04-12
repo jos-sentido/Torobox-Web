@@ -247,13 +247,19 @@ export async function POST(req: Request) {
     const subject = `${safeNombre} - Solicitud de bodega${safeSucursal ? ` (${safeSucursal})` : ""}`;
 
     // MODO PRUEBAS: solo enviar a jos@sentido.mx
-    await transporter.sendMail({
-      from: `"ToroBox" <${process.env.SMTP_USER}>`,
-      to: "jos@sentido.mx",
-      replyTo: correo,
-      subject: `[PRUEBA] ${subject}`,
-      html: htmlBody,
-    });
+    let emailStatus = "sent";
+    try {
+      await transporter.sendMail({
+        from: `"ToroBox" <${process.env.SMTP_USER}>`,
+        to: "jos@sentido.mx",
+        replyTo: correo,
+        subject: `[PRUEBA] ${subject}`,
+        html: htmlBody,
+      });
+    } catch (emailErr) {
+      emailStatus = `failed: ${String(emailErr)}`;
+      console.error("Email error:", emailErr);
+    }
 
     // TODO: REACTIVAR DESPUÉS DE PRUEBAS — emails a admin y sucursales
     // // Send to admin
@@ -286,7 +292,7 @@ export async function POST(req: Request) {
     //   });
     // }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, _emailStatus: emailStatus });
   } catch (error) {
     console.error("Error en API contacto:", error);
     return NextResponse.json({ error: "Error al procesar la solicitud" }, { status: 500 });
