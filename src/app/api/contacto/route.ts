@@ -17,6 +17,7 @@ async function sendToGhlWebhook(data: {
   correo: string;
   sucursal: string;
   tamano: string;
+  piso: string;
   plazo: string;
   mensaje: string;
   cotizacion: string;
@@ -45,7 +46,7 @@ async function sendToGhlWebhook(data: {
 
 export async function POST(req: Request) {
   try {
-    const { nombre, telefono, correo, sucursal, tamano, plazo, mensaje, cotizacion, utm = {} } = await req.json();
+    const { nombre, telefono, correo, sucursal, tamano, piso, plazo, mensaje, cotizacion, utm = {} } = await req.json();
 
     if (!nombre || !telefono || !correo) {
       return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
@@ -73,6 +74,7 @@ export async function POST(req: Request) {
       correo,
       sucursal: sucursal || "",
       tamano: tamano || "",
+      piso: piso || "",
       plazo: plazo || "",
       mensaje: mensaje || "",
       cotizacion: cotizacion || "",
@@ -96,9 +98,12 @@ export async function POST(req: Request) {
       },
     });
 
+    const safePiso = piso ? escapeHtml(piso) : "";
+
     const detalles = [
       { label: "Sucursal", value: safeSucursal },
       { label: "Tamaño", value: safeTamano },
+      { label: "Planta", value: safePiso },
       { label: "Plazo", value: safePlazo },
     ].filter(d => d.value);
 

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import Button from '@/components/Button';
 import SimuladorTarifas, { type SeleccionSimulador } from '@/components/SimuladorTarifas';
 import { SUCURSALES } from '@/data/sucursales';
+import type { Piso } from '@/data/sucursales';
 import { useUtmCapture } from '@/hooks/useUtmCapture';
 
 const fmt = (n: number) =>
@@ -19,6 +20,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
   // Controlled form fields (those that can be pre-filled)
   const [sucursal, setSucursal] = useState(initialSucursal);
   const [tamano, setTamano] = useState(initialTamano || 'asesoria');
+  const [piso, setPiso] = useState<Piso | ''>('');
   const [plazo, setPlazo] = useState('asesoria');
 
   // Form fields
@@ -39,6 +41,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
     setPreseleccion(data);
     setSucursal(data.sucursalId);
     setTamano(data.bodegaId);
+    setPiso(data.pisoId);
     setPlazo(data.plazoId);
     setTimeout(() => {
       formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -140,6 +143,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
           correo,
           sucursal: sucursalNombre,
           tamano: tamanoLabel,
+          piso: piso === 'baja' ? 'Planta Baja' : piso === 'alta' ? 'Planta Alta' : 'Sin preferencia',
           plazo: plazoLabels[plazo] || plazo,
           mensaje,
           cotizacion: cotizacionText,
@@ -155,6 +159,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
       setCorreo('');
       setSucursal('');
       setTamano('asesoria');
+      setPiso('');
       setPlazo('asesoria');
       setMensaje('');
       setPreseleccion(null);
@@ -182,6 +187,25 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
     const suc = SUCURSALES.find(s => s.id === sucursal);
     return suc?.bodegas.find(b => b.id === tamano) ?? null;
   }, [sucursal, tamano]);
+
+  // Available floors for selected bodega
+  const pisosDisponibles = useMemo<Piso[]>(() => {
+    if (!bodegaSeleccionada) return [];
+    return (Object.keys(bodegaSeleccionada.precios) as Piso[]).filter(k => bodegaSeleccionada.precios[k] !== undefined);
+  }, [bodegaSeleccionada]);
+
+  // Auto-select piso when only one option, or reset when bodega changes
+  useEffect(() => {
+    if (!preseleccion) {
+      if (pisosDisponibles.length === 1) {
+        setPiso(pisosDisponibles[0]);
+      } else if (pisosDisponibles.length === 0) {
+        setPiso('');
+      } else if (piso && !pisosDisponibles.includes(piso)) {
+        setPiso('');
+      }
+    }
+  }, [pisosDisponibles, preseleccion, piso]);
 
   // Filter sucursales based on selected tamaño
   const sucursalesFiltradas = useMemo(() => {
@@ -336,6 +360,39 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                   {errores.tamano && <p className="text-red-500 text-xs mt-1">{errores.tamano}</p>}
                 </div>
               </div>
+
+              {/* Planta — solo aparece cuando hay pisos disponibles */}
+              {pisosDisponibles.length > 1 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Planta preferida</label>
+                  <div className="flex gap-3">
+                    {pisosDisponibles.map(p => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => setPiso(p)}
+                        className={`flex-1 py-3 px-4 rounded-md text-sm font-semibold transition-all border ${
+                          piso === p
+                            ? 'bg-brand-red text-white border-brand-red'
+                            : 'bg-white text-gray-700 border-gray-300 hover:border-brand-red'
+                        }`}
+                      >
+                        Planta {p === 'alta' ? 'Alta' : 'Baja'}
+                      </button>
+                    ))}
+                  </div>
+                  {pisosDisponibles.length > 1 && piso && bodegaSeleccionada && (
+                    <p className="text-xs text-gray-500 mt-1.5">
+                      Precio: {fmt(bodegaSeleccionada.precios[piso] ?? 0)}/mes
+                    </p>
+                  )}
+                </div>
+              )}
+              {pisosDisponibles.length === 1 && bodegaSeleccionada && (
+                <div className="bg-gray-50 border border-gray-200 rounded-md px-4 py-3 text-sm text-gray-600">
+                  Esta bodega solo está disponible en <strong className="text-brand-black">Planta {pisosDisponibles[0] === 'alta' ? 'Alta' : 'Baja'}</strong>
+                </div>
+              )}
 
               <div>
                 <label htmlFor="plazo" className="block text-sm font-medium text-gray-700 mb-2">Plazo de contrato <span className="text-brand-red">*</span></label>
