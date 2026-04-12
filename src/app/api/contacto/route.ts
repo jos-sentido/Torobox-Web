@@ -210,6 +210,9 @@ export async function POST(req: Request) {
     const safeCotizacion = cotizacion ? escapeHtml(cotizacion) : "";
 
     // Create/upsert contact in GHL first (before email setup which might fail)
+    const ghlKey = process.env.GHL_API_KEY;
+    const ghlLoc = process.env.GHL_LOCATION_ID;
+    console.log("GHL ENV CHECK:", { hasKey: !!ghlKey, keyPrefix: ghlKey?.slice(0, 8), hasLoc: !!ghlLoc });
     await createGhlContact(nombre, telefono, correo, safeSucursal, safeTamano, safePlazo, utm as UtmData);
 
     const transporter = nodemailer.createTransport({
