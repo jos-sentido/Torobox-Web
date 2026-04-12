@@ -56,25 +56,27 @@ export default function PromotionsSection() {
   const descuentosPorPlazo = useMemo(() => {
     const plazoIds = ['3-6-meses', '7-meses', 'anualidad'] as const;
     const result: Record<string, { value: number; isMax: boolean }> = {};
+    const suc = SUCURSALES.find(s => s.id === sucursalId);
+    const bod = suc?.bodegas.find(b => b.id === bodegaId);
 
-    if (bodega) {
-      // Level 3: specific bodega selected → exact discounts
+    if (bod) {
+      // Specific bodega selected → exact discounts
       for (const pid of plazoIds) {
-        const d = bodega.descuentos?.[pid] ?? 0;
+        const d = bod.descuentos?.[pid] ?? 0;
         result[pid] = { value: d, isMax: false };
       }
-    } else if (sucursal) {
-      // Level 2: sucursal selected → max across its bodegas, with "Hasta"
+    } else if (suc) {
+      // Sucursal selected → max across its bodegas, with "Hasta"
       for (const pid of plazoIds) {
         let max = 0;
-        for (const b of sucursal.bodegas) {
+        for (const b of suc.bodegas) {
           const d = b.descuentos?.[pid] ?? 0;
           if (d > max) max = d;
         }
         result[pid] = { value: max, isMax: true };
       }
     } else {
-      // Level 1: nothing selected → max across ALL sucursales
+      // Nothing selected → max across ALL sucursales
       for (const pid of plazoIds) {
         let max = 0;
         for (const s of SUCURSALES) {
@@ -88,7 +90,7 @@ export default function PromotionsSection() {
     }
 
     return result;
-  }, [sucursal, bodega]);
+  }, [sucursalId, bodegaId]);
 
   return (
     <section className="py-20 bg-brand-red relative overflow-hidden">
