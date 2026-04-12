@@ -78,6 +78,7 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Teléfono: 33-32-58-26-36
 - Email: ventaspuntosur@torobox.com.mx
 - Características: Pensión vehicular, acceso controlado, acceso 24/7, vigilancia 24/7, wifi, circuito cerrado, carritos de carga, atención personalizada Lun-Sáb, amplio estacionamiento, cerca de vías rápidas, control de plagas, perros de detección, venta de accesorios
+- Descuentos: 20% (3-6 meses), 25% (7+ meses), 35% (anualidad). Bodega de 3.5 m²: 11% (3-6 meses), 20% (anualidad).
 - Precios:
   · 3.5 m²: Planta baja $1,700/mes, Planta alta $1,505/mes
   · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
@@ -90,6 +91,7 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Teléfono/WhatsApp: 322-510-00-51
 - Email: ventasbucerias@torobox.com.mx
 - Características: Acceso controlado, acceso Lun-Vie 9am a 6pm y Sáb 9am a 2pm, cámaras de vigilancia 24/7, wifi, circuito cerrado, carritos de carga, atención personalizada Lun-Sáb, amplio estacionamiento, cerca de vías rápidas, control de plagas, perros de detección, venta de accesorios, ideal turismo y zona costera, espacio para botes y motos, bodegas con oficina
+- Descuentos: 20% (3-6 meses), 25% (7+ meses), 35% (anualidad). Bodega de 3.5 m²: 11% (3-6 meses), 20% (anualidad).
 - Precios:
   · 3.5 m²: Planta baja $1,700/mes, Planta alta $1,505/mes
   · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
@@ -100,10 +102,10 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 
 ### Planes de pago y descuentos (aplican a bodegas de 7 m² en adelante):
 - Mensual: precio normal (sin descuento)
-- 3 a 6 meses: 10% de descuento (11% en Bucerías)
-- 7 meses o más: 15% de descuento (NO disponible en Zona Real)
-- Anualidad (12 meses): 20% de descuento (15% en Zona Real)
-Nota: Las bodegas de 1.75 m² y 3.5 m² no aplican descuentos por plazo.
+- 3 a 6 meses: 10% en Av. Vallarta y Zona Real, 20% en Punto Sur y Bucerías
+- 7 meses o más: 15% en Av. Vallarta, 25% en Punto Sur y Bucerías. NO disponible en Zona Real.
+- Anualidad (12 meses): 20% en Av. Vallarta, 15% en Zona Real, 35% en Punto Sur y Bucerías
+Nota: Las bodegas de 1.75 m² no aplican descuentos. Las de 3.5 m² solo aplican 11% (3-6 meses) y 20% (anualidad) en Punto Sur y Bucerías.
 
 ### Proceso de contratación (5 pasos):
 1. Contacto: Llama, manda WhatsApp o llena el formulario web. Un asesor te atiende de inmediato.

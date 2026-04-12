@@ -119,9 +119,9 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
     const plazoLabels: Record<string, string> = {
       'asesoria': 'Necesita asesoría',
       'mensual': 'Mensual',
-      '3-6-meses': '3 – 6 Meses (hasta 11% desc.)',
-      '7-meses': '7+ Meses (15% desc.)',
-      'anualidad': 'Anualidad (20% desc.)',
+      '3-6-meses': '3 – 6 Meses (hasta 20% desc.)',
+      '7-meses': '7+ Meses (hasta 25% desc.)',
+      'anualidad': 'Anualidad (hasta 35% desc.)',
     };
 
     const cotizacionText = preseleccion
@@ -340,9 +340,9 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                 >
                   <option value="asesoria">No lo sé todavía, necesito asesoría</option>
                   <option value="mensual">Mensual — precio estándar, sin compromiso</option>
-                  <option value="3-6-meses">3 – 6 Meses — hasta 11% de descuento</option>
-                  <option value="7-meses">7+ Meses — 15% de descuento</option>
-                  <option value="anualidad">Anualidad — 20% de descuento, el mayor ahorro</option>
+                  <option value="3-6-meses">3 – 6 Meses — hasta 20% de descuento</option>
+                  <option value="7-meses">7+ Meses — hasta 25% de descuento</option>
+                  <option value="anualidad">Anualidad — hasta 35% de descuento, el mayor ahorro</option>
                 </select>
                 <div className="mt-3 grid grid-cols-4 gap-2 text-center text-xs">
                   <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
@@ -351,16 +351,16 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                   </div>
                   <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
                     <p className="font-bold text-brand-black">3 – 6 Meses</p>
-                    <p className="text-brand-black font-black text-base">10% off</p>
+                    <p className="text-brand-black font-black text-base">Hasta 20% off</p>
                   </div>
                   <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
                     <p className="font-bold text-brand-black">7+ Meses</p>
-                    <p className="text-brand-black font-black text-base">15% off</p>
+                    <p className="text-brand-black font-black text-base">Hasta 25% off</p>
                   </div>
                   <div className="bg-red-50 border border-brand-red rounded-lg py-2 px-1 relative">
                     <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-brand-black text-white text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">Mejor Ahorro</span>
                     <p className="font-bold text-brand-red mt-1">Anualidad</p>
-                    <p className="text-brand-red font-black text-base">20% off</p>
+                    <p className="text-brand-red font-black text-base">Hasta 35% off</p>
                   </div>
                 </div>
                 {errores.plazo && <p className="text-red-500 text-xs mt-1">{errores.plazo}</p>}
