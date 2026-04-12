@@ -246,53 +246,37 @@ export async function POST(req: Request) {
 
     const subject = `${safeNombre} - Solicitud de bodega${safeSucursal ? ` (${safeSucursal})` : ""}`;
 
-    // MODO PRUEBAS: solo enviar a jos@sentido.mx
-    let emailStatus = "sent";
-    try {
+    // Send to admin
+    await transporter.sendMail({
+      from: `"ToroBox" <${process.env.SMTP_USER}>`,
+      to: process.env.CONTACT_RECIPIENT,
+      replyTo: correo,
+      subject,
+      html: htmlBody,
+    });
+
+    // Send to branch email if a sucursal was selected
+    const sucursalEmails: Record<string, string> = {
+      "Av. Vallarta": "ventasvallarta@torobox.com.mx",
+      "Zona Real": "karen.diaz@torobox.com.mx",
+      "Punto Sur": "ventaspuntosur@torobox.com.mx",
+      "Bucerías": "ventasbucerias@torobox.com.mx",
+    };
+
+    const branchEmail = safeSucursal ? sucursalEmails[sucursal] : undefined;
+    if (branchEmail) {
       await transporter.sendMail({
         from: `"ToroBox" <${process.env.SMTP_USER}>`,
-        to: "jos@sentido.mx",
+        to: branchEmail,
         replyTo: correo,
-        subject: `[PRUEBA] ${subject}`,
+        subject,
         html: htmlBody,
+      }).catch((err: unknown) => {
+        console.error("Error enviando correo a sucursal:", err);
       });
-    } catch (emailErr) {
-      emailStatus = `failed: ${String(emailErr)}`;
-      console.error("Email error:", emailErr);
     }
 
-    // TODO: REACTIVAR DESPUÉS DE PRUEBAS — emails a admin y sucursales
-    // // Send to admin
-    // await transporter.sendMail({
-    //   from: `"ToroBox" <${process.env.SMTP_USER}>`,
-    //   to: process.env.CONTACT_RECIPIENT,
-    //   replyTo: correo,
-    //   subject,
-    //   html: htmlBody,
-    // });
-    //
-    // // Send to branch email if a sucursal was selected
-    // const sucursalEmails: Record<string, string> = {
-    //   "Av. Vallarta": "ventasvallarta@torobox.com.mx",
-    //   "Zona Real": "karen.diaz@torobox.com.mx",
-    //   "Punto Sur": "ventaspuntosur@torobox.com.mx",
-    //   "Bucerías": "ventasbucerias@torobox.com.mx",
-    // };
-    //
-    // const branchEmail = safeSucursal ? sucursalEmails[sucursal] : undefined;
-    // if (branchEmail) {
-    //   await transporter.sendMail({
-    //     from: `"ToroBox" <${process.env.SMTP_USER}>`,
-    //     to: branchEmail,
-    //     replyTo: correo,
-    //     subject,
-    //     html: htmlBody,
-    //   }).catch((err: unknown) => {
-    //     console.error("Error enviando correo a sucursal:", err);
-    //   });
-    // }
-
-    return NextResponse.json({ ok: true, _emailStatus: emailStatus });
+    return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Error en API contacto:", error);
     return NextResponse.json({ error: "Error al procesar la solicitud" }, { status: 500 });
