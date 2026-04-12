@@ -237,7 +237,7 @@ export default function PromotionsSection() {
               const desc = info?.value ?? 0;
               const isMax = info?.isMax ?? true;
               const esMejor = plazo.id === 'anualidad' && desc > 0;
-              const noDisponible = plazo.id !== 'mensual' && desc === 0 && bodega;
+              const noDisponible = plazo.id !== 'mensual' && desc === 0;
 
               if (noDisponible) return null;
 
