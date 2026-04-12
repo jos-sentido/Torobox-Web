@@ -231,7 +231,7 @@ export default function PromotionsSection() {
           </div>
         ) : (
           /* Progressive badges: update as user selects */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-center max-w-6xl mx-auto mb-12">
+          <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto mb-12">
             {PLAZOS.map(plazo => {
               const info = descuentosPorPlazo[plazo.id];
               const desc = info?.value ?? 0;
@@ -250,7 +250,7 @@ export default function PromotionsSection() {
               return (
                 <div
                   key={plazo.id}
-                  className={`rounded-2xl text-center transition-transform duration-300 hover:scale-105 ${
+                  className={`rounded-2xl text-center transition-transform duration-300 hover:scale-105 w-full sm:w-[calc(50%-12px)] lg:w-[250px] ${
                     esMejor
                       ? 'bg-white p-10 shadow-2xl relative transform lg:-translate-y-4 lg:scale-110 z-10'
                       : 'bg-white/15 backdrop-blur-sm p-8 border border-white/20'
