@@ -83,12 +83,63 @@ async function createGhlContact(
     if (!res.ok) {
       const err = await res.text();
       console.error("GHL upsert error:", res.status, err);
-    } else {
-      const data = await res.json();
-      console.log("GHL contact upserted:", data.contact?.id);
+      return;
+    }
+
+    const data = await res.json();
+    const contactId = data.contact?.id;
+    console.log("GHL contact upserted:", contactId);
+
+    // Create opportunity in pipeline
+    if (contactId) {
+      await createGhlOpportunity(contactId, nombre, sucursal, tamano, apiKey);
     }
   } catch (err) {
     console.error("GHL API call failed:", err);
+  }
+}
+
+async function createGhlOpportunity(
+  contactId: string,
+  nombre: string,
+  sucursal: string,
+  tamano: string,
+  apiKey: string,
+) {
+  const pipelineId = process.env.GHL_PIPELINE_ID;
+  const stageId = process.env.GHL_STAGE_NUEVO_LEAD;
+  if (!pipelineId || !stageId) return;
+
+  const title = `${nombre.trim()} — ${sucursal || "Sin sucursal"}${tamano ? ` · ${tamano}` : ""}`;
+
+  try {
+    const res = await fetch("https://services.leadconnectorhq.com/opportunities/", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        Version: "2021-07-28",
+      },
+      body: JSON.stringify({
+        pipelineId,
+        pipelineStageId: stageId,
+        locationId: process.env.GHL_LOCATION_ID,
+        contactId,
+        name: title,
+        status: "open",
+        source: "sitio web torobox.mx",
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("GHL opportunity error:", res.status, err);
+    } else {
+      const data = await res.json();
+      console.log("GHL opportunity created:", data.opportunity?.id);
+    }
+  } catch (err) {
+    console.error("GHL opportunity creation failed:", err);
   }
 }
 
