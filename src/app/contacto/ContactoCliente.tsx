@@ -351,49 +351,53 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                   <option value="7-meses">7+ Meses — hasta 25% de descuento</option>
                   <option value="anualidad">Anualidad — hasta 35% de descuento, el mayor ahorro</option>
                 </select>
-                <div className="mt-3 grid grid-cols-4 gap-2 text-center text-xs">
-                  {([
+                {(() => {
+                  const allPlazos = [
                     { id: 'mensual', label: 'Mensual', fallback: 'Estándar' },
                     { id: '3-6-meses', label: '3 – 6 Meses', fallback: 'Hasta 20% off' },
                     { id: '7-meses', label: '7+ Meses', fallback: 'Hasta 25% off' },
                     { id: 'anualidad', label: 'Anualidad', fallback: 'Hasta 35% off' },
-                  ] as const).map((p) => {
-                    const isSelected = plazo === p.id;
-                    const desc = p.id === 'mensual' ? 0 : (bodegaSeleccionada?.descuentos?.[p.id] ?? 0);
-                    const descLabel = p.id === 'mensual'
-                      ? 'Estándar'
+                  ] as const;
+                  const hasSelection = plazo && plazo !== 'asesoria';
+                  const selected = allPlazos.find(p => p.id === plazo);
+
+                  if (hasSelection && selected) {
+                    const desc = selected.id === 'mensual' ? 0 : (bodegaSeleccionada?.descuentos?.[selected.id] ?? 0);
+                    const descLabel = selected.id === 'mensual'
+                      ? 'Sin descuento — precio estándar'
                       : desc > 0
-                        ? `${Math.round(desc * 100)}% off`
-                        : bodegaSeleccionada
-                          ? 'No aplica'
-                          : p.fallback;
-                    const isBest = p.id === 'anualidad' && desc > 0;
-                    const noDiscount = p.id !== 'mensual' && bodegaSeleccionada && desc === 0;
+                        ? `${Math.round(desc * 100)}% de descuento aplicado`
+                        : 'Sin descuento en este plazo';
 
                     return (
-                      <div
-                        key={p.id}
-                        className={`rounded-lg py-2 px-1 transition-all relative ${
-                          isSelected
-                            ? 'bg-brand-red/10 border-2 border-brand-red ring-1 ring-brand-red/30 scale-[1.03]'
-                            : noDiscount
-                              ? 'bg-gray-50 border border-gray-200 opacity-40'
-                              : isBest
-                                ? 'bg-red-50 border border-brand-red'
-                                : 'bg-gray-50 border border-gray-200'
-                        }`}
-                      >
-                        {isBest && !noDiscount && (
-                          <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-brand-black text-white text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">Mejor Ahorro</span>
-                        )}
-                        <p className={`font-bold ${isSelected ? 'text-brand-red' : isBest && !noDiscount ? 'text-brand-red' : 'text-brand-black'} ${isBest ? 'mt-1' : ''}`}>{p.label}</p>
-                        <p className={`font-black text-base ${noDiscount ? 'text-gray-400 text-xs font-medium' : isSelected || isBest ? 'text-brand-red' : 'text-brand-black'}`}>
-                          {descLabel}
-                        </p>
+                      <div className="mt-3 flex justify-center">
+                        <div className="bg-brand-red/10 border-2 border-brand-red rounded-lg py-3 px-6 text-center inline-flex flex-col items-center">
+                          <p className="font-bold text-brand-red text-sm">{selected.label}</p>
+                          <p className="text-brand-red font-black text-lg">{descLabel}</p>
+                        </div>
                       </div>
                     );
-                  })}
-                </div>
+                  }
+
+                  return (
+                    <div className="mt-3 grid grid-cols-4 gap-2 text-center text-xs">
+                      {allPlazos.map((p) => {
+                        const isBest = p.id === 'anualidad';
+                        return (
+                          <div key={p.id} className={`rounded-lg py-2 px-1 relative ${isBest ? 'bg-red-50 border border-brand-red' : 'bg-gray-50 border border-gray-200'}`}>
+                            {isBest && (
+                              <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-brand-black text-white text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">Mejor Ahorro</span>
+                            )}
+                            <p className={`font-bold ${isBest ? 'text-brand-red mt-1' : 'text-brand-black'}`}>{p.label}</p>
+                            <p className={`font-black text-base ${isBest ? 'text-brand-red' : 'text-brand-black'}`}>
+                              {p.id === 'mensual' ? <span className="text-gray-500 font-medium text-xs">Estándar</span> : p.fallback}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
                 {errores.plazo && <p className="text-red-500 text-xs mt-1">{errores.plazo}</p>}
               </div>
 
