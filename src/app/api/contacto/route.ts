@@ -29,7 +29,7 @@ async function createGhlContact(
 ) {
   const apiKey = process.env.GHL_API_KEY;
   const locationId = process.env.GHL_LOCATION_ID;
-  if (!apiKey || !locationId) return;
+  if (!apiKey || !locationId) return { error: "missing_env", hasKey: !!apiKey, hasLoc: !!locationId };
 
   // Build origen_del_lead from UTMs
   const origenParts = [utm.utm_source, utm.utm_medium, utm.utm_campaign].filter(Boolean);
@@ -83,20 +83,19 @@ async function createGhlContact(
 
     if (!res.ok) {
       const err = await res.text();
-      console.error("GHL upsert error:", res.status, err);
-      return;
+      return { error: "upsert_failed", status: res.status, detail: err };
     }
 
     const data = await res.json();
     const contactId = data.contact?.id;
-    console.log("GHL contact upserted:", contactId);
 
     // Create opportunity in pipeline
     if (contactId) {
       await createOrUpdateGhlOpportunity(contactId, nombre, sucursal, tamano, plazo, apiKey);
     }
+    return { ok: true, contactId };
   } catch (err) {
-    console.error("GHL API call failed:", err);
+    return { error: "exception", detail: String(err) };
   }
 }
 
@@ -210,10 +209,7 @@ export async function POST(req: Request) {
     const safeCotizacion = cotizacion ? escapeHtml(cotizacion) : "";
 
     // Create/upsert contact in GHL first (before email setup which might fail)
-    const ghlKey = process.env.GHL_API_KEY;
-    const ghlLoc = process.env.GHL_LOCATION_ID;
-    console.log("GHL ENV CHECK:", { hasKey: !!ghlKey, keyPrefix: ghlKey?.slice(0, 8), hasLoc: !!ghlLoc });
-    await createGhlContact(nombre, telefono, correo, safeSucursal, safeTamano, safePlazo, utm as UtmData);
+    const ghlDebug = await createGhlContact(nombre, telefono, correo, safeSucursal, safeTamano, safePlazo, utm as UtmData);
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -401,7 +397,7 @@ export async function POST(req: Request) {
     //   });
     // }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, _debug: ghlDebug });
   } catch (error) {
     console.error("Error enviando correo:", error);
     return NextResponse.json({ error: "Error al enviar el correo" }, { status: 500 });
