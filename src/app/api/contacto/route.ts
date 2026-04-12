@@ -9,9 +9,92 @@ function escapeHtml(text: string): string {
     .replace(/"/g, "&quot;");
 }
 
+interface UtmData {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
+  gclid?: string;
+}
+
+async function createGhlContact(
+  nombre: string,
+  telefono: string,
+  correo: string,
+  sucursal: string,
+  tamano: string,
+  utm: UtmData,
+) {
+  const apiKey = process.env.GHL_API_KEY;
+  const locationId = process.env.GHL_LOCATION_ID;
+  if (!apiKey || !locationId) return;
+
+  // Build origen_del_lead from UTMs
+  const origenParts = [utm.utm_source, utm.utm_medium, utm.utm_campaign].filter(Boolean);
+  const origenDelLead = origenParts.length > 0
+    ? origenParts.join(" / ")
+    : "sitio web / orgánico";
+
+  // Split nombre into first/last
+  const parts = nombre.trim().split(/\s+/);
+  const firstName = parts[0] || "";
+  const lastName = parts.slice(1).join(" ") || "";
+
+  const body: Record<string, unknown> = {
+    locationId,
+    firstName,
+    lastName,
+    email: correo,
+    phone: telefono,
+    source: "sitio web torobox.mx",
+    customFields: [
+      { id: "zCKGssV2MZkjp4N9199L", value: origenDelLead },
+      { id: "7WhwsrEt1rNwVRSZsuwU", value: sucursal },
+      { id: "hVZRW1n3EO8P6GapXYhm", value: tamano },
+    ],
+  };
+
+  // Add UTM custom fields only if they have values
+  if (utm.utm_source) {
+    (body.customFields as Array<{id: string; value: string}>).push({ id: "KaDrxlpdWJZyErfwJQZ8", value: utm.utm_source });
+  }
+  if (utm.utm_medium) {
+    (body.customFields as Array<{id: string; value: string}>).push({ id: "pU4wPTalEz8OqjbGeG0V", value: utm.utm_medium });
+  }
+  if (utm.utm_campaign) {
+    (body.customFields as Array<{id: string; value: string}>).push({ id: "QMPXq4nsZNEcnp2sBSL4", value: utm.utm_campaign });
+  }
+  if (utm.gclid) {
+    (body.customFields as Array<{id: string; value: string}>).push({ id: "n859ohT5iyKVOiVPwn2H", value: utm.gclid });
+  }
+
+  try {
+    const res = await fetch("https://services.leadconnectorhq.com/contacts/upsert", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        Version: "2021-07-28",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("GHL upsert error:", res.status, err);
+    } else {
+      const data = await res.json();
+      console.log("GHL contact upserted:", data.contact?.id);
+    }
+  } catch (err) {
+    console.error("GHL API call failed:", err);
+  }
+}
+
 export async function POST(req: Request) {
   try {
-    const { nombre, telefono, correo, sucursal, tamano, plazo, mensaje, cotizacion } = await req.json();
+    const { nombre, telefono, correo, sucursal, tamano, plazo, mensaje, cotizacion, utm = {} } = await req.json();
 
     if (!nombre || !telefono || !correo) {
       return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
@@ -178,6 +261,9 @@ export async function POST(req: Request) {
 </body>
 </html>
     `;
+
+    // Create/upsert contact in GHL (non-blocking — email still sends if GHL fails)
+    await createGhlContact(nombre, telefono, correo, safeSucursal, safeTamano, utm as UtmData);
 
     await transporter.sendMail({
       from: `"ToroBox" <${process.env.SMTP_USER}>`,

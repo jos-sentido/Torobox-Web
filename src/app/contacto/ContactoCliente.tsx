@@ -4,12 +4,14 @@ import { useState, useRef, useMemo } from 'react';
 import Button from '@/components/Button';
 import SimuladorTarifas, { type SeleccionSimulador } from '@/components/SimuladorTarifas';
 import { SUCURSALES } from '@/data/sucursales';
+import { useUtmCapture } from '@/hooks/useUtmCapture';
 
 const fmt = (n: number) =>
   n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 });
 
 export default function ContactoCliente({ initialSucursal = '', initialTamano = '' }: { initialSucursal?: string; initialTamano?: string }) {
   const formRef = useRef<HTMLDivElement>(null);
+  const { getUtmData } = useUtmCapture();
 
   // Simulator pre-fill state
   const [preseleccion, setPreseleccion] = useState<SeleccionSimulador | null>(null);
@@ -127,6 +129,8 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
       : '';
 
     try {
+      const utmData = getUtmData();
+
       const res = await fetch('/api/contacto', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -139,6 +143,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
           plazo: plazoLabels[plazo] || plazo,
           mensaje,
           cotizacion: cotizacionText,
+          utm: utmData,
         }),
       });
 
