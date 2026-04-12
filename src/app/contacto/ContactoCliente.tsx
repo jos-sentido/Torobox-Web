@@ -176,6 +176,13 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
     return Array.from(seen.entries()).map(([id, label]) => ({ id, label }));
   }, []);
 
+  // Selected bodega (for dynamic discount badges)
+  const bodegaSeleccionada = useMemo(() => {
+    if (!sucursal || !tamano || tamano === 'asesoria') return null;
+    const suc = SUCURSALES.find(s => s.id === sucursal);
+    return suc?.bodegas.find(b => b.id === tamano) ?? null;
+  }, [sucursal, tamano]);
+
   // Filter sucursales based on selected tamaño
   const sucursalesFiltradas = useMemo(() => {
     if (!tamano || tamano === 'asesoria') return SUCURSALES;
@@ -345,23 +352,47 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                   <option value="anualidad">Anualidad — hasta 35% de descuento, el mayor ahorro</option>
                 </select>
                 <div className="mt-3 grid grid-cols-4 gap-2 text-center text-xs">
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
-                    <p className="font-bold text-brand-black">Mensual</p>
-                    <p className="text-gray-500 mt-0.5">Estándar</p>
-                  </div>
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
-                    <p className="font-bold text-brand-black">3 – 6 Meses</p>
-                    <p className="text-brand-black font-black text-base">Hasta 20% off</p>
-                  </div>
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
-                    <p className="font-bold text-brand-black">7+ Meses</p>
-                    <p className="text-brand-black font-black text-base">Hasta 25% off</p>
-                  </div>
-                  <div className="bg-red-50 border border-brand-red rounded-lg py-2 px-1 relative">
-                    <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-brand-black text-white text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">Mejor Ahorro</span>
-                    <p className="font-bold text-brand-red mt-1">Anualidad</p>
-                    <p className="text-brand-red font-black text-base">Hasta 35% off</p>
-                  </div>
+                  {([
+                    { id: 'mensual', label: 'Mensual', fallback: 'Estándar' },
+                    { id: '3-6-meses', label: '3 – 6 Meses', fallback: 'Hasta 20% off' },
+                    { id: '7-meses', label: '7+ Meses', fallback: 'Hasta 25% off' },
+                    { id: 'anualidad', label: 'Anualidad', fallback: 'Hasta 35% off' },
+                  ] as const).map((p) => {
+                    const isSelected = plazo === p.id;
+                    const desc = p.id === 'mensual' ? 0 : (bodegaSeleccionada?.descuentos?.[p.id] ?? 0);
+                    const descLabel = p.id === 'mensual'
+                      ? 'Estándar'
+                      : desc > 0
+                        ? `${Math.round(desc * 100)}% off`
+                        : bodegaSeleccionada
+                          ? 'No aplica'
+                          : p.fallback;
+                    const isBest = p.id === 'anualidad' && desc > 0;
+                    const noDiscount = p.id !== 'mensual' && bodegaSeleccionada && desc === 0;
+
+                    return (
+                      <div
+                        key={p.id}
+                        className={`rounded-lg py-2 px-1 transition-all relative ${
+                          isSelected
+                            ? 'bg-brand-red/10 border-2 border-brand-red ring-1 ring-brand-red/30 scale-[1.03]'
+                            : noDiscount
+                              ? 'bg-gray-50 border border-gray-200 opacity-40'
+                              : isBest
+                                ? 'bg-red-50 border border-brand-red'
+                                : 'bg-gray-50 border border-gray-200'
+                        }`}
+                      >
+                        {isBest && !noDiscount && (
+                          <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-brand-black text-white text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">Mejor Ahorro</span>
+                        )}
+                        <p className={`font-bold ${isSelected ? 'text-brand-red' : isBest && !noDiscount ? 'text-brand-red' : 'text-brand-black'} ${isBest ? 'mt-1' : ''}`}>{p.label}</p>
+                        <p className={`font-black text-base ${noDiscount ? 'text-gray-400 text-xs font-medium' : isSelected || isBest ? 'text-brand-red' : 'text-brand-black'}`}>
+                          {descLabel}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
                 {errores.plazo && <p className="text-red-500 text-xs mt-1">{errores.plazo}</p>}
               </div>
