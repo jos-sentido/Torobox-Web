@@ -209,6 +209,9 @@ export async function POST(req: Request) {
     const safeMensaje = mensaje ? escapeHtml(mensaje) : "";
     const safeCotizacion = cotizacion ? escapeHtml(cotizacion) : "";
 
+    // Create/upsert contact in GHL first (before email setup which might fail)
+    await createGhlContact(nombre, telefono, correo, safeSucursal, safeTamano, safePlazo, utm as UtmData);
+
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT) || 587,
@@ -361,9 +364,6 @@ export async function POST(req: Request) {
 </body>
 </html>
     `;
-
-    // Create/upsert contact in GHL (non-blocking — email still sends if GHL fails)
-    await createGhlContact(nombre, telefono, correo, safeSucursal, safeTamano, safePlazo, utm as UtmData);
 
     // TODO: TEMPORALMENTE DESACTIVADO PARA PRUEBAS — reactivar después
     // const subject = `${safeNombre} - Solicitud de bodega${safeSucursal ? ` (${safeSucursal})` : ""}`;
