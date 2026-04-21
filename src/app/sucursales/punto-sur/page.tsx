@@ -4,7 +4,7 @@ import SucursalPage from '@/components/SucursalPage';
 export const metadata: Metadata = {
   title: 'Mini Bodegas Punto Sur, Tlajomulco — ToroBox',
   description:
-    'Renta de mini bodegas y pensión vehicular en López Mateos Sur 5540, Tlajomulco. Acceso controlado y seguridad privada. Cotiza hoy.',
+    'Renta de mini bodegas en López Mateos Sur 5540, Tlajomulco. Acceso controlado y seguridad privada. Cotiza hoy.',
 };
 
 const base = '/images/sucursales/punto-sur';
@@ -17,7 +17,7 @@ export default function SucursalPuntoSurPage() {
         nombre: 'Punto Sur',
         etiqueta: 'Sucursal Sur',
         descripcion:
-          'Nuestra ubicación al sur de la ciudad. Ideal para desarrollos residenciales, pensión vehicular y negocios locales.',
+          'Nuestra ubicación al sur de la ciudad. Ideal para desarrollos residenciales y negocios locales.',
         telefono: '33-32-58-26-36',
         email: 'ventaspuntosur@torobox.com.mx',
         direccion: 'Av. Adolfo López Mateos Sur 5540, Col. Los Gavilanes, C.P. 45645, Tlajomulco, Jalisco',
@@ -34,7 +34,6 @@ export default function SucursalPuntoSurPage() {
           `${base}/2025-08-29-10.18.23-am.webp`,
         ],
         servicios: [
-          'Pensión vehicular',
           'Acceso controlado',
           'Acceso 24/7',
           'Vigilancia 24/7',

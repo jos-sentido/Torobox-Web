@@ -30,7 +30,7 @@ const sucursales = [
     mapQuery: "Torobox+Prol.+Jes%C3%BAs+3777,+Los+Girasoles,+45136+Zapopan,+Jal.,+M%C3%A9xico",
     img: "/images/sucursales/zona-real/hero.webp",
     alt: "Instalaciones de la sucursal ToroBox Zona Real en Zapopan con estacionamiento amplio",
-    caracteristicas: ["Seguridad Premium", "Bodegas corporativas", "Amplio estacionamiento"],
+    caracteristicas: ["Vigilancia y Seguridad", "Bodegas corporativas", "Amplio estacionamiento"],
   },
   {
     id: "punto-sur",
@@ -41,7 +41,7 @@ const sucursales = [
     mapQuery: "Torobox+Av.+Adolfo+L%C3%B3pez+Mateos+Sur+5540,+Los+Gavilanes,+45645+Tlajomulco+de+Z%C3%BA%C3%B1iga,+Jal.,+M%C3%A9xico",
     img: "/images/sucursales/punto-sur/hero.webp",
     alt: "Entrada de la sucursal ToroBox Punto Sur en Tlajomulco con acceso controlado",
-    caracteristicas: ["Pensión vehicular", "Acceso controlado", "Ideal para hogar"],
+    caracteristicas: ["Acceso controlado", "Ideal para hogar"],
   },
   {
     id: "bucerias",
@@ -53,7 +53,7 @@ const sucursales = [
     img: "/images/sucursales/bucerias/hero.webp",
     alt: "Sucursal ToroBox Bucerías en Nayarit, almacenamiento vacacional cerca de la playa",
     imgPosition: "center 30%",
-    caracteristicas: ["Almacén vacacional", "Clima controlado", "Espacios para botes y motos"],
+    caracteristicas: ["Almacén vacacional", "Espacios para botes y motos"],
   },
 ];
 

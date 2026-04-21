@@ -77,7 +77,7 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Dirección: Av. Adolfo López Mateos Sur 5540, Col. Los Gavilanes, C.P. 45645, Tlajomulco, Jalisco
 - Teléfono: 33-32-58-26-36
 - Email: ventaspuntosur@torobox.com.mx
-- Características: Pensión vehicular, acceso controlado, acceso 24/7, vigilancia 24/7, wifi, circuito cerrado, carritos de carga, atención personalizada Lun-Sáb, amplio estacionamiento, cerca de vías rápidas, control de plagas, perros de detección, venta de accesorios
+- Características: Acceso controlado, acceso 24/7, vigilancia 24/7, wifi, circuito cerrado, carritos de carga, atención personalizada Lun-Sáb, amplio estacionamiento, cerca de vías rápidas, control de plagas, perros de detección, venta de accesorios
 - Descuentos: 20% (3-6 meses), 25% (7+ meses), 35% (anualidad). Bodega de 3.5 m²: 11% (3-6 meses), 20% (anualidad).
 - Precios:
   · 3.5 m²: Planta baja $1,700/mes, Planta alta $1,505/mes
