@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
+import GHLTracking from "@/components/GHLTracking";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -74,6 +75,7 @@ gtag('config', 'G-YN2CFK1MEZ');`,
         </main>
         <Footer />
         <Chatbot />
+        <GHLTracking />
       </body>
     </html>
   );
