@@ -67,6 +67,11 @@ gtag('config', 'G-YN2CFK1MEZ');`,
         </main>
         <Footer />
         <Chatbot />
+        {/* GHL External Tracking */}
+        <script
+          src="https://link.msgsndr.com/js/external-tracking.js"
+          data-tracking-id="tk_84e3cc583dfb473aa256fc525a333fdc"
+        />
       </body>
     </html>
   );
