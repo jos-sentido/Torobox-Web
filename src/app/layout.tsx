@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -50,6 +51,12 @@ gtag('js', new Date());
 gtag('config', 'G-YN2CFK1MEZ');`,
           }}
         />
+        {/* GHL External Tracking */}
+        <Script
+          src="https://link.msgsndr.com/js/external-tracking.js"
+          data-tracking-id="tk_84e3cc583dfb473aa256fc525a333fdc"
+          strategy="afterInteractive"
+        />
       </head>
       <body className={`${inter.variable} ${montserrat.variable} antialiased font-sans flex flex-col min-h-screen bg-[#F2F2F2] text-[#111111] overflow-x-hidden`}>
         {/* Google Tag Manager (noscript) */}
@@ -67,11 +74,6 @@ gtag('config', 'G-YN2CFK1MEZ');`,
         </main>
         <Footer />
         <Chatbot />
-        {/* GHL External Tracking */}
-        <script
-          src="https://link.msgsndr.com/js/external-tracking.js"
-          data-tracking-id="tk_84e3cc583dfb473aa256fc525a333fdc"
-        />
       </body>
     </html>
   );
