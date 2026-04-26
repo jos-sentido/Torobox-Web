@@ -110,8 +110,8 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
     return Object.keys(nuevosErrores).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
     if (enviando) return;
     if (!validarFormulario()) return;
     setEnviando(true);
@@ -308,7 +308,19 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
               </div>
             ) : (
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <div
+              role="form"
+              className="space-y-6"
+              onKeyDown={(e) => {
+                if (
+                  e.key === 'Enter' &&
+                  (e.target as HTMLElement).tagName === 'INPUT'
+                ) {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-2">Nombre completo <span className="text-brand-red">*</span></label>
@@ -469,10 +481,10 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                 </div>
               )}
 
-              <Button type="submit" variant="primary" fullWidth className="py-4 text-lg mt-4 shadow-lg shadow-red-500/30" disabled={enviando}>
+              <Button type="button" onClick={() => handleSubmit()} variant="primary" fullWidth className="py-4 text-lg mt-4 shadow-lg shadow-red-500/30" disabled={enviando}>
                 {enviando ? 'Enviando...' : 'Solicitar información ahora'}
               </Button>
-            </form>
+            </div>
             )}
           </div>
 
