@@ -153,6 +153,27 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
 
       if (!res.ok) throw new Error('Error al enviar');
 
+      const trimmedNombre = nombre.trim();
+      const spaceIdx = trimmedNombre.indexOf(' ');
+      const firstName = spaceIdx > 0 ? trimmedNombre.slice(0, spaceIdx) : trimmedNombre;
+      const lastName = spaceIdx > 0 ? trimmedNombre.slice(spaceIdx + 1) : '';
+
+      const w = window as Window & { dataLayer?: Record<string, unknown>[] };
+      if (Array.isArray(w.dataLayer)) {
+        w.dataLayer.push({
+          event: 'generate_lead',
+          lead_form: 'contacto_torobox',
+          value: preseleccion?.precioMensual ?? 0,
+          currency: 'MXN',
+          enhanced_conversion_data: {
+            email: correo.trim().toLowerCase(),
+            phone_number: telefono.replace(/\D/g, ''),
+            first_name: firstName,
+            last_name: lastName,
+          },
+        });
+      }
+
       setEnviado(true);
       setNombre('');
       setTelefono('');
