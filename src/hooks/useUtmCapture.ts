@@ -1,21 +1,53 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 
-const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid'] as const;
-const STORAGE_KEY = 'torobox_utm';
+const TRACKING_KEYS = [
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_content',
+  'utm_term',
+  'utm_id',
+  'gclid',
+  'gad_source',
+  'gbraid',
+  'wbraid',
+  'fbclid',
+  'msclkid',
+  'ttclid',
+  'li_fat_id',
+] as const;
 
-export interface UtmData {
-  utm_source?: string;
-  utm_medium?: string;
-  utm_campaign?: string;
-  utm_content?: string;
-  utm_term?: string;
-  gclid?: string;
+const SESSION_KEY = 'torobox_utm';
+const LOCAL_KEY = 'torobox_utm_persist';
+const TTL_MS = 90 * 24 * 60 * 60 * 1000;
+
+type Key = (typeof TRACKING_KEYS)[number];
+export type UtmData = Partial<Record<Key, string>>;
+
+interface StoredUtm {
+  data: UtmData;
+  ts: number;
+}
+
+function readStored(raw: string | null): UtmData {
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw) as StoredUtm | UtmData;
+    if (parsed && typeof parsed === 'object' && 'data' in parsed && 'ts' in parsed) {
+      return (parsed as StoredUtm).data || {};
+    }
+    return parsed as UtmData;
+  } catch {
+    return {};
+  }
 }
 
 export function useUtmCapture() {
-  // On mount, capture UTMs from URL and persist in sessionStorage
+  const pathname = usePathname();
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -23,7 +55,7 @@ export function useUtmCapture() {
     const utms: UtmData = {};
     let found = false;
 
-    for (const key of UTM_KEYS) {
+    for (const key of TRACKING_KEYS) {
       const val = params.get(key);
       if (val) {
         utms[key] = val;
@@ -31,20 +63,37 @@ export function useUtmCapture() {
       }
     }
 
-    // Only overwrite if we found new UTMs in the current URL
-    if (found) {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(utms));
-    }
-  }, []);
+    if (!found) return;
+
+    const payload: StoredUtm = { data: utms, ts: Date.now() };
+    const serialized = JSON.stringify(payload);
+    try {
+      sessionStorage.setItem(SESSION_KEY, serialized);
+    } catch {}
+    try {
+      localStorage.setItem(LOCAL_KEY, serialized);
+    } catch {}
+  }, [pathname]);
 
   const getUtmData = useCallback((): UtmData => {
     if (typeof window === 'undefined') return {};
+
     try {
-      const stored = sessionStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : {};
-    } catch {
-      return {};
-    }
+      const session = readStored(sessionStorage.getItem(SESSION_KEY));
+      if (Object.keys(session).length > 0) return session;
+    } catch {}
+
+    try {
+      const raw = localStorage.getItem(LOCAL_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as StoredUtm;
+        if (parsed?.ts && Date.now() - parsed.ts < TTL_MS) {
+          return parsed.data || {};
+        }
+      }
+    } catch {}
+
+    return {};
   }, []);
 
   return { getUtmData };

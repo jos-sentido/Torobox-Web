@@ -26,7 +26,13 @@ async function sendToGhlWebhook(data: {
   utm_campaign?: string;
   utm_content?: string;
   utm_term?: string;
+  utm_id?: string;
   gclid?: string;
+  gad_source?: string;
+  gbraid?: string;
+  wbraid?: string;
+  fbclid?: string;
+  msclkid?: string;
   origen_del_lead: string;
 }) {
   try {
@@ -61,11 +67,21 @@ export async function POST(req: Request) {
     const safeMensaje = mensaje ? escapeHtml(mensaje) : "";
     const safeCotizacion = cotizacion ? escapeHtml(cotizacion) : "";
 
-    // Build origen_del_lead from UTMs
+    // Build origen_del_lead from UTMs, with fallbacks from click-IDs
+    // (Google Ads auto-tagging may send only gclid/gad_source without manual UTMs)
     const origenParts = [utm.utm_source, utm.utm_medium, utm.utm_campaign].filter(Boolean);
-    const origenDelLead = origenParts.length > 0
-      ? origenParts.join(" / ")
-      : "sitio web / orgánico";
+    let origenDelLead: string;
+    if (origenParts.length > 0) {
+      origenDelLead = origenParts.join(" / ");
+    } else if (utm.gclid || utm.gad_source || utm.gbraid || utm.wbraid) {
+      origenDelLead = "google / cpc / google_ads";
+    } else if (utm.fbclid) {
+      origenDelLead = "facebook / cpc / meta_ads";
+    } else if (utm.msclkid) {
+      origenDelLead = "bing / cpc / microsoft_ads";
+    } else {
+      origenDelLead = "sitio web / orgánico";
+    }
 
     // Send to GHL via webhook (no env vars needed)
     await sendToGhlWebhook({
@@ -83,7 +99,13 @@ export async function POST(req: Request) {
       utm_campaign: utm.utm_campaign || "",
       utm_content: utm.utm_content || "",
       utm_term: utm.utm_term || "",
+      utm_id: utm.utm_id || "",
       gclid: utm.gclid || "",
+      gad_source: utm.gad_source || "",
+      gbraid: utm.gbraid || "",
+      wbraid: utm.wbraid || "",
+      fbclid: utm.fbclid || "",
+      msclkid: utm.msclkid || "",
       origen_del_lead: origenDelLead,
     });
 
