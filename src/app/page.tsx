@@ -22,9 +22,12 @@ import {
 } from "react-icons/pi";
 
 export const metadata: Metadata = {
-  title: "Torobox",
+  title: {
+    absolute: "Torobox | Renta de mini bodegas en Guadalajara y Bucerías",
+  },
   description:
     "Renta de mini bodegas seguras, limpias y accesibles en Guadalajara, Zapopan, Tlajomulco y Bucerías. Vigilancia 24/7, acceso controlado y bodegas desde 1.75 m². Cotiza hoy.",
+  alternates: { canonical: "/" },
 };
 
 export default function Home() {

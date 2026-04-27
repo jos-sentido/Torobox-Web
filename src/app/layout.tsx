@@ -20,8 +20,41 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Torobox",
-  description: "Espacios seguros para almacenar pertenencias personales, muebles, archivo o inventario de negocios. Instalaciones con vigilancia 24/7.",
+  metadataBase: new URL("https://torobox.mx"),
+  title: {
+    default: "Torobox | Renta de mini bodegas en Guadalajara y Bucerías",
+    template: "%s | Torobox",
+  },
+  description:
+    "Renta de mini bodegas seguras y accesibles en Guadalajara, Zapopan, Tlajomulco y Bucerías. Vigilancia 24/7, acceso controlado y bodegas desde 1.75 m².",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_MX",
+    url: "https://torobox.mx",
+    siteName: "Torobox",
+    title: "Torobox | Renta de mini bodegas en Guadalajara y Bucerías",
+    description:
+      "Renta de mini bodegas seguras y accesibles en Guadalajara, Zapopan, Tlajomulco y Bucerías. Vigilancia 24/7, acceso controlado y bodegas desde 1.75 m².",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Torobox | Renta de mini bodegas en Guadalajara y Bucerías",
+    description:
+      "Renta de mini bodegas seguras y accesibles en Guadalajara, Zapopan, Tlajomulco y Bucerías. Vigilancia 24/7, acceso controlado y bodegas desde 1.75 m².",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
