@@ -56,6 +56,11 @@ const organizationJsonLd = {
       postalCode: s.postalCode,
       addressCountry: s.country,
     },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: s.latitude,
+      longitude: s.longitude,
+    },
   })),
 };
 

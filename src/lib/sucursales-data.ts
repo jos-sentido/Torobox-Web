@@ -12,6 +12,8 @@ export type SucursalSeo = {
   url: string;
   image: string;
   description: string;
+  latitude: number;
+  longitude: number;
 };
 
 export const sucursalesSeo: SucursalSeo[] = [
@@ -30,6 +32,8 @@ export const sucursalesSeo: SucursalSeo[] = [
     image: "https://torobox.mx/images/sucursales/av-vallarta/hero.webp",
     description:
       "Renta de mini bodegas desde 1.75 m² en Av. Vallarta, Zapopan. Acceso 24/7 y vigilancia CCTV.",
+    latitude: 20.6899083,
+    longitude: -103.4490999,
   },
   {
     id: "zona-real",
@@ -46,6 +50,8 @@ export const sucursalesSeo: SucursalSeo[] = [
     image: "https://torobox.mx/images/sucursales/zona-real/hero.webp",
     description:
       "Bodegas premium y corporativas en Zona Real, Zapopan. Vigilancia armada 24/7, montacargas y wifi.",
+    latitude: 20.735824,
+    longitude: -103.4270418,
   },
   {
     id: "punto-sur",
@@ -62,6 +68,8 @@ export const sucursalesSeo: SucursalSeo[] = [
     image: "https://torobox.mx/images/sucursales/punto-sur/hero.webp",
     description:
       "Mini bodegas en Tlajomulco con acceso controlado y seguridad privada, sobre López Mateos Sur.",
+    latitude: 20.5733912,
+    longitude: -103.4544733,
   },
   {
     id: "bucerias",
@@ -78,6 +86,8 @@ export const sucursalesSeo: SucursalSeo[] = [
     image: "https://torobox.mx/images/sucursales/bucerias/hero.webp",
     description:
       "Almacenamiento vacacional en Bucerías. Espacios para botes, motos y equipos marinos.",
+    latitude: 20.7513858,
+    longitude: -105.3244334,
   },
 ];
 
@@ -99,6 +109,11 @@ export function localBusinessJsonLd(s: SucursalSeo) {
       addressRegion: s.region,
       postalCode: s.postalCode,
       addressCountry: s.country,
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: s.latitude,
+      longitude: s.longitude,
     },
     areaServed: s.locality,
     parentOrganization: {
