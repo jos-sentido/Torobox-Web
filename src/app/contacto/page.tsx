@@ -1,4 +1,12 @@
+import type { Metadata } from 'next';
 import ContactoCliente from './ContactoCliente';
+
+export const metadata: Metadata = {
+  title: 'Contacto — Cotiza tu Mini Bodega',
+  description:
+    'Cotiza tu mini bodega en Guadalajara, Zapopan, Tlajomulco o Bucerías. Llámanos, escríbenos por WhatsApp o llena el formulario y te atendemos hoy mismo.',
+  alternates: { canonical: '/contacto' },
+};
 
 export default async function ContactoPage({
   searchParams,

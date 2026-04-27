@@ -4,6 +4,8 @@ import Link from "next/link";
 import Button from "@/components/Button";
 import PromotionsSection from "@/components/PromotionsSection";
 import GaleriaHome from "@/components/GaleriaHome";
+import JsonLd from "@/components/JsonLd";
+import { sucursalesSeo } from "@/lib/sucursales-data";
 import {
   PiHouseDuotone,
   PiPackageDuotone,
@@ -30,9 +32,37 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Torobox",
+  alternateName: "ToroBox",
+  url: "https://torobox.mx",
+  logo: "https://torobox.mx/logos/logo-torobox.png",
+  description:
+    "Renta de mini bodegas seguras y accesibles en Guadalajara, Zapopan, Tlajomulco y Bucerías. Vigilancia 24/7 y acceso controlado.",
+  areaServed: ["Guadalajara", "Zapopan", "Tlajomulco", "Bucerías"],
+  sameAs: [],
+  location: sucursalesSeo.map((s) => ({
+    "@type": "SelfStorage",
+    name: s.nombre,
+    url: s.url,
+    telephone: s.telefonoIntl,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: s.street,
+      addressLocality: s.locality,
+      addressRegion: s.region,
+      postalCode: s.postalCode,
+      addressCountry: s.country,
+    },
+  })),
+};
+
 export default function Home() {
   return (
     <>
+      <JsonLd data={organizationJsonLd} />
       {/* Hero Section */}
       <section className="relative bg-brand-black text-white py-20 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">

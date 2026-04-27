@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Soluciones de Almacenamiento Empresarial — ToroBox",
   description:
     "Bodega con oficina integrada para PyMES y pensión vehicular para autos, flotillas y remolques. Soluciones a la medida en Guadalajara, Zapopan y Bucerías.",
+  alternates: { canonical: "/soluciones" },
 };
 
 export default function SolucionesPage() {

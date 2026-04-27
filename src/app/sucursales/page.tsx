@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Sucursales de Mini Bodegas — ToroBox",
   description:
     "Encuentra tu mini bodega más cercana en Guadalajara, Zapopan, Tlajomulco y Bucerías. Instalaciones con seguridad 24/7, acceso controlado y estacionamiento.",
+  alternates: { canonical: "/sucursales" },
 };
 
 const sucursales = [

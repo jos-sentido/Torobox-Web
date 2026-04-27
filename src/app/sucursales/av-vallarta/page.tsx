@@ -1,16 +1,23 @@
 import type { Metadata } from 'next';
 import SucursalPage from '@/components/SucursalPage';
+import JsonLd from '@/components/JsonLd';
+import { sucursalesSeo, localBusinessJsonLd } from '@/lib/sucursales-data';
+
+const seo = sucursalesSeo.find((s) => s.id === 'av-vallarta')!;
 
 export const metadata: Metadata = {
   title: 'Mini Bodegas Av. Vallarta, Zapopan — ToroBox',
   description:
     'Renta de mini bodegas desde 1.75 m² en Av. Vallarta 7529, Zapopan. Acceso 24/7, vigilancia CCTV y cerca de vías rápidas. Cotiza hoy.',
+  alternates: { canonical: '/sucursales/av-vallarta' },
 };
 
 const base = '/images/sucursales/av-vallarta';
 
 export default function SucursalAvVallartaPage() {
   return (
+    <>
+    <JsonLd data={localBusinessJsonLd(seo)} />
     <SucursalPage
       data={{
         sucursalId: 'av-vallarta',
@@ -51,5 +58,6 @@ export default function SucursalAvVallartaPage() {
         ],
       }}
     />
+    </>
   );
 }

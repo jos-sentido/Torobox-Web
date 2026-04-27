@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Cómo Contratar tu Mini Bodega — ToroBox",
   description:
     "Contrata tu mini bodega en 5 pasos: contacto, asesoría de tamaño, documentación, firma de contrato y acceso inmediato. Proceso rápido y sin complicaciones.",
+  alternates: { canonical: "/como-contratar" },
 };
 
 export default function ComoContratarPage() {

@@ -1,14 +1,21 @@
 import type { Metadata } from 'next';
 import SucursalPage from '@/components/SucursalPage';
+import JsonLd from '@/components/JsonLd';
+import { sucursalesSeo, localBusinessJsonLd } from '@/lib/sucursales-data';
+
+const seo = sucursalesSeo.find((s) => s.id === 'zona-real')!;
 
 export const metadata: Metadata = {
   title: 'Mini Bodegas Zona Real, Zapopan — ToroBox',
   description:
     'Bodegas premium y corporativas en Prol. Jesús 3777, Zapopan. Vigilancia armada 24/7, montacargas y wifi de alta velocidad. Cotiza hoy.',
+  alternates: { canonical: '/sucursales/zona-real' },
 };
 
 export default function SucursalZonaRealPage() {
   return (
+    <>
+    <JsonLd data={localBusinessJsonLd(seo)} />
     <SucursalPage
       data={{
         sucursalId: 'zona-real',
@@ -47,5 +54,6 @@ export default function SucursalZonaRealPage() {
         ],
       }}
     />
+    </>
   );
 }

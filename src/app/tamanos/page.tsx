@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Tamaños de Mini Bodegas — ToroBox",
   description:
     "Bodegas desde 1.75 m² hasta 30 m². Encuentra el tamaño ideal para tu hogar, negocio o archivo. Cotiza en Guadalajara, Zapopan, Tlajomulco y Bucerías.",
+  alternates: { canonical: "/tamanos" },
 };
 
 export default function TamanosPage() {

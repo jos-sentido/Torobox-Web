@@ -1,16 +1,23 @@
 import type { Metadata } from 'next';
 import SucursalPage from '@/components/SucursalPage';
+import JsonLd from '@/components/JsonLd';
+import { sucursalesSeo, localBusinessJsonLd } from '@/lib/sucursales-data';
+
+const seo = sucursalesSeo.find((s) => s.id === 'punto-sur')!;
 
 export const metadata: Metadata = {
   title: 'Mini Bodegas Punto Sur, Tlajomulco — ToroBox',
   description:
     'Renta de mini bodegas en López Mateos Sur 5540, Tlajomulco. Acceso controlado y seguridad privada. Cotiza hoy.',
+  alternates: { canonical: '/sucursales/punto-sur' },
 };
 
 const base = '/images/sucursales/punto-sur';
 
 export default function SucursalPuntoSurPage() {
   return (
+    <>
+    <JsonLd data={localBusinessJsonLd(seo)} />
     <SucursalPage
       data={{
         sucursalId: 'punto-sur',
@@ -49,5 +56,6 @@ export default function SucursalPuntoSurPage() {
         ],
       }}
     />
+    </>
   );
 }

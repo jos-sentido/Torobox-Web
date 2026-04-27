@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Qué Puedes Guardar en tu Mini Bodega — ToroBox",
   description:
     "Muebles, inventario, archivo muerto, equipo deportivo y más. Conoce todo lo que puedes almacenar en una mini bodega ToroBox.",
+  alternates: { canonical: "/que-puedes-guardar" },
 };
 
 export default function QuePuedesGuardarPage() {

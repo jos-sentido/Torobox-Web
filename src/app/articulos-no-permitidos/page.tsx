@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Artículos No Permitidos en Mini Bodegas — ToroBox",
   description:
     "Conoce los artículos prohibidos en mini bodegas ToroBox: inflamables, explosivos, perecederos, sustancias tóxicas y más. Política de seguridad.",
+  alternates: { canonical: "/articulos-no-permitidos" },
 };
 
 export default function ArticulosNoPermitidosPage() {
