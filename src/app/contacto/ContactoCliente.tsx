@@ -158,10 +158,13 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
       const firstName = spaceIdx > 0 ? trimmedNombre.slice(0, spaceIdx) : trimmedNombre;
       const lastName = spaceIdx > 0 ? trimmedNombre.slice(spaceIdx + 1) : '';
 
+      const eventId = `lead_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+
       const w = window as Window & { dataLayer?: Record<string, unknown>[] };
       if (Array.isArray(w.dataLayer)) {
         w.dataLayer.push({
-          event: 'generate_lead',
+          event: 'form_submit',
+          event_id: eventId,
           lead_form: 'contacto_torobox',
           value: preseleccion?.precioMensual ?? 0,
           currency: 'MXN',
@@ -173,6 +176,18 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
           },
         });
       }
+
+      try {
+        window.history.pushState({ formEnviado: true }, '', '/contacto/formenviado');
+        if (Array.isArray(w.dataLayer)) {
+          w.dataLayer.push({
+            event: 'page_view',
+            page_path: '/contacto/formenviado',
+            page_location: window.location.origin + '/contacto/formenviado',
+            page_title: 'Contacto - Formulario Enviado',
+          });
+        }
+      } catch {}
 
       setEnviado(true);
       setNombre('');
@@ -321,7 +336,10 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                 <h4 className="text-xl font-bold text-brand-black mb-2">¡Solicitud enviada!</h4>
                 <p className="text-gray-600 mb-6">Nuestro equipo te contactará a la brevedad posible.</p>
                 <button
-                  onClick={() => setEnviado(false)}
+                  onClick={() => {
+                    try { window.history.pushState({}, '', '/contacto'); } catch {}
+                    setEnviado(false);
+                  }}
                   className="text-brand-red font-semibold hover:underline"
                 >
                   Enviar otra solicitud
