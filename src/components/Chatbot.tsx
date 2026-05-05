@@ -106,12 +106,18 @@ export default function Chatbot() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSend = async () => {
     if (!input.trim() || isLoading) return;
     const text = input;
     setInput("");
     await sendMessage({ text });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   const handleSuggestion = async (question: string) => {
@@ -260,18 +266,20 @@ export default function Chatbot() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Formulario de entrada */}
+          {/* Entrada de mensaje (sin <form> para evitar que GHL lo registre como envío de formulario) */}
           <div className="p-3 bg-white border-t border-gray-100">
-            <form onSubmit={handleSubmit} className="flex gap-2">
+            <div className="flex gap-2">
               <input
                 className="flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-red focus:bg-white transition-colors"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder="Escribe tu mensaje..."
                 disabled={isLoading}
               />
               <button
-                type="submit"
+                type="button"
+                onClick={handleSend}
                 disabled={!input.trim() || isLoading}
                 className="bg-brand-black hover:bg-black text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -279,7 +287,7 @@ export default function Chatbot() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </button>
-            </form>
+            </div>
             <div className="text-[10px] text-center text-gray-400 mt-2">
               ToroBox AI puede cometer errores. Verifica información importante.
             </div>

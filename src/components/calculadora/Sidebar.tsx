@@ -95,8 +95,7 @@ export default function Sidebar({
     e.dataTransfer.effectAllowed = 'copy';
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     setError('');
 
     const w = parseFloat(width);
@@ -270,7 +269,7 @@ export default function Sidebar({
           </button>
 
           {showForm && (
-            <form onSubmit={handleSubmit} className="px-3 pb-3 pt-1 space-y-2 bg-slate-50">
+            <div className="px-3 pb-3 pt-1 space-y-2 bg-slate-50">
               <div>
                 <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide block mb-1">Nombre</label>
                 <input
@@ -315,12 +314,13 @@ export default function Sidebar({
               )}
 
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 className="w-full py-2 bg-brand-red hover:bg-brand-red-hover text-white text-xs font-bold rounded-lg transition-colors"
               >
                 Agregar objeto
               </button>
-            </form>
+            </div>
           )}
         </div>
       </div>
