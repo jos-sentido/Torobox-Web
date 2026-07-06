@@ -94,7 +94,7 @@ export const sucursalesSeo: SucursalSeo[] = [
     nombre: "ToroBox Juan Gil Preciado",
     telefono: "33-12-82-66-09",
     telefonoIntl: "+523312826609",
-    email: "",
+    email: "ventasjuangil@torobox.com.mx",
     street: "Av. Juan Gil Preciado 7676",
     locality: "Zapopan",
     region: "Jalisco",

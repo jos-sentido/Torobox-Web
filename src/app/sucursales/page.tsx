@@ -60,7 +60,7 @@ const sucursales = [
     id: "juan-gil-preciado",
     nombre: "Juan Gil Preciado",
     telefono: "33-12-82-66-09",
-    email: "",
+    email: "ventasjuangil@torobox.com.mx",
     direccion: "Av. Juan Gil Preciado 7676, Zapopan, Jalisco",
     mapQuery: "Torobox+Av.+Juan+Gil+Preciado+7676,+Zapopan,+Jal.,+M%C3%A9xico",
     img: "/images/sucursales/juan-gil-preciado/hero.webp",

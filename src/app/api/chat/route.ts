@@ -103,6 +103,7 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 **Sucursal Juan Gil Preciado (Sucursal Norte)**
 - Dirección: Av. Juan Gil Preciado 7676, Zapopan, Jalisco
 - Teléfono: 33-12-82-66-09
+- Email: ventasjuangil@torobox.com.mx
 - Características: Bodegas tipo contenedor, acceso controlado, circuito cerrado (CCTV), vigilancia, planta alta y baja, amplios pasillos de maniobra, oficina de atención, estacionamiento
 - Descuentos: 20% (3-6 meses), 25% (7+ meses), 35% (anualidad). Bodega de 3.5 m²: 11% (3-6 meses), 20% (anualidad).
 - Precios:

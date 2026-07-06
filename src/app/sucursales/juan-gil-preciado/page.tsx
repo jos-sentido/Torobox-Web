@@ -26,7 +26,7 @@ export default function SucursalJuanGilPreciadoPage() {
         descripcion:
           'Bodegas tipo contenedor sobre Av. Juan Gil Preciado, al norte de Zapopan. Acceso controlado y monitoreo por circuito cerrado.',
         telefono: '33-12-82-66-09',
-        email: null,
+        email: 'ventasjuangil@torobox.com.mx',
         direccion: 'Av. Juan Gil Preciado 7676, Zapopan, Jalisco',
         mapQuery: 'Torobox+Av.+Juan+Gil+Preciado+7676,+Zapopan,+Jal.,+M%C3%A9xico',
         heroSrc: `${base}/hero.webp`,

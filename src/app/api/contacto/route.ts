@@ -280,6 +280,7 @@ export async function POST(req: Request) {
       "Zona Real": "karen.diaz@torobox.com.mx",
       "Punto Sur": "ventaspuntosur@torobox.com.mx",
       "Bucerías": "ventasbucerias@torobox.com.mx",
+      "Juan Gil Preciado": "ventasjuangil@torobox.com.mx",
     };
 
     const branchEmail = safeSucursal ? sucursalEmails[sucursal] : undefined;
