@@ -40,7 +40,7 @@ export const sucursalesSeo: SucursalSeo[] = [
     nombre: "ToroBox Zona Real",
     telefono: "33-31-31-21-64",
     telefonoIntl: "+523331312164",
-    email: "karen.diaz@torobox.com.mx",
+    email: "ventaszonareal@torobox.com.mx",
     street: "Prol. Jesús 3777, Col. Los Girasoles",
     locality: "Zapopan",
     region: "Jalisco",

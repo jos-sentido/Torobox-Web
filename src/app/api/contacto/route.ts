@@ -306,7 +306,7 @@ export async function POST(req: Request) {
     // Send to branch email if a sucursal was selected
     const sucursalEmails: Record<string, string> = {
       "Av. Vallarta": "ventasvallarta@torobox.com.mx",
-      "Zona Real": "karen.diaz@torobox.com.mx",
+      "Zona Real": "ventaszonareal@torobox.com.mx",
       "Punto Sur": "ventaspuntosur@torobox.com.mx",
       "Bucerías": "ventasbucerias@torobox.com.mx",
       "Juan Gil Preciado": "ventasjuangil@torobox.com.mx",

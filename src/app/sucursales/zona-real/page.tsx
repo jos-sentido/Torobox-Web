@@ -24,7 +24,7 @@ export default function SucursalZonaRealPage() {
         descripcion:
           'Bodegas premium y corporativas con la más alta seguridad para tu negocio en la zona de mayor plusvalía de Zapopan.',
         telefono: '33-31-31-21-64',
-        email: 'karen.diaz@torobox.com.mx',
+        email: 'ventaszonareal@torobox.com.mx',
         direccion: 'Prol. Jesús 3777, Col. Los Girasoles, C.P. 45136, Zapopan, Jalisco',
         mapQuery: 'Torobox+Prol.+Jes%C3%BAs+3777,+Los+Girasoles,+45136+Zapopan,+Jal.,+M%C3%A9xico',
         heroSrc: '/images/sucursales/zona-real/hero.webp',

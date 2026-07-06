@@ -61,7 +61,7 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 **Sucursal Zona Real (Sucursal Premium)**
 - Dirección: Prol. Jesús 3777, Col. Los Girasoles, C.P. 45136, Zapopan, Jalisco
 - Teléfono: 33-31-31-21-64
-- Email: karen.diaz@torobox.com.mx
+- Email: ventaszonareal@torobox.com.mx
 - Características: Acceso controlado, acceso 24/7, vigilancia 24/7, wifi, circuito cerrado, carritos de carga, atención personalizada Lun-Sáb, amplio estacionamiento, cerca de vías rápidas, control de plagas, perros de detección, venta de accesorios
 - Descuentos: 10% (3-6 meses), 15% (anualidad). NO hay descuento de 7+ meses en esta sucursal.
 - Precios:

@@ -26,7 +26,7 @@ const sucursales = [
     id: "zona-real",
     nombre: "Zona Real",
     telefono: "33-31-31-21-64",
-    email: "karen.diaz@torobox.com.mx",
+    email: "ventaszonareal@torobox.com.mx",
     direccion: "Prol. Jesús 3777, Col. Los Girasoles, C.P. 45136, Zapopan, Jalisco",
     mapQuery: "Torobox+Prol.+Jes%C3%BAs+3777,+Los+Girasoles,+45136+Zapopan,+Jal.,+M%C3%A9xico",
     img: "/images/sucursales/zona-real/hero.webp",
