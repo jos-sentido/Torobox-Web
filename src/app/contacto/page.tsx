@@ -11,11 +11,12 @@ export const metadata: Metadata = {
 export default async function ContactoPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sucursal?: string; tamano?: string }>;
+  searchParams: Promise<{ sucursal?: string; tamano?: string; piso?: string }>;
 }) {
   const params = await searchParams;
   const initialSucursal = params.sucursal ?? '';
   const initialTamano = params.tamano ?? '';
+  const initialPiso = params.piso === 'alta' || params.piso === 'baja' ? params.piso : '';
 
   return (
     <div className="bg-white min-h-screen">
@@ -29,7 +30,7 @@ export default async function ContactoPage({
         </div>
       </div>
 
-      <ContactoCliente initialSucursal={initialSucursal} initialTamano={initialTamano} />
+      <ContactoCliente initialSucursal={initialSucursal} initialTamano={initialTamano} initialPiso={initialPiso} />
     </div>
   );
 }

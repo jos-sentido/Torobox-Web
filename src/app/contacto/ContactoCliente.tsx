@@ -10,7 +10,7 @@ import { useUtmCapture } from '@/hooks/useUtmCapture';
 const fmt = (n: number) =>
   n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 });
 
-export default function ContactoCliente({ initialSucursal = '', initialTamano = '' }: { initialSucursal?: string; initialTamano?: string }) {
+export default function ContactoCliente({ initialSucursal = '', initialTamano = '', initialPiso = '' }: { initialSucursal?: string; initialTamano?: string; initialPiso?: Piso | '' }) {
   const formRef = useRef<HTMLDivElement>(null);
   const { getUtmData } = useUtmCapture();
 
@@ -20,7 +20,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
   // Controlled form fields (those that can be pre-filled)
   const [sucursal, setSucursal] = useState(initialSucursal);
   const [tamano, setTamano] = useState(initialTamano || 'asesoria');
-  const [piso, setPiso] = useState<Piso | ''>('');
+  const [piso, setPiso] = useState<Piso | ''>(initialPiso);
   const [plazo, setPlazo] = useState('asesoria');
 
   // Form fields
@@ -302,7 +302,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
 
   return (
     <>
-      <SimuladorTarifas onSolicitar={handleSolicitar} initialSucursalId={initialSucursal} initialBodegaId={initialTamano} />
+      <SimuladorTarifas onSolicitar={handleSolicitar} initialSucursalId={initialSucursal} initialBodegaId={initialTamano} initialPisoId={initialPiso} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">

@@ -32,14 +32,15 @@ interface SimuladorTarifasProps {
   onSolicitar?: (data: SeleccionSimulador) => void;
   initialSucursalId?: string;
   initialBodegaId?: string;
+  initialPisoId?: Piso | '';
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', initialBodegaId = '' }: SimuladorTarifasProps = {}) {
+export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', initialBodegaId = '', initialPisoId = '' }: SimuladorTarifasProps = {}) {
   const [sucursalId, setSucursalId] = useState(initialSucursalId);
   const [bodegaId, setBodegaId]     = useState(initialBodegaId);
-  const [piso, setPiso]             = useState<Piso | ''>('');
+  const [piso, setPiso]             = useState<Piso | ''>(initialPisoId);
   const [plazoId, setPlazoId]       = useState('mensual');
 
   // When a bodega is pre-selected without a sucursal, filter available sucursales

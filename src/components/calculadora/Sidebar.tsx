@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { ComponentType } from 'react';
+import Link from 'next/link';
 import { Branch, Unit, ItemType } from './types';
 import { BRANCHES, ITEM_TYPES } from './constants';
 import { SUCURSALES } from '@/data/sucursales';
@@ -182,6 +183,12 @@ export default function Sidebar({
             );
           })}
         </div>
+        <Link
+          href={`/contacto?sucursal=${BRANCH_ID_MAP[selectedBranch.id] || selectedBranch.id}&tamano=${selectedUnit.id.replace(/^[a-z]+-/, '')}`}
+          className="mt-3 block w-full text-center py-2.5 px-4 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-xl transition-colors text-sm"
+        >
+          Cotizar esta bodega
+        </Link>
       </div>
 
       {/* Item palette */}

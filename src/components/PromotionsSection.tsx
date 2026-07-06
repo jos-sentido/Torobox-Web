@@ -52,6 +52,16 @@ export default function PromotionsSection() {
   // Check if we have a complete selection with prices to show
   const showPrices = precioBase !== null && bodega;
 
+  // Lleva la selección actual (sucursal, tamaño y planta) al cotizador de /contacto
+  const cotizarHref = useMemo(() => {
+    const p = new URLSearchParams();
+    if (sucursalId) p.set('sucursal', sucursalId);
+    if (bodegaId) p.set('tamano', bodegaId);
+    if (pisoEfectivo) p.set('piso', pisoEfectivo);
+    const qs = p.toString();
+    return qs ? `/contacto?${qs}` : '/contacto';
+  }, [sucursalId, bodegaId, pisoEfectivo]);
+
   // Compute discount percentages progressively based on selection level
   const descuentosPorPlazo = useMemo(() => {
     const plazoIds = ['3-6-meses', '7-meses', 'anualidad'] as const;
@@ -283,7 +293,7 @@ export default function PromotionsSection() {
         )}
 
         <div className="text-center">
-          <Button href="/contacto" variant="white" className="text-lg px-8 py-3.5 font-bold rounded-lg shadow-lg hover:shadow-xl transition-all">
+          <Button href={cotizarHref} variant="white" className="text-lg px-8 py-3.5 font-bold rounded-lg shadow-lg hover:shadow-xl transition-all">
             Cotizar mi espacio
           </Button>
         </div>
