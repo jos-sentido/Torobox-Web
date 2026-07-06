@@ -100,12 +100,24 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
   · 30 m²: Planta baja $13,500/mes
   · Bodega con Oficina: Planta baja $15,000/mes
 
+**Sucursal Juan Gil Preciado (Sucursal Norte)**
+- Dirección: Av. Juan Gil Preciado 7676, Zapopan, Jalisco
+- Teléfono: 33-12-82-66-09
+- Características: Bodegas tipo contenedor, acceso controlado, circuito cerrado (CCTV), vigilancia, planta alta y baja, amplios pasillos de maniobra, oficina de atención, estacionamiento
+- Descuentos: 20% (3-6 meses), 25% (7+ meses), 35% (anualidad). Bodega de 3.5 m²: 11% (3-6 meses), 20% (anualidad).
+- Precios:
+  · 3.5 m²: Planta baja $1,700/mes, Planta alta $1,505/mes
+  · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
+  · 10 m²: Planta baja $4,500/mes, Planta alta $4,200/mes
+  · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
+  · 30 m²: Planta baja $13,500/mes
+
 ### Planes de pago y descuentos (aplican a bodegas de 7 m² en adelante):
 - Mensual: precio normal (sin descuento)
-- 3 a 6 meses: 10% en Av. Vallarta y Zona Real, 20% en Punto Sur y Bucerías
-- 7 meses o más: 15% en Av. Vallarta, 25% en Punto Sur y Bucerías. NO disponible en Zona Real.
-- Anualidad (12 meses): 20% en Av. Vallarta, 15% en Zona Real, 35% en Punto Sur y Bucerías
-Nota: Las bodegas de 1.75 m² no aplican descuentos. Las de 3.5 m² solo aplican 11% (3-6 meses) y 20% (anualidad) en Punto Sur y Bucerías.
+- 3 a 6 meses: 10% en Av. Vallarta y Zona Real, 20% en Punto Sur, Bucerías y Juan Gil Preciado
+- 7 meses o más: 15% en Av. Vallarta, 25% en Punto Sur, Bucerías y Juan Gil Preciado. NO disponible en Zona Real.
+- Anualidad (12 meses): 20% en Av. Vallarta, 15% en Zona Real, 35% en Punto Sur, Bucerías y Juan Gil Preciado
+Nota: Las bodegas de 1.75 m² no aplican descuentos. Las de 3.5 m² solo aplican 11% (3-6 meses) y 20% (anualidad) en Punto Sur, Bucerías y Juan Gil Preciado.
 
 ### Proceso de contratación (5 pasos):
 1. Contacto: Llama, manda WhatsApp o llena el formulario web. Un asesor te atiende de inmediato.

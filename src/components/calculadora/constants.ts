@@ -50,6 +50,17 @@ export const BRANCHES: Branch[] = [
       { id: 'b-oficina', name: 'Bodega con Oficina', width: 2.44, length: 8.6, height: 2.78 },
     ],
   },
+  {
+    id: 'juan-gil-preciado',
+    name: 'Sucursal Juan Gil Preciado',
+    units: [
+      { id: 'jgp-3.5', name: 'Bodega 3.5 m²', width: 1.5, length: 2.44, height: 2.78 },
+      { id: 'jgp-7', name: 'Bodega 7 m²', width: 2.44, length: 2.86, height: 2.78 },
+      { id: 'jgp-10', name: 'Bodega 10 m²', width: 2.44, length: 4, height: 2.78 },
+      { id: 'jgp-15', name: 'Bodega 15 m²', width: 2.44, length: 6, height: 2.78 },
+      { id: 'jgp-30', name: 'Bodega 30 m²', width: 2.44, length: 12, height: 2.78 },
+    ],
+  },
 ];
 
 export const ITEM_TYPES: ItemType[] = [

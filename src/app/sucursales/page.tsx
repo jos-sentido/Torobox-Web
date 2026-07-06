@@ -56,6 +56,17 @@ const sucursales = [
     imgPosition: "center 30%",
     caracteristicas: ["Almacén vacacional", "Espacios para botes y motos"],
   },
+  {
+    id: "juan-gil-preciado",
+    nombre: "Juan Gil Preciado",
+    telefono: "33-12-82-66-09",
+    email: "",
+    direccion: "Av. Juan Gil Preciado 7676, Zapopan, Jalisco",
+    mapQuery: "Torobox+Av.+Juan+Gil+Preciado+7676,+Zapopan,+Jal.,+M%C3%A9xico",
+    img: "/images/sucursales/juan-gil-preciado/hero.webp",
+    alt: "Pasillo de mini bodegas tipo contenedor en la sucursal ToroBox Juan Gil Preciado, Zapopan",
+    caracteristicas: ["Bodegas tipo contenedor", "Acceso controlado", "Circuito cerrado (CCTV)"],
+  },
 ];
 
 export default function SucursalesPage() {

@@ -20,6 +20,8 @@ const DESC_PS  = { '3-6-meses': 0.20, '7-meses': 0.25, 'anualidad': 0.35 };
 const DESC_PS_SM = { '3-6-meses': 0.11, 'anualidad': 0.20 };
 const DESC_BUC = { '3-6-meses': 0.20, '7-meses': 0.25, 'anualidad': 0.35 };
 const DESC_BUC_SM = { '3-6-meses': 0.11, 'anualidad': 0.20 };
+const DESC_JGP = { '3-6-meses': 0.20, '7-meses': 0.25, 'anualidad': 0.35 };
+const DESC_JGP_SM = { '3-6-meses': 0.11, 'anualidad': 0.20 };
 
 export const SUCURSALES: Sucursal[] = [
   {
@@ -69,6 +71,17 @@ export const SUCURSALES: Sucursal[] = [
       { id: '15',   label: '15 m²',   area: 15,   precios: { baja: 6750, alta: 6300 }, descuentos: DESC_BUC },
       { id: '30',   label: '30 m²',   area: 30,   precios: { baja: 13500 }, descuentos: DESC_BUC },
       { id: 'oficina', label: 'Bodega con Oficina (30 m²)', area: 30, precios: { baja: 15000 } },
+    ],
+  },
+  {
+    id: 'juan-gil-preciado',
+    nombre: 'Juan Gil Preciado',
+    bodegas: [
+      { id: '3.5',  label: '3.5 m²',  area: 3.5,  precios: { baja: 1700, alta: 1505 }, descuentos: DESC_JGP_SM },
+      { id: '7',    label: '7 m²',    area: 7,    precios: { baja: 3150, alta: 2940 }, descuentos: DESC_JGP },
+      { id: '10',   label: '10 m²',   area: 10,   precios: { baja: 4500, alta: 4200 }, descuentos: DESC_JGP },
+      { id: '15',   label: '15 m²',   area: 15,   precios: { baja: 6750, alta: 6300 }, descuentos: DESC_JGP },
+      { id: '30',   label: '30 m²',   area: 30,   precios: { baja: 13500 }, descuentos: DESC_JGP },
     ],
   },
 ];

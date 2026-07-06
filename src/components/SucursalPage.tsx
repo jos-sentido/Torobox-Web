@@ -88,7 +88,7 @@ export default function SucursalPage({ data }: { data: SucursalData }) {
             </section>
 
             {/* Medidas disponibles */}
-            {sucursalInfo && (
+            {sucursalInfo && sucursalInfo.bodegas.length > 0 && (
               <section>
                 <h2 className="text-2xl font-bold text-brand-black mb-6">Medidas Disponibles</h2>
                 <div className="grid sm:grid-cols-2 gap-3">

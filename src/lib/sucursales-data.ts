@@ -12,8 +12,8 @@ export type SucursalSeo = {
   url: string;
   image: string;
   description: string;
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export const sucursalesSeo: SucursalSeo[] = [
@@ -89,10 +89,37 @@ export const sucursalesSeo: SucursalSeo[] = [
     latitude: 20.7513858,
     longitude: -105.3244334,
   },
+  {
+    id: "juan-gil-preciado",
+    nombre: "ToroBox Juan Gil Preciado",
+    telefono: "33-12-82-66-09",
+    telefonoIntl: "+523312826609",
+    email: "",
+    street: "Av. Juan Gil Preciado 7676",
+    locality: "Zapopan",
+    region: "Jalisco",
+    postalCode: "",
+    country: "MX",
+    url: "https://torobox.mx/sucursales/juan-gil-preciado",
+    image: "https://torobox.mx/images/sucursales/juan-gil-preciado/hero.webp",
+    description:
+      "Renta de mini bodegas tipo contenedor en Av. Juan Gil Preciado 7676, Zapopan. Acceso controlado y monitoreo por circuito cerrado.",
+    latitude: null,
+    longitude: null,
+  },
 ];
 
 export function localBusinessJsonLd(s: SucursalSeo) {
-  return {
+  const address: Record<string, unknown> = {
+    "@type": "PostalAddress",
+    streetAddress: s.street,
+    addressLocality: s.locality,
+    addressRegion: s.region,
+    addressCountry: s.country,
+  };
+  if (s.postalCode) address.postalCode = s.postalCode;
+
+  const data: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "SelfStorage",
     "@id": s.url,
@@ -101,20 +128,7 @@ export function localBusinessJsonLd(s: SucursalSeo) {
     url: s.url,
     image: s.image,
     telephone: s.telefonoIntl,
-    email: s.email,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: s.street,
-      addressLocality: s.locality,
-      addressRegion: s.region,
-      postalCode: s.postalCode,
-      addressCountry: s.country,
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: s.latitude,
-      longitude: s.longitude,
-    },
+    address,
     areaServed: s.locality,
     parentOrganization: {
       "@type": "Organization",
@@ -122,4 +136,13 @@ export function localBusinessJsonLd(s: SucursalSeo) {
       url: "https://torobox.mx",
     },
   };
+  if (s.email) data.email = s.email;
+  if (s.latitude != null && s.longitude != null) {
+    data.geo = {
+      "@type": "GeoCoordinates",
+      latitude: s.latitude,
+      longitude: s.longitude,
+    };
+  }
+  return data;
 }

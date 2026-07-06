@@ -53,14 +53,18 @@ const organizationJsonLd = {
       streetAddress: s.street,
       addressLocality: s.locality,
       addressRegion: s.region,
-      postalCode: s.postalCode,
+      ...(s.postalCode ? { postalCode: s.postalCode } : {}),
       addressCountry: s.country,
     },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: s.latitude,
-      longitude: s.longitude,
-    },
+    ...(s.latitude != null && s.longitude != null
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: s.latitude,
+            longitude: s.longitude,
+          },
+        }
+      : {}),
   })),
 };
 
@@ -352,7 +356,8 @@ export default function Home() {
                   { name: "Av Vallarta", id: "av-vallarta", img: "/images/sucursales/av-vallarta/hero.webp", alt: "Fachada de mini bodegas ToroBox sucursal Av. Vallarta en Zapopan" },
                   { name: "Zona Real", id: "zona-real", img: "/images/sucursales/zona-real/hero.webp", alt: "Instalaciones de mini bodegas ToroBox sucursal Zona Real en Zapopan" },
                   { name: "Punto Sur", id: "punto-sur", img: "/images/sucursales/punto-sur/hero.webp", alt: "Entrada de mini bodegas ToroBox sucursal Punto Sur en Tlajomulco" },
-                  { name: "Bucerías", id: "bucerias", img: "/images/sucursales/bucerias/hero.webp", alt: "Mini bodegas ToroBox sucursal Bucerías en Nayarit, zona costera" }
+                  { name: "Bucerías", id: "bucerias", img: "/images/sucursales/bucerias/hero.webp", alt: "Mini bodegas ToroBox sucursal Bucerías en Nayarit, zona costera" },
+                  { name: "Juan Gil Preciado", id: "juan-gil-preciado", img: "/images/sucursales/juan-gil-preciado/hero.webp", alt: "Pasillo de mini bodegas tipo contenedor ToroBox sucursal Juan Gil Preciado en Zapopan" }
                 ].map((suc, i) => (
                   <Link href={`/sucursales/${suc.id}`} key={i} className="group relative h-40 rounded-lg overflow-hidden flex items-end p-4">
                     <Image src={suc.img} alt={suc.alt} fill sizes="(max-width: 640px) 100vw, 50vw" className="object-cover bg-gray-200 group-hover:scale-105 transition-transform duration-500" />

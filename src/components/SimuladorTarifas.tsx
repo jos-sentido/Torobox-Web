@@ -53,6 +53,9 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
   const bodega   = sucursal?.bodegas.find(b => b.id === bodegaId);
   const plazo    = PLAZOS.find(p => p.id === plazoId)!;
 
+  // Sucursal seleccionada sin precios cargados todavía
+  const sucursalSinPrecios = !!sucursal && sucursal.bodegas.length === 0;
+
   // Descuento: viene de la bodega según el plazo seleccionado
   const descuento = useMemo(() => {
     if (!bodega?.descuentos) return 0;
@@ -183,7 +186,9 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
                   className={`${selectClass} disabled:opacity-40 disabled:cursor-not-allowed`}
                 >
                   <option value="">
-                    {sucursal ? 'Selecciona un tamaño' : 'Primero elige una sucursal'}
+                    {sucursal
+                      ? (sucursalSinPrecios ? 'Precios en actualización' : 'Selecciona un tamaño')
+                      : 'Primero elige una sucursal'}
                   </option>
                   {sucursal
                     ? sucursal.bodegas.map(b => {
@@ -273,7 +278,23 @@ export default function SimuladorTarifas({ onSolicitar, initialSucursalId = '', 
             <div className="p-6 sm:p-8 flex flex-col">
               <h3 className="text-white font-bold text-base mb-5">Tu presupuesto estimado</h3>
 
-              {!isComplete ? (
+              {sucursalSinPrecios ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
+                  <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-4">
+                    <svg className="w-7 h-7 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-300 text-sm font-semibold mb-1">Estamos actualizando los precios de esta sucursal</p>
+                  <p className="text-gray-500 text-sm mb-5">Déjanos tus datos y un asesor te comparte medidas y tarifas disponibles.</p>
+                  <button
+                    onClick={() => document.getElementById('formulario-contacto')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                    className="w-full bg-brand-red hover:bg-brand-red-hover text-white py-3.5 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-brand-red/20"
+                  >
+                    Solicitar información
+                  </button>
+                </div>
+              ) : !isComplete ? (
                 <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
                   <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-4">
                     <svg className="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

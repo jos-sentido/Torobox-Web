@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/sucursales/av-vallarta", priority: 0.8, changeFrequency: "monthly" },
     { path: "/sucursales/punto-sur", priority: 0.8, changeFrequency: "monthly" },
     { path: "/sucursales/bucerias", priority: 0.8, changeFrequency: "monthly" },
+    { path: "/sucursales/juan-gil-preciado", priority: 0.8, changeFrequency: "monthly" },
     { path: "/tamanos", priority: 0.9, changeFrequency: "monthly" },
     { path: "/calculadora", priority: 0.8, changeFrequency: "monthly" },
     { path: "/como-contratar", priority: 0.7, changeFrequency: "monthly" },
