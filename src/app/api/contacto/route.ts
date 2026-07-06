@@ -13,8 +13,14 @@ const GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/C8HeFtWI5ohK
 
 async function sendToGhlWebhook(data: {
   nombre: string;
+  first_name: string;
+  last_name: string;
   telefono: string;
+  phone: string;
   correo: string;
+  email: string;
+  external_id: string;
+  event_id: string;
   sucursal: string;
   tamano: string;
   piso: string;
@@ -52,7 +58,24 @@ async function sendToGhlWebhook(data: {
 
 export async function POST(req: Request) {
   try {
-    const { nombre, telefono, correo, sucursal, tamano, piso, plazo, mensaje, cotizacion, utm = {} } = await req.json();
+    const {
+      nombre,
+      first_name = '',
+      last_name = '',
+      telefono,
+      phone = '',
+      correo,
+      email = '',
+      external_id = '',
+      event_id = '',
+      sucursal,
+      tamano,
+      piso,
+      plazo,
+      mensaje,
+      cotizacion,
+      utm = {},
+    } = await req.json();
 
     if (!nombre || !telefono || !correo) {
       return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
@@ -86,8 +109,14 @@ export async function POST(req: Request) {
     // Send to GHL via webhook (no env vars needed)
     await sendToGhlWebhook({
       nombre,
+      first_name: first_name || nombre.split(' ')[0] || '',
+      last_name: last_name || nombre.split(' ').slice(1).join(' ') || '',
       telefono,
+      phone: phone || telefono,
       correo,
+      email: email || correo.toLowerCase(),
+      external_id,
+      event_id,
       sucursal: sucursal || "",
       tamano: tamano || "",
       piso: piso || "",

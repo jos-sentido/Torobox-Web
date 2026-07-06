@@ -131,16 +131,37 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
       ? `${preseleccion.sucursalNombre} · ${preseleccion.bodegaLabel} · ${preseleccion.pisoLabel} · ${preseleccion.plazoLabel}${preseleccion.descuento > 0 ? ` (${preseleccion.descuento * 100}% desc.)` : ''} · ${fmt(preseleccion.precioMensual)}/mes`
       : '';
 
-    try {
-      const utmData = getUtmData();
+    const utmData = getUtmData();
 
+    const trimmedNombre = nombre.trim();
+    const spaceIdx = trimmedNombre.indexOf(' ');
+    const firstName = spaceIdx > 0 ? trimmedNombre.slice(0, spaceIdx) : trimmedNombre;
+    const lastName = spaceIdx > 0 ? trimmedNombre.slice(spaceIdx + 1) : '';
+
+    const emailNormalized = correo.trim().toLowerCase();
+    const phoneDigits = telefono.replace(/\D/g, '');
+    const phoneE164Raw = phoneDigits.startsWith('52') || phoneDigits.length > 10
+      ? phoneDigits
+      : `52${phoneDigits}`;
+    const phoneE164 = phoneE164Raw ? `+${phoneE164Raw}` : '';
+
+    const eventId = `lead_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+    const externalId = `${emailNormalized}|${phoneE164Raw}`;
+
+    try {
       const res = await fetch('/api/contacto', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nombre,
+          first_name: firstName,
+          last_name: lastName,
           telefono,
+          phone: phoneE164,
           correo,
+          email: emailNormalized,
+          external_id: externalId,
+          event_id: eventId,
           sucursal: sucursalNombre,
           tamano: tamanoLabel,
           piso: piso === 'baja' ? 'Baja' : piso === 'alta' ? 'Alta' : 'Sin preferencia',
@@ -153,26 +174,56 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
 
       if (!res.ok) throw new Error('Error al enviar');
 
-      const trimmedNombre = nombre.trim();
-      const spaceIdx = trimmedNombre.indexOf(' ');
-      const firstName = spaceIdx > 0 ? trimmedNombre.slice(0, spaceIdx) : trimmedNombre;
-      const lastName = spaceIdx > 0 ? trimmedNombre.slice(spaceIdx + 1) : '';
-
-      const eventId = `lead_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+      const readCookie = (name: string): string => {
+        const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()[\]\\/+^]/g, '\\$&') + '=([^;]*)'));
+        return m ? decodeURIComponent(m[1]) : '';
+      };
+      const fbp = readCookie('_fbp');
+      const fbcCookie = readCookie('_fbc');
+      const fbclidFromUtm = (utmData as { fbclid?: string })?.fbclid || '';
+      const fbc = fbcCookie || (fbclidFromUtm ? `fb.1.${Date.now()}.${fbclidFromUtm}` : '');
 
       const w = window as Window & { dataLayer?: Record<string, unknown>[] };
       if (Array.isArray(w.dataLayer)) {
         w.dataLayer.push({
-          event: 'form_submit',
+          event: 'generate_lead',
           event_id: eventId,
           lead_form: 'contacto_torobox',
           value: preseleccion?.precioMensual ?? 0,
           currency: 'MXN',
+          // Para Google Ads enhanced conversions
           enhanced_conversion_data: {
-            email: correo.trim().toLowerCase(),
-            phone_number: telefono.replace(/\D/g, ''),
+            email: emailNormalized,
+            phone_number: phoneE164,
             first_name: firstName,
             last_name: lastName,
+          },
+          // Para Meta CAPI (la plantilla del Conversions API Gateway hashea SHA-256 automáticamente)
+          user_data: {
+            email_address: emailNormalized,
+            phone_number: phoneE164,
+            address: {
+              first_name: firstName,
+              last_name: lastName,
+            },
+            external_id: externalId,
+            fbp,
+            fbc,
+          },
+          // Atribución / contexto del lead que también queremos en custom_data del CAPI
+          lead_context: {
+            sucursal: sucursalNombre,
+            tamano: tamanoLabel,
+            piso: piso === 'baja' ? 'Baja' : piso === 'alta' ? 'Alta' : 'Sin preferencia',
+            plazo: plazoLabels[plazo] || plazo,
+            cotizacion: cotizacionText,
+            utm_source: utmData.utm_source || '',
+            utm_medium: utmData.utm_medium || '',
+            utm_campaign: utmData.utm_campaign || '',
+            utm_content: utmData.utm_content || '',
+            utm_term: utmData.utm_term || '',
+            fbclid: utmData.fbclid || '',
+            gclid: utmData.gclid || '',
           },
         });
       }
