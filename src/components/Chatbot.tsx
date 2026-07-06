@@ -86,6 +86,7 @@ const WHATSAPP_SUCURSALES = [
   { nombre: "Zona Real", numero: "5213331312164" },
   { nombre: "Punto Sur", numero: "5213332582636" },
   { nombre: "Bucerías", numero: "523225100051" },
+  { nombre: "Juan Gil Preciado", numero: "5213312826609" },
 ];
 
 export default function Chatbot() {
