@@ -41,7 +41,7 @@ export default function SucursalJuanGilPreciadoPage() {
           `${base}/pasillo.webp`,
         ],
         servicios: [
-          'Bodegas tipo contenedor',
+          'Bodegas con oficina',
           'Acceso controlado',
           'Circuito cerrado (CCTV)',
           'Vigilancia',
