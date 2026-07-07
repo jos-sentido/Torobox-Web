@@ -319,7 +319,7 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                 </div>
                 <div>
                   <h3 className="font-bold text-brand-black">Llámanos</h3>
-                  <p className="text-gray-600">+52 (33) 1234 5678</p>
+                  <p className="text-gray-600">+52 1 33 2154 5773</p>
                 </div>
               </div>
 
