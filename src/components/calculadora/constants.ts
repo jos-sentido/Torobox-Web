@@ -35,7 +35,7 @@ export const BRANCHES: Branch[] = [
       { id: 'ps-7', name: 'Bodega 7 m²', width: 2.44, length: 2.86, height: 2.78 },
       { id: 'ps-10', name: 'Bodega 10 m²', width: 2.44, length: 4, height: 2.78 },
       { id: 'ps-15', name: 'Bodega 15 m²', width: 2.44, length: 6, height: 2.78 },
-      { id: 'ps-30', name: 'Bodega 30 m²', width: 2.44, length: 12.29, height: 2.78 },
+      { id: 'ps-30', name: 'Bodega 30 m²', width: 2.44, length: 12, height: 2.78 },
     ],
   },
   {

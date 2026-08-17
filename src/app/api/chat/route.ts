@@ -52,10 +52,10 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Precios:
   · 1.75 m²: Planta baja $900/mes, Planta alta $750/mes
   · 3.5 m²: Planta baja $1,800/mes, Planta alta $1,700/mes
-  · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
-  · 10 m²: Planta baja $4,500/mes, Planta alta $4,200/mes
-  · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
-  · 30 m²: Planta baja $13,500/mes
+  · 7 m²: Planta baja $3,360/mes, Planta alta $3,150/mes
+  · 10 m²: Planta baja $4,800/mes, Planta alta $4,500/mes
+  · 15 m²: Planta baja $7,200/mes, Planta alta $6,750/mes
+  · 30 m²: Planta baja $14,440/mes
   · Bodega con Oficina: Planta baja $18,000/mes
 
 **Sucursal Zona Real (Sucursal Premium)**
@@ -66,12 +66,12 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Descuentos: 10% (3-6 meses), 15% (anualidad). NO hay descuento de 7+ meses en esta sucursal.
 - Precios:
   · 3.5 m²: Planta baja $1,800/mes, Planta alta $1,700/mes
-  · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
-  · 8 m²: Planta baja $3,600/mes, Planta alta $3,360/mes
-  · 9 m²: Planta baja $4,050/mes, Planta alta $3,780/mes
-  · 11 m²: Planta baja $4,950/mes, Planta alta $4,620/mes
-  · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
-  · 30 m²: Planta baja $13,500/mes
+  · 7 m²: Planta baja $3,360/mes, Planta alta $3,150/mes
+  · 8 m²: Planta baja $3,840/mes, Planta alta $3,600/mes
+  · 9 m²: Planta baja $4,320/mes, Planta alta $4,050/mes
+  · 11 m²: Planta baja $5,280/mes, Planta alta $4,950/mes
+  · 15 m²: Planta baja $7,200/mes, Planta alta $6,750/mes
+  · 30 m²: Planta baja $14,440/mes
 
 **Sucursal Punto Sur (Sucursal Sur)**
 - Dirección: Av. Adolfo López Mateos Sur 5540, Col. Los Gavilanes, C.P. 45645, Tlajomulco, Jalisco
@@ -80,11 +80,11 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Características: Acceso controlado, acceso 24/7, vigilancia 24/7, wifi, circuito cerrado, carritos de carga, atención personalizada Lun-Sáb, amplio estacionamiento, cerca de vías rápidas, control de plagas, perros de detección, venta de accesorios
 - Descuentos: 20% (3-6 meses), 25% (7+ meses), 35% (anualidad). Bodega de 3.5 m²: 11% (3-6 meses), 20% (anualidad).
 - Precios:
-  · 3.5 m²: Planta baja $1,700/mes, Planta alta $1,505/mes
-  · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
-  · 10 m²: Planta baja $4,500/mes, Planta alta $4,200/mes
-  · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
-  · 30 m²: Planta baja $13,500/mes
+  · 3.5 m²: Planta baja $1,800/mes, Planta alta $1,700/mes
+  · 7 m²: Planta baja $3,360/mes, Planta alta $3,150/mes
+  · 10 m²: Planta baja $4,800/mes, Planta alta $4,500/mes
+  · 15 m²: Planta baja $7,200/mes, Planta alta $6,750/mes
+  · 30 m²: Planta baja $14,440/mes
 
 **Sucursal Bucerías (Sucursal Costa)**
 - Dirección: Heroes De Nacozari 210, Col. Los Mangos y Flamingos Residencial, C.P. 63732, Bucerías, Nayarit
@@ -93,11 +93,11 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Características: Acceso controlado, acceso Lun-Vie 9am a 6pm y Sáb 9am a 2pm, cámaras de vigilancia 24/7, wifi, circuito cerrado, carritos de carga, atención personalizada Lun-Sáb, amplio estacionamiento, cerca de vías rápidas, control de plagas, perros de detección, venta de accesorios, ideal turismo y zona costera, espacio para botes y motos, bodegas con oficina
 - Descuentos: 20% (3-6 meses), 25% (7+ meses), 35% (anualidad). Bodega de 3.5 m²: 11% (3-6 meses), 20% (anualidad).
 - Precios:
-  · 3.5 m²: Planta baja $1,700/mes, Planta alta $1,505/mes
-  · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
-  · 10 m²: Planta baja $4,500/mes, Planta alta $4,200/mes
-  · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
-  · 30 m²: Planta baja $13,500/mes
+  · 3.5 m²: Planta baja $1,800/mes, Planta alta $1,700/mes
+  · 7 m²: Planta baja $3,360/mes, Planta alta $3,150/mes
+  · 10 m²: Planta baja $4,800/mes, Planta alta $4,500/mes
+  · 15 m²: Planta baja $7,200/mes, Planta alta $6,750/mes
+  · 30 m²: Planta baja $14,440/mes
   · Bodega con Oficina: Planta baja $15,000/mes
 
 **Sucursal Juan Gil Preciado (Sucursal Norte)**
@@ -107,11 +107,11 @@ Empresa de renta de mini bodegas seguras, limpias y accesibles en México. Ofrec
 - Características: Bodegas tipo contenedor, acceso controlado, circuito cerrado (CCTV), vigilancia, planta alta y baja, amplios pasillos de maniobra, oficina de atención, estacionamiento
 - Descuentos: 20% (3-6 meses), 25% (7+ meses), 35% (anualidad). Bodega de 3.5 m²: 11% (3-6 meses), 20% (anualidad).
 - Precios:
-  · 3.5 m²: Planta baja $1,700/mes, Planta alta $1,505/mes
-  · 7 m²: Planta baja $3,150/mes, Planta alta $2,940/mes
-  · 10 m²: Planta baja $4,500/mes, Planta alta $4,200/mes
-  · 15 m²: Planta baja $6,750/mes, Planta alta $6,300/mes
-  · 30 m²: Planta baja $13,500/mes
+  · 3.5 m²: Planta baja $1,800/mes, Planta alta $1,700/mes
+  · 7 m²: Planta baja $3,360/mes, Planta alta $3,150/mes
+  · 10 m²: Planta baja $4,800/mes, Planta alta $4,500/mes
+  · 15 m²: Planta baja $7,200/mes, Planta alta $6,750/mes
+  · 30 m²: Planta baja $14,440/mes
 
 ### Planes de pago y descuentos (aplican a bodegas de 7 m² en adelante):
 - Mensual: precio normal (sin descuento)
