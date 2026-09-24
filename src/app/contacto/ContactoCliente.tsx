@@ -275,6 +275,58 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
     return suc?.bodegas.find(b => b.id === tamano) ?? null;
   }, [sucursal, tamano]);
 
+  // Descuentos reales por plazo según la selección actual (misma lógica que la
+  // sección de promociones): exactos cuando ya hay un tamaño elegido, o el
+  // máximo "hasta X%" de la sucursal / de todas las sucursales cuando aún no.
+  // Los porcentajes salen siempre de src/data/sucursales.ts (fuente única) para
+  // que ninguna sucursal muestre descuentos que no ofrece.
+  const descuentosPorPlazo = useMemo(() => {
+    const plazoIds = ['3-6-meses', '7-meses', 'anualidad'] as const;
+    const result: Record<string, { value: number; isMax: boolean }> = {};
+    const suc = SUCURSALES.find(s => s.id === sucursal);
+    const bod = suc?.bodegas.find(b => b.id === tamano);
+
+    if (bod) {
+      // Tamaño específico seleccionado → descuentos exactos de esa bodega
+      for (const pid of plazoIds) {
+        result[pid] = { value: bod.descuentos?.[pid] ?? 0, isMax: false };
+      }
+    } else if (suc) {
+      // Solo sucursal → máximo disponible entre sus bodegas ("hasta X%")
+      for (const pid of plazoIds) {
+        let max = 0;
+        for (const b of suc.bodegas) {
+          const d = b.descuentos?.[pid] ?? 0;
+          if (d > max) max = d;
+        }
+        result[pid] = { value: max, isMax: true };
+      }
+    } else {
+      // Nada seleccionado → máximo entre todas las sucursales
+      for (const pid of plazoIds) {
+        let max = 0;
+        for (const s of SUCURSALES) {
+          for (const b of s.bodegas) {
+            const d = b.descuentos?.[pid] ?? 0;
+            if (d > max) max = d;
+          }
+        }
+        result[pid] = { value: max, isMax: true };
+      }
+    }
+    return result;
+  }, [sucursal, tamano]);
+
+  // Texto del descuento para las opciones del selector "Plazo de contrato".
+  const plazoOptionDesc = (pid: '3-6-meses' | '7-meses' | 'anualidad'): string => {
+    const info = descuentosPorPlazo[pid];
+    const d = info?.value ?? 0;
+    if (d <= 0) {
+      return bodegaSeleccionada ? 'sin descuento en este tamaño' : 'descuento según sucursal';
+    }
+    return `${info.isMax ? 'hasta ' : ''}${Math.round(d * 100)}% de descuento`;
+  };
+
   // Available floors for selected bodega
   const pisosDisponibles = useMemo<Piso[]>(() => {
     if (!bodegaSeleccionada) return [];
@@ -506,16 +558,16 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                 >
                   <option value="asesoria">No lo sé todavía, necesito asesoría</option>
                   <option value="mensual">Mensual — precio estándar, sin compromiso</option>
-                  <option value="3-6-meses">3 – 6 Meses — hasta 20% de descuento</option>
-                  <option value="7-meses">7+ Meses — hasta 25% de descuento</option>
-                  <option value="anualidad">Anualidad — hasta 35% de descuento, el mayor ahorro</option>
+                  <option value="3-6-meses">{`3 – 6 Meses — ${plazoOptionDesc('3-6-meses')}`}</option>
+                  <option value="7-meses">{`7+ Meses — ${plazoOptionDesc('7-meses')}`}</option>
+                  <option value="anualidad">{`Anualidad — ${plazoOptionDesc('anualidad')}${(descuentosPorPlazo['anualidad']?.value ?? 0) > 0 ? ', el mayor ahorro' : ''}`}</option>
                 </select>
                 {(() => {
                   const allPlazos = [
-                    { id: 'mensual', label: 'Mensual', fallback: 'Estándar' },
-                    { id: '3-6-meses', label: '3 – 6 Meses', fallback: 'Hasta 20% off' },
-                    { id: '7-meses', label: '7+ Meses', fallback: 'Hasta 25% off' },
-                    { id: 'anualidad', label: 'Anualidad', fallback: 'Hasta 35% off' },
+                    { id: 'mensual', label: 'Mensual' },
+                    { id: '3-6-meses', label: '3 – 6 Meses' },
+                    { id: '7-meses', label: '7+ Meses' },
+                    { id: 'anualidad', label: 'Anualidad' },
                   ] as const;
                   const hasSelection = plazo && plazo !== 'asesoria';
                   const selected = allPlazos.find(p => p.id === plazo);
@@ -549,7 +601,15 @@ export default function ContactoCliente({ initialSucursal = '', initialTamano = 
                             )}
                             <p className={`font-bold ${isBest ? 'text-brand-red mt-1' : 'text-brand-black'}`}>{p.label}</p>
                             <p className={`font-black text-base ${isBest ? 'text-brand-red' : 'text-brand-black'}`}>
-                              {p.id === 'mensual' ? <span className="text-gray-500 font-medium text-xs">Estándar</span> : p.fallback}
+                              {p.id === 'mensual'
+                                ? <span className="text-gray-500 font-medium text-xs">Estándar</span>
+                                : (() => {
+                                    const info = descuentosPorPlazo[p.id];
+                                    const d = info?.value ?? 0;
+                                    return d > 0
+                                      ? `${info.isMax ? 'Hasta ' : ''}${Math.round(d * 100)}%`
+                                      : <span className="text-gray-500 font-medium text-xs">Consultar</span>;
+                                  })()}
                             </p>
                           </div>
                         );
